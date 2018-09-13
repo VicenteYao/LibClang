@@ -12,7 +12,7 @@ using System.Threading;
 
 namespace CodeCompleteApp
 {
-    public class CodeEditor :UserControl
+    public class CodeEditor :RichTextBox
     {
         public CodeEditor()
         {
@@ -31,6 +31,7 @@ namespace CodeCompleteApp
             this.sourceCode = System.IO.File.ReadAllText(fileName);
             this.file = this.translationUnit.GetFile(fileName);
             this.tokens= this.translationUnit.Tokenize(this.translationUnit.GetSourceRange(this.file));
+            this.AppendText(this.sourceCode);
             this.InvalidateVisual();
         }
 
@@ -60,7 +61,7 @@ namespace CodeCompleteApp
             base.OnPreviewKeyDown(e);
         }
 
-        private TokenCollection tokens;
+        private TokenList tokens;
 
 
         private int line;
@@ -93,7 +94,7 @@ namespace CodeCompleteApp
                 uint lineColumn = 0;
                 foreach (var item in tokens)
                 {
-                    if (item.SourceLocation.InstantiationLocation.Line<this.line)
+                    if (item.SourceLocation.InstantiationLocation.Line < this.line)
                     {
                         continue;
                     }

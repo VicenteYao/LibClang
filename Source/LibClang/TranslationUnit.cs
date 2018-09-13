@@ -103,12 +103,12 @@ namespace LibClang
             clang.clang_disposeTranslationUnit(this.Value);
         }
 
-        public unsafe TokenCollection Tokenize(SourceRange sourceRange)
+        public unsafe TokenList Tokenize(SourceRange sourceRange)
         {
             CXToken* pToken = null;
             uint tokenCount = 0;
             clang.clang_tokenize(this.Value, sourceRange.Value, out pToken, out tokenCount);
-            return new TokenCollection(this, pToken, tokenCount);
+            return new TokenList(this, pToken, tokenCount);
         }
 
         public void AnnotateTokens(Token[] tokens, Cursor[] cursors)
@@ -194,6 +194,47 @@ namespace LibClang
         protected override bool EqualsCore(ClangObject<IntPtr> clangObject)
         {
             return this.Value == clangObject.Value;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        private unsafe class SourceRangeListObject
+        {
+            public uint count;
+            public CXSourceRange* ranges;
+        }
+
+        public unsafe SourceRangeList GetSkippedRanges(File file)
+        {
+           IntPtr pRangeList=  clang.clang_getSkippedRanges(this.Value, file.Value);
+            if (pRangeList==IntPtr.Zero)
+            {
+                return null;
+            }
+
+            SourceRangeListObject sourceRangeListObject = new SourceRangeListObject();
+            Pointer<SourceRangeListObject>.FromPointer(pRangeList, sourceRangeListObject);
+            return new SourceRangeList(new CXSourceRangeList()
+            {
+                count = sourceRangeListObject.count,
+                ranges = sourceRangeListObject.ranges,
+            });
+        }
+
+        public unsafe SourceRangeList GetAllSkippedRanges()
+        {
+            IntPtr pRangeList = clang.clang_getAllSkippedRanges(this.Value);
+            if (pRangeList == IntPtr.Zero)
+            {
+                return null;
+            }
+
+            SourceRangeListObject sourceRangeListObject = new SourceRangeListObject();
+            Pointer<SourceRangeListObject>.FromPointer(pRangeList, sourceRangeListObject);
+            return new SourceRangeList(new CXSourceRangeList()
+            {
+                count = sourceRangeListObject.count,
+                ranges = sourceRangeListObject.ranges,
+            });
         }
     }
 }

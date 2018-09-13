@@ -20,7 +20,6 @@ namespace LibClang
             {
                 if (this._sourceLocation==null)
                 {
-
                     this._sourceLocation = new SourceLocation(clang.clang_indexLoc_getCXSourceLocation(this.Value));
                 }
                 return this._sourceLocation;

@@ -78,5 +78,57 @@ namespace LibClang
         {
             return this.Value == clangObject.Value;
         }
+
+        private CXDiagnosticSeverity? _severity;
+        CXDiagnosticSeverity Severity
+        {
+            get
+            {
+                if (!this._severity.HasValue)
+                {
+                    this._severity = clang.clang_getDiagnosticSeverity(this.Value);
+                }
+                return this._severity.Value;
+            }
+        }
+
+        private SourceRange[] _sourceRanges;
+        public SourceRange[] SourceRanges
+        {
+            get
+            {
+                if (this._sourceRanges == null)
+                {
+                    uint sourceRangesCount = clang.clang_getDiagnosticNumRanges(this.Value);
+                    this._sourceRanges = new SourceRange[(int)sourceRangesCount];
+                    for (uint i = 0; i < sourceRangesCount; i++)
+                    {
+                        this._sourceRanges[i] = new SourceRange(clang.clang_getDiagnosticRange(this.Value, i));
+                    }
+                }
+                return this._sourceRanges;
+            }
+        }
+
+        private FixIt[] _fixIts;
+        public FixIt[] FixIts
+        {
+            get
+            {
+                if (this._fixIts==null)
+                {
+                    uint fixitsCount = clang.clang_getDiagnosticNumFixIts(this.Value);
+                    this._fixIts = new FixIt[fixitsCount];
+                    for (uint i = 0; i < fixitsCount; i++)
+                    {
+                        CXSourceRange xSourceRange;
+                        string text = clang.clang_getDiagnosticFixIt(this.Value, i, out xSourceRange).ToStringAndDispose();
+                        SourceRange sourceRange = new SourceRange(xSourceRange);
+                        this._fixIts[i] = new FixIt(text, sourceRange);
+                    }
+                }
+                return this._fixIts;
+            }
+        }
     }
 }

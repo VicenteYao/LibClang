@@ -3172,7 +3172,7 @@ namespace LibClang.Intertop
          * completion_index can be applied
          */
         [DllImport(Lib)]
-        internal static extern uint clang_getCompletionNumFixIts(CXCodeCompleteResults[] results, uint completion_index);
+        internal static extern uint clang_getCompletionNumFixIts(CXCodeCompleteResults* results, uint completion_index);
 
         /**
          * Fix-its that *must* be applied before inserting the text for the
@@ -3219,7 +3219,7 @@ namespace LibClang.Intertop
          */
         [DllImport(Lib)]
         internal static extern CXString clang_getCompletionFixIt(
-           CXCodeCompleteResults[] results, uint completion_index,
+           CXCodeCompleteResults* results, uint completion_index,
            uint fixit_index, out CXSourceRange replacement_range);
 
        
@@ -3681,8 +3681,7 @@ IntPtr clang_index_getCXXClassDeclInfo(/* CXIdxDeclInfo*/ IntPtr declInfo);
          * For setting a custom CXIdxClientEntity attached to an entity.
          */
         [DllImport(Lib)]
-        internal static extern void
-       clang_index_setClientEntity(/*CXIdxEntityInfo*/ IntPtr entityInfo, CXIdxClientEntity entity);
+        internal static extern void  clang_index_setClientEntity(/*CXIdxEntityInfo*/ IntPtr entityInfo, CXIdxClientEntity entity);
 
 
         /**
