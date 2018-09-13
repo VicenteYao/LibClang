@@ -8,8 +8,7 @@ namespace TestApp
         static void Main(string[] args)
         {
             Index index = new Index(true, true);
-            index.GlobalOptFlags = LibClang.Intertop.CXGlobalOptFlags.CXGlobalOpt_ThreadBackgroundPriorityForAll;
-            LibClang.TranslationUnit translationUnit = index.CreateTranslationUnit(@"D:\llvm\tools\clang\tools\driver\driver.cpp", null, null);
+            LibClang.TranslationUnit translationUnit = index.CreateTranslationUnit(@"D:\clang.ast");
 
             var indexAction = index.CreateIndexAction(new IndexActionEventHandler());
             indexAction.Index(translationUnit, LibClang.Intertop.CXIndexOptFlags.CXIndexOpt_IndexFunctionLocalSymbols);

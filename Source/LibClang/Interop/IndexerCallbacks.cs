@@ -10,25 +10,33 @@ using CXIdxClientASTFile = System.IntPtr;
 using System.Runtime.InteropServices;
 namespace LibClang.Intertop
 {
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate int abortQuery(CXClientData client_data, IntPtr reserved);
 
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void diagnostic(CXClientData client_data, CXDiagnosticSet set, IntPtr reserved);
 
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate CXIdxClientFile enteredMainFile(CXClientData client_data,
                       CXFile mainFile, IntPtr reserved);
 
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate CXIdxClientFile ppIncludedFile(CXClientData client_data,
                                /*CXIdxIncludedFileInfo*/ IntPtr fileInfo);
 
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void indexEntityReference(CXClientData client_data,
                     /*CXIdxEntityRefInfo*/IntPtr refInfo);
 
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void indexDeclaration(CXClientData client_data,
           /* CXIdxDeclInfo*/IntPtr declInfo);
 
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate CXIdxClientContainer startedTranslationUnit(CXClientData client_data,
                                 IntPtr reserved);
 
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate CXIdxClientASTFile importedASTFile(CXClientData client_data,
                                   /*CXIdxImportedASTFileInfo*/IntPtr fileInfo);
 

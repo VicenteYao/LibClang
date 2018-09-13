@@ -33,10 +33,11 @@ namespace LibClangUnitTest
 
         }
 
-        public void OnQueryContinue(CancelEventArgs e)
+        public bool OnQueryAbort()
         {
-            e.Cancel = false;
+            return false;
         }
+
 
         public void OnStartTranslationUnit()
         {

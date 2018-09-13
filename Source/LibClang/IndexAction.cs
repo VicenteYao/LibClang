@@ -23,11 +23,13 @@ namespace LibClang
         {
            this._indexerCallbacks.abortQuery = Marshal.GetFunctionPointerForDelegate(new abortQuery((clientData, reserve) =>
             {
-                CancelEventArgs cancelEventArgs = new CancelEventArgs();
-                this._indexActionEventHandler?.OnQueryContinue(cancelEventArgs);
-                if (!cancelEventArgs.Cancel)
+                if (clientData!=IntPtr.Zero)
                 {
-                    return 0;
+
+                }
+                if (this._indexActionEventHandler!=null)
+                {
+                    return this._indexActionEventHandler.OnQueryAbort() ? 1 : 0;
                 }
                 return 1;
             }));
@@ -91,7 +93,7 @@ namespace LibClang
                 return clang.clang_indexTranslationUnit(this.Value,
                     IntPtr.Zero,
                     ptrIndexerCallbacks,
-                    (uint)(ptrIndexerCallbacks.Size / IntPtr.Size),
+                    (uint)(ptrIndexerCallbacks.Size),
                     (uint)indexOptFlags, translationUnit.Value) > 0;
             }
         }
@@ -112,7 +114,7 @@ namespace LibClang
                 clang.clang_indexSourceFile(this.Value,
                     IntPtr.Zero,
                     ptrIndexerCallbacks,
-                    (uint)(ptrIndexerCallbacks.Size / IntPtr.Size), 
+                    (uint)(ptrIndexerCallbacks.Size), 
                     (uint)indexOptFlags,
                     sourceFile,
                     cmdLineArgs,
