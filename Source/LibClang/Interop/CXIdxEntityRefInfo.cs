@@ -9,17 +9,17 @@ namespace LibClang.Intertop
             */
     public struct CXIdxEntityRefInfo
     {
-        CXIdxEntityRefKind kind;
+      public   CXIdxEntityRefKind kind;
         /**
          * Reference cursor.
          */
-        CXCursor cursor;
-        CXIdxLoc loc;
+        public CXCursor cursor;
+        public CXIdxLoc loc;
         /**
          * The entity that gets referenced.
          */
         /* CXIdxEntityInfo*/
-        IntPtr referencedEntity;
+        public IntPtr referencedEntity;
         /**
          * Immediate "parent" of the reference. For example:
          *
@@ -32,15 +32,15 @@ namespace LibClang.Intertop
          * the parentEntity will be the function/method.
          */
         /*CXIdxEntityInfo*/
-        IntPtr parentEntity;
+        public IntPtr parentEntity;
         /**
          * Lexical container context of the reference.
          */
         /*CXIdxContainerInfo*/
-        IntPtr container;
+        public IntPtr container;
         /**
          * Sets of symbol roles of the reference.
          */
-        CXSymbolRole role;
+        public CXSymbolRole role;
     }
 }

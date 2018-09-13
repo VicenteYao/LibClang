@@ -23,10 +23,6 @@ namespace LibClang
         {
            this._indexerCallbacks.abortQuery = Marshal.GetFunctionPointerForDelegate(new abortQuery((clientData, reserve) =>
             {
-                if (clientData!=IntPtr.Zero)
-                {
-
-                }
                 if (this._indexActionEventHandler!=null)
                 {
                     return this._indexActionEventHandler.OnQueryAbort() ? 1 : 0;
@@ -35,15 +31,20 @@ namespace LibClang
             }));
             this._indexerCallbacks.diagnostic = Marshal.GetFunctionPointerForDelegate(new diagnostic((clientData, diagnostic, reserve) =>
             {
-                DiagnosticSet diagnostics = new DiagnosticSet(diagnostic);
-                this._indexActionEventHandler?.OnDiagnostic(diagnostics);
+                using (DiagnosticSet diagnostics = new DiagnosticSet(diagnostic))
+                {
+                    this._indexActionEventHandler?.OnDiagnostic(diagnostics);
+                }  
             }));
 
             this._indexerCallbacks.enteredMainFile = Marshal.GetFunctionPointerForDelegate(new enteredMainFile((clientFile, cxFile, reserve) =>
             {
-                File file = new File(cxFile);
-                File result = this._indexActionEventHandler?.OnEnteredMainFile(file);
-                return result == null ? IntPtr.Zero : result.Value;
+                using (File file = new File(cxFile))
+                {
+                    File result = this._indexActionEventHandler?.OnEnteredMainFile(file);
+
+                    return result == null ? IntPtr.Zero : result.Value;
+                }
             }));
 
             this._indexerCallbacks.importedASTFile = Marshal.GetFunctionPointerForDelegate(new importedASTFile((clientData, reserve) =>
@@ -61,15 +62,23 @@ namespace LibClang
 
             this._indexerCallbacks.indexDeclaration = Marshal.GetFunctionPointerForDelegate(new indexDeclaration((clientData, declInfo) =>
              {
-                 CXIdxDeclInfo* pIndexDeclInfo = (CXIdxDeclInfo*)declInfo;
-                 IndexDeclInfo indexDeclInfo = new IndexDeclInfo(*pIndexDeclInfo);
-                 this._indexActionEventHandler?.OnIndexDeclaration(indexDeclInfo);
+                 //CXIdxDeclInfo* pIndexDeclInfo = (CXIdxDeclInfo*)declInfo;
+                 //IndexDeclInfo indexDeclInfo = new IndexDeclInfo(*pIndexDeclInfo);
+                 //this._indexActionEventHandler?.OnIndexDeclaration(indexDeclInfo);
              }));
 
             this._indexerCallbacks.indexEntityReference = Marshal.GetFunctionPointerForDelegate(new indexEntityReference((clientData, refInfo) =>
              {
                  CXIdxEntityRefInfo* pIndexEntityRefInfo = (CXIdxEntityRefInfo*)refInfo;
-                 IndexEntityRefInfo indexEntityRefInfo = new IndexEntityRefInfo(*pIndexEntityRefInfo);
+                 CXIdxEntityRefInfo  copy= new CXIdxEntityRefInfo();
+                 copy.container = pIndexEntityRefInfo->container;
+                 copy.cursor = pIndexEntityRefInfo->cursor;
+                 copy.kind = pIndexEntityRefInfo->kind;
+                 copy.loc = pIndexEntityRefInfo->loc;
+                 copy.parentEntity = pIndexEntityRefInfo->parentEntity;
+                 copy.referencedEntity = pIndexEntityRefInfo->referencedEntity;
+                 copy.role = pIndexEntityRefInfo->role;
+                 IndexEntityRefInfo indexEntityRefInfo = new IndexEntityRefInfo(copy);
                  this._indexActionEventHandler?.OnIndexEntityRefInfo(indexEntityRefInfo);
              }));
             this._indexerCallbacks.startedTranslationUnit = Marshal.GetFunctionPointerForDelegate(new startedTranslationUnit((clientData, reserved) =>

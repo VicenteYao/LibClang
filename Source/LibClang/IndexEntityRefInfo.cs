@@ -10,7 +10,7 @@ namespace LibClang
 
         internal IndexEntityRefInfo(CXIdxEntityRefInfo cXIdxEntityRefInfo)
         {
-
+            this.Value = cXIdxEntityRefInfo;
         }
 
         protected override bool EqualsCore(ClangObject<CXIdxEntityRefInfo> clangObject)

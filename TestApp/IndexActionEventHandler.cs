@@ -10,6 +10,10 @@ namespace TestApp
     {
         public void OnDiagnostic(DiagnosticSet diagnostics)
         {
+            foreach (var item in diagnostics)
+            {
+                Console.WriteLine(item.Spelling);
+            }
 
         }
 
