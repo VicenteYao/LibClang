@@ -92,6 +92,32 @@ namespace LibClang
             }
         }
 
+        private Cursor[] overridesCursors;
+        public unsafe Cursor[] OverridesCursors
+        {
+            get
+            {
+                if (this.overridesCursors == null)
+                {
+                    CXCursor* pCursors = (CXCursor*)0;
+                    uint cursorsCount = 0;
+                    clang.clang_getOverriddenCursors(this.Value, out pCursors, out cursorsCount);
+                    if (pCursors == (CXCursor*)0)
+                    {
+                        this.overridesCursors = new Cursor[0];
+                        goto LEnd;
+                    }
+                    this.overridesCursors = new Cursor[cursorsCount];
+                    for (uint i = 0; i < cursorsCount; i++)
+                    {
+                        this.overridesCursors[i] = new Cursor(pCursors[i]);
+                    }
+                }
+            LEnd:
+                return overridesCursors;
+            }
+        }
+
         public Type[] TemplateArguments
         {
             get;
@@ -232,6 +258,21 @@ namespace LibClang
                     this._evalResult = new EvalResult(clang.clang_Cursor_Evaluate(this.Value));
                 }
                 return this._evalResult;
+            }
+        }
+
+
+        private Type resultType;
+        public Type ResultType
+        {
+            get
+            {
+                if (this.resultType==null)
+                {
+                    CXType cxResultType = clang.clang_getCursorResultType(this.Value);
+                    this.resultType = new Type(cxResultType);
+                }
+                return this.resultType;
             }
         }
 

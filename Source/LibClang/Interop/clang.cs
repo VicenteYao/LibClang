@@ -1596,7 +1596,7 @@ namespace LibClang.Intertop
          */
         [DllImport(Lib)]
         internal static extern void clang_getOverriddenCursors(CXCursor cursor,
-                                                      out CXCursor overridden,
+                                                      out CXCursor* overridden,
                                                       out uint num_overridden);
 
         /**

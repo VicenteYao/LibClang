@@ -5,7 +5,9 @@ VisualStudioVersion = 15.0.28010.2026
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibClang", "Source\LibClang\LibClang.csproj", "{FA3E7975-ED02-48C2-B8CD-00A199FC2819}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibClangUnitTest", "Source\LibClangUnitTest\LibClangUnitTest.csproj", "{3D4C938C-856F-43E4-A4DC-1991CCB92DAA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibClangUnitTest", "Source\LibClangUnitTest\LibClangUnitTest.csproj", "{3D4C938C-856F-43E4-A4DC-1991CCB92DAA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeCompleteApp", "CodeCompleteApp\CodeCompleteApp.csproj", "{C94505EB-DDDB-4E0D-9CCF-7A56550E6DA9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{3D4C938C-856F-43E4-A4DC-1991CCB92DAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3D4C938C-856F-43E4-A4DC-1991CCB92DAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3D4C938C-856F-43E4-A4DC-1991CCB92DAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C94505EB-DDDB-4E0D-9CCF-7A56550E6DA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C94505EB-DDDB-4E0D-9CCF-7A56550E6DA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C94505EB-DDDB-4E0D-9CCF-7A56550E6DA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C94505EB-DDDB-4E0D-9CCF-7A56550E6DA9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

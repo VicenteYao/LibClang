@@ -103,27 +103,21 @@ namespace LibClang
             clang.clang_disposeTranslationUnit(this.Value);
         }
 
-        public unsafe Token[]  Tokenize(SourceRange sourceRange)
+        public unsafe TokenCollection Tokenize(SourceRange sourceRange)
         {
-            Token[] tokens = null;
             CXToken* pToken = null;
             uint tokenCount = 0;
             clang.clang_tokenize(this.Value, sourceRange.Value, out pToken, out tokenCount);
-            tokens = new Token[tokenCount];
-            CXTokenObject cXTokenObject = new CXTokenObject();
-            for (int i = 0; i < tokenCount; i++)
+            return new TokenCollection(this, pToken, tokenCount);
+        }
+
+        public void AnnotateTokens(Token[] tokens, Cursor[] cursors)
+        {
+            if (tokens == null || tokens.Length == 0 || cursors.Length == 0)
             {
-                Marshal.PtrToStructure((IntPtr)(pToken + i), cXTokenObject);
-                CXToken cXToken = default(CXToken);
-                cXToken.int_data1 = cXTokenObject.int_data1;
-                cXToken.int_data2 = cXTokenObject.int_data2;
-                cXToken.int_data3 = cXTokenObject.int_data3;
-                cXToken.int_data4 = cXTokenObject.int_data4;
-                cXToken.ptr_data = cXTokenObject.ptr_data;
-                tokens[i] = new Token(this, cXToken);
+                return;
             }
-            //clang.clang_disposeTokens(this.Value, pToken, tokenCount);
-            return tokens;
+            clang.clang_annotateTokens(this.Value, tokens.Select(x => x.Value).ToArray(), (uint)tokens.Length, cursors.Select(x => x.Value).ToArray());
         }
 
         public Cursor GetCursor(SourceLocation sourceLocation)

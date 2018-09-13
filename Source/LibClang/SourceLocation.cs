@@ -30,7 +30,7 @@ namespace LibClang
                 uint offset;
                 clang.clang_getInstantiationLocation(this.Value, out filePtr, out line, out column, out offset);
                 File file = new File(filePtr);
-                this.instantiationLocation = new InstantiationLocation(file, column, line, offset);
+                this.instantiationLocation = new InstantiationLocation(file, line, column, offset);
             }
         }
 
@@ -110,7 +110,7 @@ namespace LibClang
 
         public override string ToString()
         {
-            return string.Format("{0}:{1},{2}", this.InstantiationLocation.File.FileName,this.InstantiationLocation.Line,this.InstantiationLocation.Column);
+            return string.Format("{0}:{1},{2}", this.InstantiationLocation.File.FileName,this.PresumedLocation.Line,this.PresumedLocation.Column);
         }
 
     }

@@ -24,6 +24,43 @@ namespace LibClang
                 return this._addressSpace.Value;
             }
         }
+        
+        private CXCursor_ExceptionSpecificationKind? exceptionSpecificationType;
+
+        public CXCursor_ExceptionSpecificationKind ExceptionSpecificationType
+        {
+            get
+            {
+                if (!this.exceptionSpecificationType.HasValue)
+                {
+                    int type = clang.clang_getExceptionSpecificationType(this.Value);
+                    if (type == -1)
+                    {
+                        throw new InvalidOperationException();
+                    }
+                    else
+                    {
+                        this.exceptionSpecificationType = (CXCursor_ExceptionSpecificationKind)type;
+                    }
+                }
+                return this.exceptionSpecificationType.Value;
+            }
+        }
+
+        private CXCallingConv? callingConv;
+        public CXCallingConv FunctionTypeCallingConversation
+        {
+            get
+            {
+                if (!this.callingConv.HasValue)
+                {
+                    this.callingConv = clang.clang_getFunctionTypeCallingConv(this.Value);
+                }
+                return this.callingConv.Value;
+            }
+        }
+
+        
 
         private Type _arrayElementType;
         public Type ArrayElementType
@@ -136,6 +173,39 @@ namespace LibClang
                 }
                 return this._spelling;
             }
+        }
+
+        private Type resultType;
+        public Type ResultType
+        {
+            get
+            {
+                if (this.resultType == null)
+                {
+                    CXType cxResultType = clang.clang_getResultType(this.Value);
+                    this.resultType = new Type(cxResultType);
+                }
+                return this.resultType;
+            }
+        }
+
+        private Type pointeeType;
+        public Type PointeeType
+        {
+            get
+            {
+                if (this.pointeeType == null)
+                {
+                    CXType cxPointeeType = clang.clang_getPointeeType(this.Value);
+                    this.pointeeType = new Type(cxPointeeType);
+                }
+                return this.pointeeType;
+            }
+        }
+
+        public static string GetTypeKindSpelling(CXTypeKind typeKind)
+        {
+            return clang.clang_getTypeKindSpelling(typeKind).ToStringAndDispose();
         }
 
         protected override bool EqualsCore(ClangObject<CXType> clangObject)
