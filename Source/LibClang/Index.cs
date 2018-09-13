@@ -1,25 +1,26 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using LibClang.Intertop;
+using System.Linq;
 
 namespace LibClang
 {
     public unsafe class Index : ClangObject<IntPtr>, IDisposable
     {
-        public Index()
+        public Index(bool excludeDeclarationsFromPCH, bool displayDiagnostics)
         {
-            this.Value = clang.clang_createIndex(0, 1);
+            this.Value = clang.clang_createIndex(Convert.ToInt32(excludeDeclarationsFromPCH), Convert.ToInt32(excludeDeclarationsFromPCH));
         }
 
-        private CXGlobalOptFlags _GlobalOptFlags;
+        private CXGlobalOptFlags _globalOptFlags;
 
         public CXGlobalOptFlags GlobalOptFlags
         {
-            get { return _GlobalOptFlags = (CXGlobalOptFlags)clang.clang_CXIndex_getGlobalOptions(this.Value); }
+            get { return _globalOptFlags = (CXGlobalOptFlags)clang.clang_CXIndex_getGlobalOptions(this.Value); }
             set
             {
 
-                _GlobalOptFlags = value;
+                _globalOptFlags = value;
                 clang.clang_CXIndex_setGlobalOptions(this.Value, (uint)value);
             }
         }
@@ -32,7 +33,6 @@ namespace LibClang
                 return null;
             }
             return new TranslationUnit(pTranslationUnit);
-
         }
 
         public TranslationUnit CreateTranslationUnit(string astFileName, out CXErrorCode errorCode)
@@ -44,40 +44,78 @@ namespace LibClang
                 return null;
             }
             return new TranslationUnit(pTranslationUnit);
-
         }
 
-        public TranslationUnit CreateTranslationUnit(string sourceFileName,string[] cmdArgs, UnsavedFile[] unsavedFiles)
+        public TranslationUnit CreateTranslationUnit(string sourceFileName, string[] cmdArgs, UnsavedFile[] unsavedFiles)
         {
             IntPtr pTranslationUnit = IntPtr.Zero;
-            if (cmdArgs==null)
+            if (cmdArgs == null)
             {
-                cmdArgs = new string[1];
-                cmdArgs[0] = string.Empty;
+                cmdArgs = new string[0];
             }
-            if (unsavedFiles==null)
+            if (unsavedFiles == null)
             {
                 unsavedFiles = new UnsavedFile[0];
             }
-            sbyte** pCmdArgs = cmdArgs.ToPointer();
-            CXUnsavedFile* pUnsavedFile = unsavedFiles.ToPointer();
-            pTranslationUnit = clang.clang_createTranslationUnitFromSourceFile(this.Value, sourceFileName, cmdArgs.Length, pCmdArgs, (uint)unsavedFiles.Length, pUnsavedFile);
-
-            if ((IntPtr)pCmdArgs!=IntPtr.Zero)
+            pTranslationUnit = clang.clang_createTranslationUnitFromSourceFile(this.Value, sourceFileName, cmdArgs.Length, cmdArgs, (uint)unsavedFiles.Length, unsavedFiles.Select(x => x.Value).ToArray());
+            if (pTranslationUnit == IntPtr.Zero)
             {
-                for (int i = 0; i < cmdArgs.Length; i++)
-                {
-                    Marshal.FreeHGlobal((IntPtr)pCmdArgs[i]);
-                }
-                Marshal.FreeHGlobal((IntPtr)pCmdArgs);
+                return null;
             }
-            if ((IntPtr)pUnsavedFile!=IntPtr.Zero)
+            return new TranslationUnit(pTranslationUnit);
+        }
+
+        public TranslationUnit Parse(string sourceFileName, CXGlobalOptFlags globalOptFlags, string[] cmdLineArgs, UnsavedFile[] unsavedFiles)
+        {
+            IntPtr pTranslationUnit = IntPtr.Zero;
+            if (cmdLineArgs == null)
             {
-                Marshal.FreeHGlobal((IntPtr)pUnsavedFile);
-
+                cmdLineArgs = new string[0];
             }
+            if (unsavedFiles == null)
+            {
+                unsavedFiles = new UnsavedFile[0];
+            }
+            pTranslationUnit = clang.clang_parseTranslationUnit(this.Value, sourceFileName, cmdLineArgs, cmdLineArgs.Length, unsavedFiles.Select(x => x.Value).ToArray(), (uint)unsavedFiles.Length, (uint)globalOptFlags);
+            if (pTranslationUnit == IntPtr.Zero)
+            {
+                return null;
+            }
+            return new TranslationUnit(pTranslationUnit);
+        }
 
-            if (pTranslationUnit==IntPtr.Zero)
+        public TranslationUnit Parse(string sourceFileName, CXGlobalOptFlags globalOptFlags, string[] cmdLineArgs, UnsavedFile[] unsavedFiles, out CXErrorCode errorCode)
+        {
+            IntPtr pTranslationUnit = IntPtr.Zero;
+            if (cmdLineArgs == null)
+            {
+                cmdLineArgs = new string[0];
+            }
+            if (unsavedFiles == null)
+            {
+                unsavedFiles = new UnsavedFile[0];
+            }
+            errorCode = clang.clang_parseTranslationUnit2(this.Value, sourceFileName, cmdLineArgs, cmdLineArgs.Length, unsavedFiles.Select(x => x.Value).ToArray(), (uint)unsavedFiles.Length, (uint)globalOptFlags, out pTranslationUnit);
+            if (pTranslationUnit == IntPtr.Zero)
+            {
+                return null;
+            }
+            return new TranslationUnit(pTranslationUnit);
+        }
+
+        public TranslationUnit ParseWithFullArguments(string sourceFileName, CXGlobalOptFlags globalOptFlags, string[] cmdLineArgs, UnsavedFile[] unsavedFiles, out CXErrorCode errorCode)
+        {
+            IntPtr pTranslationUnit = IntPtr.Zero;
+            if (cmdLineArgs == null)
+            {
+                cmdLineArgs = new string[0];
+            }
+            if (unsavedFiles == null)
+            {
+                unsavedFiles = new UnsavedFile[0];
+            }
+            errorCode = clang.clang_parseTranslationUnit2FullArgv(this.Value, sourceFileName, cmdLineArgs, cmdLineArgs.Length, unsavedFiles.Select(x => x.Value).ToArray(), (uint)unsavedFiles.Length, (uint)globalOptFlags, out pTranslationUnit);
+            if (pTranslationUnit == IntPtr.Zero)
             {
                 return null;
             }

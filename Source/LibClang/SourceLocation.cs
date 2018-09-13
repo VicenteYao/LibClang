@@ -20,27 +20,17 @@ namespace LibClang
             this.Value = sourceLocation;
         }
 
-        private class LocationInfo
+        private void EnsurenInstantiationLocationInfo()
         {
-            public File File;
-            public uint Column;
-            public uint Line;
-            public uint Offset;
-        }
-
-        private void EnsureLocationInfo()
-        {
-            if (this.locationInfo == null)
+            if (this.instantiationLocation == null)
             {
-                this.locationInfo = new LocationInfo();
                 IntPtr filePtr = IntPtr.Zero;
                 uint line;
                 uint column;
                 uint offset;
                 clang.clang_getInstantiationLocation(this.Value, out filePtr, out line, out column, out offset);
-                this.locationInfo.Line = line;
-                this.locationInfo.Column = column;
-                this.locationInfo.Offset = offset;
+                File file = new File(filePtr);
+                this.instantiationLocation = new InstantiationLocation(file, column, line, offset);
             }
         }
 
@@ -49,32 +39,43 @@ namespace LibClang
             return clang.clang_equalLocations(this.Value, clangObject.Value) > 0;
         }
 
-        private LocationInfo locationInfo;
+        private InstantiationLocation instantiationLocation;
 
-        public uint Column
+        public InstantiationLocation InstantiationLocation
         {
             get
             {
-                this.EnsureLocationInfo();
-                return locationInfo.Column;
+                if (this.instantiationLocation==null)
+                {
+                    this.EnsurenInstantiationLocationInfo();
+                }
+                return this.instantiationLocation;
             }
         }
 
-        public uint Line
+        private PresumedLocation presumedLocation;
+
+        public PresumedLocation PresumedLocation
         {
             get
             {
-                this.EnsureLocationInfo();
-                return locationInfo.Line;
+                if (this.presumedLocation==null)
+                {
+                    this.EnsurePresumedLocation();
+                }
+                return this.presumedLocation;
             }
         }
 
-        public uint Offset
+        private void EnsurePresumedLocation()
         {
-            get
+            if (this.presumedLocation == null)
             {
-                this.EnsureLocationInfo();
-                return locationInfo.Offset;
+                CXString ptrFileName;
+                uint column;
+                uint line;
+                clang.clang_getPresumedLocation(this.Value, out ptrFileName, out line, out column);
+                this.presumedLocation = new PresumedLocation(ptrFileName.ToStringAndDispose(), line, column);
             }
         }
 
@@ -109,7 +110,7 @@ namespace LibClang
 
         public override string ToString()
         {
-            return string.Format("{0},{1}", this.Line, this.Column);
+            return string.Format("{0}:{1},{2}", this.InstantiationLocation.File.FileName,this.InstantiationLocation.Line,this.InstantiationLocation.Column);
         }
 
     }

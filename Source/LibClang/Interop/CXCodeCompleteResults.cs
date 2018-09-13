@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Runtime.InteropServices;
 
 namespace LibClang.Intertop
 {
@@ -11,6 +12,7 @@ namespace LibClang.Intertop
      * produced by \c clang_codeCompleteAt(). Its contents must be freed by
      * \c clang_disposeCodeCompleteResults.
      */
+     [StructLayout(LayoutKind.Sequential)]
     public unsafe struct CXCodeCompleteResults
     {
         /**

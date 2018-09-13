@@ -20,6 +20,15 @@ namespace LibClang
             this.Value = sourceRange;
         }
 
+
+        public bool IsNull
+        {
+            get
+            {
+                return clang.clang_Range_isNull(this.Value) > 0;
+            }
+        }
+
         public SourceRange(SourceLocation begin, SourceLocation end)
         {
             this.Value = clang.clang_getRange(begin.Value, end.Value);

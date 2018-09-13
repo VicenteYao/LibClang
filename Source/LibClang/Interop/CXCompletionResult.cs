@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Text;
 using CXCompletionString = System.IntPtr;
 
@@ -8,7 +9,7 @@ namespace LibClang.Intertop
     /**
      * A single result of code completion.
      */
-    
+    [StructLayout(LayoutKind.Sequential)]
     public unsafe struct CXCompletionResult
     {
         /**

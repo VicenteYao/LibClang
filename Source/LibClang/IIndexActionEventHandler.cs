@@ -9,7 +9,7 @@ namespace LibClang
     {
 
 
-        void OnQueryContinue(CancelEventArgs cancelEventArgs);
+        void OnQueryContinue(CancelEventArgs e);
 
         void OnDiagnostic(DiagnosticSet diagnostics);
 

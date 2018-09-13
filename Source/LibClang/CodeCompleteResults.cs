@@ -13,6 +13,18 @@ namespace LibClang
             this.Value = completeResults;
         }
 
+        [StructLayout(LayoutKind.Sequential)]
+        private class CXCodeCompleteResultsObject
+        {
+            public CXCompletionResult* Results;
+
+            /**
+             * The number of code-completion results stored in the
+             * \c Results array.
+             */
+            public uint NumResults;
+        }
+
         private CompletionResult[] completionResults = null;
         public CompletionResult[] CompletionResults
         {
@@ -20,15 +32,14 @@ namespace LibClang
             {
                 if (this.completionResults==null)
                 {
-                    CXCodeCompleteResults* pCodeCompleteResults = (CXCodeCompleteResults*)this.Value;
-                    uint resultsCount = pCodeCompleteResults->NumResults;
+                    CXCodeCompleteResultsObject codeCompleteResults = new CXCodeCompleteResultsObject();
+                    Pointer<CXCodeCompleteResultsObject>.FromPointer(this.Value, codeCompleteResults);
+                    uint resultsCount = codeCompleteResults.NumResults;
                     this.completionResults = new CompletionResult[resultsCount];
                     for (uint i = 0; i < resultsCount; i++)
                     {
-                        CXCursorKind cursorKind = pCodeCompleteResults->Results[i].CursorKind;
-                        CXCompletionResult* pCompletionResult = (CXCompletionResult*)Marshal.AllocHGlobal(Marshal.SizeOf(typeof(CXCompletionResult)));
-                        Marshal.StructureToPtr(pCodeCompleteResults->Results[i], (IntPtr)pCompletionResult, false);
-                        this.completionResults[i] = new CompletionResult(cursorKind, (IntPtr)pCompletionResult);
+                        CXCompletionResult completionResult = codeCompleteResults.Results[i];
+                        this.completionResults[i] = new CompletionResult(completionResult);
                     }
                 }
                 return this.completionResults;
@@ -56,6 +67,19 @@ namespace LibClang
                     }
                 }
                 return this._diagnostics;
+            }
+        }
+
+        private CXCompletionContext? context;
+        public CXCompletionContext Context
+        {
+            get
+            {
+                if (!this.context.HasValue)
+                {
+                    this.context = (CXCompletionContext)clang.clang_codeCompleteGetContexts((CXCodeCompleteResults*)this.Value);
+                }
+                return this.context.Value;
             }
         }
 

@@ -6,12 +6,12 @@ using LibClang.Intertop;
 
 namespace LibClang
 {
-     public class CompletionResult:ClangObject<IntPtr>
+     public class CompletionResult:ClangObject<CXCompletionResult>
     {
-        internal CompletionResult(CXCursorKind cursorKind, IntPtr pCompletionResult)
+        internal CompletionResult(CXCompletionResult completionResult)
         {
-            this.CursorKind = cursorKind;
-            this.Value = pCompletionResult;
+            this.CursorKind = completionResult.CursorKind;
+            this.Value = completionResult;
         }
 
         public CXCursorKind CursorKind { get; private set; }
@@ -24,15 +24,14 @@ namespace LibClang
             {
                 if (this.completionStrings == null)
                 {
-                    CXCompletionResult* pCompletionResult = (CXCompletionResult*)this.Value;
-                    uint chunks = clang.clang_getNumCompletionChunks(this.Value);
+                    uint chunks = clang.clang_getNumCompletionChunks(this.Value.CompletionString);
                     this.completionStrings = new CompletionString[chunks];
                     for (uint i = 0; i < chunks; i++)
                     {
-                        IntPtr pCompletionString = clang.clang_getCompletionChunkCompletionString(pCompletionResult->CompletionString, i);
-                        string text = clang.clang_getCompletionChunkText(pCompletionString, i).ToStringAndDispose();
-                        CXCompletionChunkKind chunkKind = clang.clang_getCompletionChunkKind(pCompletionString, i);
-                        this.completionStrings[i] = new CompletionString(text, chunkKind, pCompletionString);
+                        CXCompletionChunkKind chunkKind = clang.clang_getCompletionChunkKind(this.Value.CompletionString, i);
+                        IntPtr pCompletionString = clang.clang_getCompletionChunkCompletionString(this.Value.CompletionString, i);
+                        string text = clang.clang_getCompletionChunkText(this.Value.CompletionString, i).ToStringAndDispose();
+                        this.completionStrings[i] = new CompletionString(text, chunkKind);
                     }
                 }
                 return this.completionStrings;
@@ -42,12 +41,12 @@ namespace LibClang
 
         protected override void Dispose()
         {
-            Marshal.FreeHGlobal(this.Value);
+
         }
 
-        protected override bool EqualsCore(ClangObject<IntPtr> clangObject)
+        protected override bool EqualsCore(ClangObject<CXCompletionResult> clangObject)
         {
-            return this.Value == clangObject.Value;
+            return false;
         }
     }
 }

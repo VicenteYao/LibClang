@@ -53,7 +53,7 @@ namespace LibClang
 
         protected override bool EqualsCore(ClangObject<IntPtr> clangObject)
         {
-            return this.Value == clangObject.Value;
+            return clang.clang_File_isEqual(this.Value, clangObject.Value) > 0;
         }
 
 

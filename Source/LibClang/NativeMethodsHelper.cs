@@ -11,8 +11,8 @@ namespace LibClang
 
         internal static  string ToStringAndDispose(this CXString cxString)
         {
-            var cString = clang.clang_getCString(cxString);
-            string result= new string(cString);
+            var pString = clang.clang_getCString(cxString);
+            string result= new string(pString);
             clang.clang_disposeString(cxString);
             return result;
         }
@@ -21,7 +21,7 @@ namespace LibClang
         {
             if (pStringSet == (CXStringSet*)0)
             {
-                return new string[0];
+                return null;
             }
             string[] stringArray = new string[pStringSet->Count];
             for (int i = 0; i < stringArray.Length; i++)
@@ -32,31 +32,7 @@ namespace LibClang
             return stringArray;
         }
 
-        public static sbyte** ToPointer(this string[] cmdArgs )
-        {
-            sbyte** pCmdArgs = (sbyte**)Marshal.AllocHGlobal(Marshal.SizeOf(typeof(sbyte*)) * cmdArgs.Length);
-            for (int i = 0; i < cmdArgs.Length; i++)
-            {
-                *pCmdArgs = (sbyte*)Marshal.StringToHGlobalUni(cmdArgs[i]);
-            }
 
-            return pCmdArgs;
-        }
-
-        internal static CXUnsavedFile* ToPointer(this UnsavedFile[] unsavedFiles)
-        {
-            if (unsavedFiles==null||unsavedFiles.Length==0)
-            {
-                return (CXUnsavedFile*)IntPtr.Zero;
-            }
-            CXUnsavedFile* pUnsavedFile = (CXUnsavedFile*)Marshal.AllocHGlobal(Marshal.SizeOf(typeof(CXUnsavedFile)) * unsavedFiles.Length);
-            for (int i = 0; i < unsavedFiles.Length; i++)
-            {
-                (*pUnsavedFile) = unsavedFiles[i].Value;
-            }
-
-            return pUnsavedFile;
-        }
 
     }
 }

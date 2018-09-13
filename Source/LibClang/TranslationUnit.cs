@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 using LibClang.Intertop;
+using System.Linq;
 
 namespace LibClang
 {
@@ -15,18 +16,11 @@ namespace LibClang
 
         public unsafe CodeCompleteResults CodeCompleteAt(string completeFileName, uint completeline, uint completeColumn, UnsavedFile[] unsavedFiles, CXCodeComplete_Flags flags)
         {
-            CXUnsavedFile* pUnsavedFiles = null;
-            int length = unsavedFiles == null ? 0 : unsavedFiles.Length;
-            int bytesLength = Marshal.SizeOf(typeof(CXUnsavedFile)) * length;
-            pUnsavedFiles = (CXUnsavedFile*)Marshal.AllocHGlobal(bytesLength);
-            for (int i = 0; i < length; i++)
+            if (unsavedFiles==null)
             {
-                pUnsavedFiles[i].Contents = unsavedFiles[i].Value.Contents;
-                pUnsavedFiles[i].Filename = unsavedFiles[i].Value.Filename;
-                pUnsavedFiles[i].Length = unsavedFiles[i].Value.Length;
+                unsavedFiles = new UnsavedFile[0];
             }
-            CXCodeCompleteResults* pCodeComplete = clang.clang_codeCompleteAt(this.Value, completeFileName, completeline, completeColumn, new IntPtr(pUnsavedFiles), (uint)length, (uint)flags);
-            Marshal.FreeHGlobal(new IntPtr(pUnsavedFiles));
+            CXCodeCompleteResults* pCodeComplete = clang.clang_codeCompleteAt(this.Value, completeFileName, completeline, completeColumn, unsavedFiles.Select(x => x.Value).ToArray(), (uint)unsavedFiles.Length, (uint)flags);
             return new CodeCompleteResults((IntPtr)pCodeComplete);
         }
 

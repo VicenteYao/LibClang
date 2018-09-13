@@ -11,11 +11,11 @@ namespace LibClang
     {
         internal Token(TranslationUnit translationUnit, CXToken token)
         {
-            this.TranslationUnit = translationUnit;
+            this._translationUnit = translationUnit;
             this.Value = token;
         }
 
-        protected TranslationUnit TranslationUnit { get; private set; }
+        private TranslationUnit _translationUnit;
 
 
         private CXTokenKind? tokenKind;
@@ -40,7 +40,7 @@ namespace LibClang
             {
                 if (this.sourceLocation == null)
                 {
-                    var cxLocation = clang.clang_getTokenLocation(this.TranslationUnit.Value, this.Value);
+                    var cxLocation = clang.clang_getTokenLocation(this._translationUnit.Value, this.Value);
                     this.sourceLocation = new SourceLocation(cxLocation);
                 }
                 return this.sourceLocation;
@@ -55,7 +55,7 @@ namespace LibClang
             {
                 if (this.sourceRange == null)
                 {
-                    this.sourceRange = new SourceRange(clang.clang_getTokenExtent(this.TranslationUnit.Value, this.Value));
+                    this.sourceRange = new SourceRange(clang.clang_getTokenExtent(this._translationUnit.Value, this.Value));
                 }
                 return this.sourceRange;
             }
@@ -68,7 +68,7 @@ namespace LibClang
             {
                 if (this._spelling == null)
                 {
-                    this._spelling = clang.clang_getTokenSpelling(this.TranslationUnit.Value, this.Value).ToStringAndDispose();
+                    this._spelling = clang.clang_getTokenSpelling(this._translationUnit.Value, this.Value).ToStringAndDispose();
                 }
                 return this._spelling;
             }
@@ -81,7 +81,7 @@ namespace LibClang
 
         public override string ToString()
         {
-            return string.Format("{0}{1}{2}", this.TokenKind, this.SourceRange, this.Spelling);
+            return string.Format("[{0},{1},{2}]", this.TokenKind, this.SourceRange, this.Spelling);
         }
     }
 }
