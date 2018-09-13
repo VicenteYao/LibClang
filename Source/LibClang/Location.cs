@@ -4,9 +4,9 @@ using System.Text;
 
 namespace LibClang
 {
-    public class InstantiationLocation
+    public class Location
     {
-        internal InstantiationLocation(File file, uint line, uint column, uint offset)
+        internal Location(File file, uint line, uint column, uint offset)
         {
             this.File = file;
             this.Line = line;

@@ -3727,9 +3727,9 @@ IntPtr clang_index_getIBOutletCollectionAttrInfo(/* CXIdxAttrInfo*/ IntPtr attrI
                                                 uint index_callbacks_size,
                                                 uint index_options,
                                                 string source_filename,
-                                                string command_line_args,
+                                                string[] command_line_args,
                                                 int num_command_line_args,
-                                                out CXUnsavedFile unsaved_files,
+                                                CXUnsavedFile[] unsaved_files,
                                                 uint num_unsaved_files,
                                                 out CXTranslationUnit out_TU,
                                                 uint TU_options);

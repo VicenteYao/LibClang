@@ -126,7 +126,7 @@ namespace CodeCompleteApp
         this.typeface,
         this.FontSize,
         brush);
-                    InstantiationLocation instantiationLocation = item.SourceLocation.InstantiationLocation;
+                    Location instantiationLocation = item.SourceLocation.InstantiationLocation;
                     if (instantiationLocation.Line != lastLine)
                     {
                         y += formattedText.Height;

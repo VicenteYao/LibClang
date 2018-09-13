@@ -10,33 +10,25 @@ using CXIdxClientASTFile = System.IntPtr;
 using System.Runtime.InteropServices;
 namespace LibClang.Intertop
 {
-    [UnmanagedFunctionPointerAttribute(CallingConvention.Cdecl,SetLastError =true)]
     public delegate int abortQuery(CXClientData client_data, IntPtr reserved);
 
-    [UnmanagedFunctionPointerAttribute(CallingConvention.Cdecl, SetLastError = true)]
     public delegate void diagnostic(CXClientData client_data, CXDiagnosticSet set, IntPtr reserved);
 
-    [UnmanagedFunctionPointerAttribute(CallingConvention.Cdecl, SetLastError = true)]
     public delegate CXIdxClientFile enteredMainFile(CXClientData client_data,
                       CXFile mainFile, IntPtr reserved);
 
-    [UnmanagedFunctionPointerAttribute(CallingConvention.Cdecl, SetLastError = true)]
     public delegate CXIdxClientFile ppIncludedFile(CXClientData client_data,
                                /*CXIdxIncludedFileInfo*/ IntPtr fileInfo);
 
-    [UnmanagedFunctionPointerAttribute(CallingConvention.Cdecl, SetLastError = true)]
     public delegate void indexEntityReference(CXClientData client_data,
                     /*CXIdxEntityRefInfo*/IntPtr refInfo);
 
-    [UnmanagedFunctionPointerAttribute(CallingConvention.Cdecl, SetLastError = true)]
     public delegate void indexDeclaration(CXClientData client_data,
           /* CXIdxDeclInfo*/IntPtr declInfo);
 
-    [UnmanagedFunctionPointerAttribute(CallingConvention.Cdecl, SetLastError = true)]
     public delegate CXIdxClientContainer startedTranslationUnit(CXClientData client_data,
                                 IntPtr reserved);
 
-    [UnmanagedFunctionPointerAttribute(CallingConvention.Cdecl, SetLastError = true)]
     public delegate CXIdxClientASTFile importedASTFile(CXClientData client_data,
                                   /*CXIdxImportedASTFileInfo*/IntPtr fileInfo);
 
@@ -45,6 +37,7 @@ namespace LibClang.Intertop
            * A group of callbacks used by #clang_indexSourceFile and
            * #clang_indexTranslationUnit.
            */
+      [StructLayout(LayoutKind.Sequential)]
     public unsafe struct IndexerCallbacks
     {
         /**

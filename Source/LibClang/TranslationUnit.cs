@@ -54,6 +54,24 @@ namespace LibClang
             }
         }
 
+
+        public CXResult FindIncludesInFile(File file, Func<Cursor, SourceRange, bool> searchFunc)
+        {
+            CXCursorAndRangeVisitor cursorAndRangeVisitor = default(CXCursorAndRangeVisitor);
+            cursorAndRangeVisitor.Visit = Marshal.GetFunctionPointerForDelegate(new visit((context, cxCursor, cxRange) =>
+            {
+                if (searchFunc != null)
+                {
+                    Cursor cursor = new Cursor(cxCursor);
+                    SourceRange sourceRange = new SourceRange(cxRange);
+                    bool result = searchFunc(cursor, sourceRange);
+                    return result ? CXVisitorResult.CXVisit_Continue : CXVisitorResult.CXVisit_Break;
+                }
+                return CXVisitorResult.CXVisit_Break;
+            }));
+            return clang.clang_findIncludesInFile(this.Value, file.Value, cursorAndRangeVisitor);
+        }
+
         private CXReparse_Flags _defaultReparseFlags;
         public CXReparse_Flags DefaultReparseFlags
         {

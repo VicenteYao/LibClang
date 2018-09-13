@@ -30,7 +30,7 @@ namespace LibClang
 
         private void EnsureSourceRanges()
         {
-            if (this._sourceRanges==null)
+            if (this._sourceRanges == null)
             {
                 this._sourceRanges = new Dictionary<int, SourceRange>(this.Count);
             }

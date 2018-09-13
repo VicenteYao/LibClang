@@ -30,7 +30,7 @@ namespace LibClang
                 uint offset;
                 clang.clang_getInstantiationLocation(this.Value, out filePtr, out line, out column, out offset);
                 File file = new File(filePtr);
-                this.instantiationLocation = new InstantiationLocation(file, line, column, offset);
+                this.instantiationLocation = new Location(file, line, column, offset);
             }
         }
 
@@ -39,9 +39,9 @@ namespace LibClang
             return clang.clang_equalLocations(this.Value, clangObject.Value) > 0;
         }
 
-        private InstantiationLocation instantiationLocation;
+        private Location instantiationLocation;
 
-        public InstantiationLocation InstantiationLocation
+        public Location InstantiationLocation
         {
             get
             {

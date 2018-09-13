@@ -9,7 +9,7 @@ namespace LibClang
     {
         public Index(bool excludeDeclarationsFromPCH, bool displayDiagnostics)
         {
-            this.Value = clang.clang_createIndex(Convert.ToInt32(excludeDeclarationsFromPCH), Convert.ToInt32(excludeDeclarationsFromPCH));
+            this.Value = clang.clang_createIndex(excludeDeclarationsFromPCH ? 1 : 0, excludeDeclarationsFromPCH ? 1 : 0);
         }
 
         private CXGlobalOptFlags _globalOptFlags;

@@ -7,7 +7,7 @@ namespace LibClang.Intertop
     public delegate CXVisitorResult visit(IntPtr context, CXCursor cXCursor, CXSourceRange cXSourceRange);
     public unsafe struct CXCursorAndRangeVisitor
     {
-        public void* context;
-        public visit Visit;
+        public IntPtr context;
+        public IntPtr Visit;
     }
 }

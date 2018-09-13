@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Text;
 using LibClang.Intertop;
 
@@ -29,6 +30,24 @@ namespace LibClang
                 }
                 return this._translationUnit;
             }
+        }
+
+
+        public CXResult FindReferencesInFiles(File file, Func<Cursor, SourceRange, bool> searchFunc)
+        {
+            CXCursorAndRangeVisitor cursorAndRangeVisitor = default(CXCursorAndRangeVisitor);
+            cursorAndRangeVisitor.Visit = Marshal.GetFunctionPointerForDelegate(new visit((context, cxCursor, cxRange) =>
+            {
+                if (searchFunc != null)
+                {
+                    Cursor cursor = new Cursor(cxCursor);
+                    SourceRange sourceRange = new SourceRange(cxRange);
+                    bool result = searchFunc(cursor, sourceRange);
+                    return result ? CXVisitorResult.CXVisit_Continue : CXVisitorResult.CXVisit_Break;
+                }
+                return CXVisitorResult.CXVisit_Break;
+            }));
+            return clang.clang_findReferencesInFile(this.Value, file.Value, cursorAndRangeVisitor);
         }
 
         public static Cursor Null { get; private set; }

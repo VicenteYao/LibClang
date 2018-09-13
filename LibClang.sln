@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibClangUnitTest", "Source\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeCompleteApp", "CodeCompleteApp\CodeCompleteApp.csproj", "{C94505EB-DDDB-4E0D-9CCF-7A56550E6DA9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp", "TestApp\TestApp.csproj", "{C900399F-3637-4BE6-8410-4D49096AC8B7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{C94505EB-DDDB-4E0D-9CCF-7A56550E6DA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C94505EB-DDDB-4E0D-9CCF-7A56550E6DA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C94505EB-DDDB-4E0D-9CCF-7A56550E6DA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C900399F-3637-4BE6-8410-4D49096AC8B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C900399F-3637-4BE6-8410-4D49096AC8B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C900399F-3637-4BE6-8410-4D49096AC8B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C900399F-3637-4BE6-8410-4D49096AC8B7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

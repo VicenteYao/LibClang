@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Text;
 using LibClang.Intertop;
+using System.Linq;
 
 namespace LibClang
 {
@@ -24,7 +25,7 @@ namespace LibClang
             {
                 CancelEventArgs cancelEventArgs = new CancelEventArgs();
                 this._indexActionEventHandler?.OnQueryContinue(cancelEventArgs);
-                if (cancelEventArgs.Cancel)
+                if (!cancelEventArgs.Cancel)
                 {
                     return 0;
                 }
@@ -83,12 +84,46 @@ namespace LibClang
             clang.clang_IndexAction_dispose(this.Value);
         }
 
-        public unsafe void Index(TranslationUnit translationUnit, CXIndexOptFlags indexOptFlags)
+        public unsafe bool Index(TranslationUnit translationUnit, CXIndexOptFlags indexOptFlags)
         {
             using (Pointer<IndexerCallbacks> ptrIndexerCallbacks=new Pointer<IndexerCallbacks>(this._indexerCallbacks))
             {
-                clang.clang_indexTranslationUnit(this.Value, IntPtr.Zero, ptrIndexerCallbacks, (uint)(ptrIndexerCallbacks.Size / IntPtr.Size), (uint)indexOptFlags, translationUnit.Value);
+                return clang.clang_indexTranslationUnit(this.Value,
+                    IntPtr.Zero,
+                    ptrIndexerCallbacks,
+                    (uint)(ptrIndexerCallbacks.Size / IntPtr.Size),
+                    (uint)indexOptFlags, translationUnit.Value) > 0;
             }
+        }
+
+        public void IndexSourceFile(string sourceFile,string[] cmdLineArgs,UnsavedFile[] unsavedFiles,CXIndexOptFlags indexOptFlags,CXTranslationUnit_Flags translationUnit_Flags)
+        {
+            if (cmdLineArgs==null)
+            {
+                cmdLineArgs = new string[0];
+            }
+            if (unsavedFiles==null)
+            {
+                unsavedFiles = new UnsavedFile[0];
+            }
+            using (Pointer<IndexerCallbacks> ptrIndexerCallbacks = new Pointer<IndexerCallbacks>(this._indexerCallbacks))
+            {
+                IntPtr pTU = IntPtr.Zero;
+                clang.clang_indexSourceFile(this.Value,
+                    IntPtr.Zero,
+                    ptrIndexerCallbacks,
+                    (uint)(ptrIndexerCallbacks.Size / IntPtr.Size), 
+                    (uint)indexOptFlags,
+                    sourceFile,
+                    cmdLineArgs,
+                    cmdLineArgs.Length,
+                    unsavedFiles.Select(x => x.Value).ToArray(),
+                    (uint)unsavedFiles.Length,
+                    out pTU,
+                      (uint)translationUnit_Flags
+                    );
+            }
+
         }
 
         protected override bool EqualsCore(ClangObject<IntPtr> clangObject)
