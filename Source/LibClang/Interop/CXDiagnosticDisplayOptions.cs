@@ -10,7 +10,7 @@ namespace LibClang.Intertop
             * The values in this enum are meant to be combined to customize the
             * behavior of \c clang_formatDiagnostic().
             */
-    enum CXDiagnosticDisplayOptions
+    public  enum CXDiagnosticDisplayOptions
     {
         /**
          * Display the source-location information where the

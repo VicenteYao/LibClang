@@ -168,16 +168,43 @@ namespace LibClang
             }
         }
 
-        private SourceRange _sourceRange;
-        public SourceRange SourceRange
+        private SourceRange _commentRange;
+        public SourceRange CommentRange
         {
             get
             {
-                if (this._sourceRange==null)
+                if (this._commentRange==null)
                 {
-                    this._sourceRange = new SourceRange(clang.clang_Cursor_getCommentRange(this.Value));
+                    this._commentRange = new SourceRange(clang.clang_Cursor_getCommentRange(this.Value));
                 }
-                return this._sourceRange;
+                return this._commentRange;
+            }
+        }
+
+        private SourceLocation _sourceLocation;
+        public SourceLocation SourceLocation
+        {
+            get
+            {
+                if (this._sourceLocation == null)
+                {
+                    this._sourceLocation = new SourceLocation(clang.clang_getCursorLocation(this.Value));
+                }
+                return this._sourceLocation;
+            }
+        }
+
+        private File _includedFile;
+        public File IncludedFile
+        {
+            get
+            {
+                if (this._includedFile==null)
+                {
+                    IntPtr pFile = clang.clang_getIncludedFile(this.Value);
+                    this._includedFile = new File(pFile);
+                }
+                return this._includedFile;
             }
         }
 
@@ -247,6 +274,59 @@ namespace LibClang
             }
         }
 
+        private CXLanguageKind? _languageKind;
+
+        public CXLanguageKind LanguageKind
+        {
+            get
+            {
+                if (!this._languageKind.HasValue)
+                {
+                    this._languageKind = clang.clang_getCursorLanguage(this.Value);
+                }
+                return this._languageKind.Value;
+            }
+        }
+
+        private CXVisibilityKind? _visibility;
+        public CXVisibilityKind Visibility
+        {
+            get
+            {
+                if (!this._visibility.HasValue)
+                {
+                    this._visibility = clang.clang_getCursorVisibility(this.Value);
+                }
+                return this._visibility.Value;
+            }
+        }
+
+        private CXAvailabilityKind? _availability;
+        public CXAvailabilityKind Availability
+        {
+            get
+            {
+                if (!this._availability.HasValue)
+                {
+                    this._availability = clang.clang_getCursorAvailability(this.Value);
+                }
+                return this._availability.Value;
+            }
+        }
+
+        private CXLinkageKind? _linkage;
+        public CXLinkageKind  Linkage
+        {
+            get
+            {
+                if (!this._linkage.HasValue)
+                {
+                    this._linkage = clang.clang_getCursorLinkage(this.Value);
+                }
+                return this._linkage.Value;
+            }
+        }
+
         private EvalResult _evalResult;
 
         public EvalResult EvalResult
@@ -260,6 +340,8 @@ namespace LibClang
                 return this._evalResult;
             }
         }
+
+
 
 
         private Type resultType;

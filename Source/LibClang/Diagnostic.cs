@@ -12,6 +12,24 @@ namespace LibClang
             this.Value = value;
         }
 
+        private static CXDiagnosticDisplayOptions? _CXDiagnosticDisplayOptions;
+        public static CXDiagnosticDisplayOptions DefaultDisplayOptions
+        {
+            get
+            {
+                if (!_CXDiagnosticDisplayOptions.HasValue)
+                {
+                    _CXDiagnosticDisplayOptions = (CXDiagnosticDisplayOptions)clang.clang_defaultDiagnosticDisplayOptions();
+                }
+                return _CXDiagnosticDisplayOptions.Value;
+            }
+        }
+
+        public string Format(CXDiagnosticDisplayOptions diagnosticDisplayOptions)
+        {
+            return clang.clang_formatDiagnostic(this.Value, (uint)diagnosticDisplayOptions).ToStringAndDispose();
+        }
+
         private SourceLocation _sourceLocation;
 
         public SourceLocation SourceLocation
@@ -77,6 +95,20 @@ namespace LibClang
         protected override bool EqualsCore(ClangObject<IntPtr> clangObject)
         {
             return this.Value == clangObject.Value;
+        }
+
+        private int? _category;
+
+        public int Category
+        {
+            get
+            {
+                if (!this._category.HasValue)
+                {
+                    this._category = (int)clang.clang_getDiagnosticCategory(this.Value);
+                }
+                return this._category.Value;
+            }
         }
 
         private CXDiagnosticSeverity? _severity;

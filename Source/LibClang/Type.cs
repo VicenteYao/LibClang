@@ -212,5 +212,7 @@ namespace LibClang
         {
             return clang.clang_equalTypes(this.Value, clangObject.Value) > 0;
         }
+
+      
     }
 }

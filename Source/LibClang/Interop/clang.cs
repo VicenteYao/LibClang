@@ -650,8 +650,7 @@ namespace LibClang.Intertop
          * \returns the requested diagnostic. This diagnostic must be freed
          * via a call to \c clang_disposeDiagnostic().
          */
-        [DllImport(Lib)]
-        internal static extern CXDiagnostic clang_getDiagnosticInSet(CXDiagnosticSet Diags,
+        [DllImport(Lib)] internal static extern CXDiagnostic clang_getDiagnosticInSet(CXDiagnosticSet Diags,
                                                             uint Index);
 
      
@@ -669,8 +668,7 @@ namespace LibClang.Intertop
          * \returns A loaded CXDiagnosticSet if successful, and NULL otherwise.  These
          * diagnostics should be released using clang_disposeDiagnosticSet().
          */
-        [DllImport(Lib)]
-        internal static extern CXDiagnosticSet clang_loadDiagnostics(string file,
+        [DllImport(Lib)] internal static extern CXDiagnosticSet clang_loadDiagnostics(string file,
                                                           out CXLoadDiag_Error error,
                                                          out CXString errorString);
 
@@ -702,8 +700,7 @@ namespace LibClang.Intertop
          * \returns the requested diagnostic. This diagnostic must be freed
          * via a call to \c clang_disposeDiagnostic().
          */
-        [DllImport(Lib)]
-        internal static extern CXDiagnostic clang_getDiagnostic(CXTranslationUnit Unit,
+        [DllImport(Lib)] internal static extern CXDiagnostic clang_getDiagnostic(CXTranslationUnit Unit,
                                                        uint Index);
 
         /**
@@ -713,8 +710,7 @@ namespace LibClang.Intertop
          * \param Unit the translation unit to query.
          */
         [DllImport(Lib)]
-        internal static extern CXDiagnosticSet
-         clang_getDiagnosticSetFromTU(CXTranslationUnit Unit);
+        internal static extern CXDiagnosticSet clang_getDiagnosticSetFromTU(CXTranslationUnit Unit);
 
         /**
          * Destroy a diagnostic.
@@ -754,8 +750,7 @@ namespace LibClang.Intertop
          * Determine the severity of the given diagnostic.
          */
         [DllImport(Lib)]
-        internal static extern CXDiagnosticSeverity
-       clang_getDiagnosticSeverity(CXDiagnostic CXDiagnostic);
+        internal static extern CXDiagnosticSeverity clang_getDiagnosticSeverity(CXDiagnostic CXDiagnostic);
 
         /**
          * Retrieve the source location of the given diagnostic.
@@ -895,8 +890,7 @@ namespace LibClang.Intertop
          * Get the original translation unit source file name.
          */
         [DllImport(Lib)]
-        internal static extern CXString
-       clang_getTranslationUnitSpelling(CXTranslationUnit CTUnit);
+        internal static extern CXString clang_getTranslationUnitSpelling(CXTranslationUnit CTUnit);
 
         /**
          * Return the CXTranslationUnit for a given source file and the provided
@@ -1183,7 +1177,7 @@ namespace LibClang.Intertop
         [DllImport(Lib)]
         internal static extern int clang_reparseTranslationUnit(CXTranslationUnit TU,
                                                        uint num_unsaved_files,
-                                                 out /*CXUnsavedFile*/IntPtr unsaved_files,
+                                                  CXUnsavedFile[] unsaved_files,
                                                        uint options);
 
       
@@ -1192,7 +1186,7 @@ namespace LibClang.Intertop
           *  the name of the memory category.  This string should never be freed.
           */
         [DllImport(Lib)]
-        internal static extern string clang_getTUResourceUsageName(CXTUResourceUsageKind kind);
+        internal static extern IntPtr clang_getTUResourceUsageName(CXTUResourceUsageKind kind);
 
 
     
@@ -1603,7 +1597,7 @@ namespace LibClang.Intertop
          * Free the set of overridden cursors returned by \c
          * clang_getOverriddenCursors().
          */
-        [DllImport(Lib)] internal static extern void clang_disposeOverriddenCursors(CXCursor overridden);
+        [DllImport(Lib)] internal static extern void clang_disposeOverriddenCursors(CXCursor* overridden);
 
         /**
          * Retrieve the file that is included by the given inclusion directive
@@ -3651,8 +3645,7 @@ IntPtr clang_index_getObjCPropertyDeclInfo(/*CXIdxDeclInfo*/ IntPtr declInfo);
 IntPtr clang_index_getIBOutletCollectionAttrInfo(/* CXIdxAttrInfo*/ IntPtr attrInfo);
 
         [DllImport(Lib)]
-        internal static extern /* CXIdxCXXClassDeclInfo*/
-IntPtr clang_index_getCXXClassDeclInfo(/* CXIdxDeclInfo*/ IntPtr declInfo);
+        internal static extern /* CXIdxCXXClassDeclInfo*/IntPtr clang_index_getCXXClassDeclInfo(/* CXIdxDeclInfo*/ IntPtr declInfo);
 
         /**
          * For retrieving a custom CXIdxClientContainer attached to a
@@ -3831,8 +3824,7 @@ IntPtr clang_index_getCXXClassDeclInfo(/* CXIdxDeclInfo*/ IntPtr declInfo);
          * \returns a non-zero value if the traversal was terminated
          * prematurely by the visitor returning \c CXFieldVisit_Break.
          */
-        [DllImport(Lib)]
-        internal static extern uint clang_Type_visitFields(CXType T, CXFieldVisitor visitor, CXClientData client_data);
+        [DllImport(Lib)] internal static extern uint clang_Type_visitFields(CXType T, CXFieldVisitor visitor, CXClientData client_data);
 
         /**
          * @}

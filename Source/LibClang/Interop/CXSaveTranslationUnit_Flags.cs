@@ -11,7 +11,7 @@ namespace LibClang.Intertop
           * ORed together to specify which options should be used when
           * saving the translation unit.
           */
-    enum CXSaveTranslationUnit_Flags
+    public enum CXSaveTranslationUnit_Flags
     {
         /**
          * Used to indicate that no special saving options are needed.

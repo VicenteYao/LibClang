@@ -29,9 +29,64 @@ namespace LibClang
             clang.clang_suspendTranslationUnit(this.Value);
         }
 
-        public void Save(string fileName)
+        private CXSaveTranslationUnit_Flags? _defaultSaveFlags;
+        public CXSaveTranslationUnit_Flags DefaultSaveFlags
         {
-            clang.clang_saveTranslationUnit(this.Value, fileName, 0);
+            get
+            {
+                if (!this._defaultSaveFlags.HasValue)
+                {
+                    this._defaultSaveFlags = (CXSaveTranslationUnit_Flags)clang.clang_defaultSaveOptions(this.Value);
+                }
+                return this._defaultSaveFlags.Value;
+            }
+        }
+
+        private TranslationUnitResourceUsage _resourceUsage;
+        public TranslationUnitResourceUsage ResourceUsage
+        {
+            get
+            {
+                CXTUResourceUsage cXTUResourceUsage;
+                cXTUResourceUsage = clang.clang_getCXTUResourceUsage(this.Value);
+                this._resourceUsage = new TranslationUnitResourceUsage(cXTUResourceUsage);
+                return this._resourceUsage;
+            }
+        }
+
+        private CXReparse_Flags _defaultReparseFlags;
+        public CXReparse_Flags DefaultReparseFlags
+        {
+            get
+            {
+
+                this._defaultReparseFlags = (CXReparse_Flags)clang.clang_defaultReparseOptions(this.Value);
+                return this._defaultReparseFlags;
+            }
+        }
+
+
+        public void Reparse(UnsavedFile[] unsavedFiles, CXReparse_Flags reparseFlags)
+        {
+            clang.clang_reparseTranslationUnit(this.Value, (uint)unsavedFiles.Length, unsavedFiles.Select(x => x.Value).ToArray(), (uint)reparseFlags);
+        }
+
+        public void Save(string fileName,CXSaveTranslationUnit_Flags saveTranslationUnit_Flags)
+        {
+            clang.clang_saveTranslationUnit(this.Value, fileName, (uint)saveTranslationUnit_Flags);
+        }
+
+        private string _spelling;
+        public string Spelling
+        {
+            get
+            {
+                if (this._spelling==null)
+                {
+                    this._spelling = clang.clang_getTranslationUnitSpelling(this.Value).ToStringAndDispose();
+                }
+                return this._spelling;
+            }
         }
 
         private Cursor _cursor;

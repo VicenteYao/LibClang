@@ -9,7 +9,7 @@ namespace LibClang.Intertop
          * whether the use of this entity will result in a warning or error due to
          * it being deprecated or unavailable.
          */
-    enum CXAvailabilityKind
+    public enum CXAvailabilityKind
     {
         /**
          * The entity is available.
