@@ -12,16 +12,13 @@ namespace LibClang
             this.Value = value;
         }
 
-        private static CXDiagnosticDisplayOptions? _CXDiagnosticDisplayOptions;
+        private static CXDiagnosticDisplayOptions _CXDiagnosticDisplayOptions;
         public static CXDiagnosticDisplayOptions DefaultDisplayOptions
         {
             get
             {
-                if (!_CXDiagnosticDisplayOptions.HasValue)
-                {
-                    _CXDiagnosticDisplayOptions = (CXDiagnosticDisplayOptions)clang.clang_defaultDiagnosticDisplayOptions();
-                }
-                return _CXDiagnosticDisplayOptions.Value;
+                _CXDiagnosticDisplayOptions = (CXDiagnosticDisplayOptions)clang.clang_defaultDiagnosticDisplayOptions();
+                return _CXDiagnosticDisplayOptions;
             }
         }
 
@@ -92,35 +89,25 @@ namespace LibClang
             clang.clang_disposeDiagnostic(this.Value);
         }
 
-        protected override bool EqualsCore(ClangObject<IntPtr> clangObject)
-        {
-            return this.Value == clangObject.Value;
-        }
 
-        private int? _category;
+        private int _category;
 
         public int Category
         {
             get
             {
-                if (!this._category.HasValue)
-                {
-                    this._category = (int)clang.clang_getDiagnosticCategory(this.Value);
-                }
-                return this._category.Value;
+                this._category = (int)clang.clang_getDiagnosticCategory(this.Value);
+                return this._category;
             }
         }
 
-        private CXDiagnosticSeverity? _severity;
+        private CXDiagnosticSeverity _severity;
         CXDiagnosticSeverity Severity
         {
             get
             {
-                if (!this._severity.HasValue)
-                {
-                    this._severity = clang.clang_getDiagnosticSeverity(this.Value);
-                }
-                return this._severity.Value;
+                this._severity = clang.clang_getDiagnosticSeverity(this.Value);
+                return this._severity;
             }
         }
 

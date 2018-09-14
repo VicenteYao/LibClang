@@ -25,9 +25,5 @@ namespace LibClang
             Marshal.FreeHGlobal(this.Value.Contents);
         }
 
-        protected override bool EqualsCore(ClangObject<CXUnsavedFile> clangObject)
-        {
-            return false;
-        }
     }
 }

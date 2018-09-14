@@ -25,10 +25,5 @@ namespace LibClang
                 return this._sourceLocation;
             }
         }
-
-        protected override bool EqualsCore(ClangObject<CXIdxLoc> clangObject)
-        {
-            return false;
-        }
     }
 }

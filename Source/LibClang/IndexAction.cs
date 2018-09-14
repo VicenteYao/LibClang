@@ -78,8 +78,10 @@ namespace LibClang
                  copy.parentEntity = pIndexEntityRefInfo->parentEntity;
                  copy.referencedEntity = pIndexEntityRefInfo->referencedEntity;
                  copy.role = pIndexEntityRefInfo->role;
-                 IndexEntityRefInfo indexEntityRefInfo = new IndexEntityRefInfo(copy);
-                 this._indexActionEventHandler?.OnIndexEntityRefInfo(indexEntityRefInfo);
+                 using (IndexEntityRefInfo indexEntityRefInfo = new IndexEntityRefInfo(copy))
+                 {
+                     this._indexActionEventHandler?.OnIndexEntityRefInfo(indexEntityRefInfo);
+                 } 
              }));
             this._indexerCallbacks.startedTranslationUnit = Marshal.GetFunctionPointerForDelegate(new startedTranslationUnit((clientData, reserved) =>
             {
@@ -137,9 +139,5 @@ namespace LibClang
 
         }
 
-        protected override bool EqualsCore(ClangObject<IntPtr> clangObject)
-        {
-            return this.Value == clangObject.Value;
-        }
     }
 }

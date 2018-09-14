@@ -8,7 +8,7 @@ namespace LibClang.Intertop
           * Describes the kind of error that occurred (if any) in a call to
           * \c clang_loadDiagnostics.
           */
-    enum CXLoadDiag_Error
+   public  enum CXLoadDiag_Error
     {
         /**
          * Indicates that no error occurred.

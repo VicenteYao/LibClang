@@ -25,9 +25,5 @@ namespace LibClang
 
         public bool IsImplicit { get; private set; }
 
-        protected override bool EqualsCore(ClangObject<CXIdxImportedASTFileInfo> clangObject)
-        {
-            return false;
-        }
     }
 }

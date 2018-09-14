@@ -5,7 +5,7 @@ using LibClang.Intertop;
 
 namespace LibClang
 {
-    public class CursorSet:ClangObject<IntPtr>
+    public class CursorSet : ClangObject<IntPtr>
     {
         public CursorSet()
         {
@@ -25,11 +25,6 @@ namespace LibClang
         protected override void Dispose()
         {
             clang.clang_disposeCXCursorSet(this.Value);
-        }
-
-        protected override bool EqualsCore(ClangObject<IntPtr> clangObject)
-        {
-            return this.Value == clangObject.Value;
         }
     }
 }

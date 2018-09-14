@@ -5,7 +5,7 @@ using LibClang.Intertop;
 
 namespace LibClang
 {
-    public unsafe class File : ClangObject<IntPtr>
+    public  class File : ClangObject<IntPtr>
     {
         internal File(IntPtr file)
         {

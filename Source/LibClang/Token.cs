@@ -74,10 +74,6 @@ namespace LibClang
             }
         }
 
-        protected override bool EqualsCore(ClangObject<CXToken> clangObject)
-        {
-            return this.Value.Equals(clangObject.Value);
-        }
 
         public override string ToString()
         {

@@ -17,9 +17,6 @@ namespace LibClang
         {
             clang.clang_disposeCXTUResourceUsage(this.Value);
         }
-        protected override bool EqualsCore(ClangObject<CXTUResourceUsage> clangObject)
-        {
-            return false;
-        }
+
     }
 }

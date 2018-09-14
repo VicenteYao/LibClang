@@ -88,9 +88,5 @@ namespace LibClang
         
         }
 
-        protected override bool EqualsCore(ClangObject<IntPtr> clangObject)
-        {
-            return this.Value == clangObject.Value;
-        }
     }
 }

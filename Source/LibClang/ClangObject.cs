@@ -46,7 +46,10 @@ namespace LibClang
             return !left.Equals(right);
         }
 
-        protected abstract bool EqualsCore(ClangObject<T> clangObject);
+        protected virtual bool EqualsCore(ClangObject<T> clangObject)
+        {
+            return this.Value.Equals(clangObject.Value);
+        }
 
         public override int GetHashCode()
         {

@@ -7,7 +7,7 @@ namespace LibClang.Intertop
     /**
             * Data for IndexerCallbacks#indexEntityReference.
             */
-    public struct CXIdxEntityRefInfo
+    public unsafe struct CXIdxEntityRefInfo
     {
       public   CXIdxEntityRefKind kind;
         /**
@@ -18,8 +18,8 @@ namespace LibClang.Intertop
         /**
          * The entity that gets referenced.
          */
-        /* CXIdxEntityInfo*/
-        public IntPtr referencedEntity;
+
+        public  CXIdxEntityInfo* referencedEntity;
         /**
          * Immediate "parent" of the reference. For example:
          *
@@ -31,13 +31,11 @@ namespace LibClang.Intertop
          * For references inside statement bodies of functions/methods,
          * the parentEntity will be the function/method.
          */
-        /*CXIdxEntityInfo*/
-        public IntPtr parentEntity;
+        public CXIdxEntityInfo* parentEntity;
         /**
          * Lexical container context of the reference.
          */
-        /*CXIdxContainerInfo*/
-        public IntPtr container;
+        public CXIdxContainerInfo* container;
         /**
          * Sets of symbol roles of the reference.
          */

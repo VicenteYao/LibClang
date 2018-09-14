@@ -181,7 +181,7 @@ namespace LibClang
             CXToken* pToken = null;
             uint tokenCount = 0;
             clang.clang_tokenize(this.Value, sourceRange.Value, out pToken, out tokenCount);
-            return new TokenList(this, pToken, tokenCount);
+            return new TokenList(this, pToken, (int)tokenCount);
         }
 
         public void AnnotateTokens(Token[] tokens, Cursor[] cursors)
@@ -261,12 +261,6 @@ namespace LibClang
                 topleverHeaders[i] = new File(clang.clang_Module_getTopLevelHeader(this.Value, module.Value, i));
             }
             return topleverHeaders;
-        }
-
-
-        protected override bool EqualsCore(ClangObject<IntPtr> clangObject)
-        {
-            return this.Value == clangObject.Value;
         }
 
         [StructLayout(LayoutKind.Sequential)]

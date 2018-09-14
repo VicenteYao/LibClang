@@ -111,8 +111,8 @@ namespace LibClang
             }
         }
 
-        private Cursor[] overridesCursors;
-        public unsafe Cursor[] OverridesCursors
+        private OverriddenCursors overridesCursors;
+        public unsafe OverriddenCursors OverridesCursors
         {
             get
             {
@@ -121,18 +121,8 @@ namespace LibClang
                     CXCursor* pCursors = (CXCursor*)0;
                     uint cursorsCount = 0;
                     clang.clang_getOverriddenCursors(this.Value, out pCursors, out cursorsCount);
-                    if (pCursors == (CXCursor*)0)
-                    {
-                        this.overridesCursors = new Cursor[0];
-                        goto LEnd;
-                    }
-                    this.overridesCursors = new Cursor[cursorsCount];
-                    for (uint i = 0; i < cursorsCount; i++)
-                    {
-                        this.overridesCursors[i] = new Cursor(pCursors[i]);
-                    }
+                    this.overridesCursors = new OverriddenCursors(pCursors, (int)cursorsCount);
                 }
-            LEnd:
                 return overridesCursors;
             }
         }

@@ -6,13 +6,13 @@ namespace LibClang.Intertop
 {
     public unsafe struct CXIdxEntityInfo
     {
-        CXIdxEntityKind kind;
-        CXIdxEntityCXXTemplateKind templateKind;
-        CXIdxEntityLanguage lang;
-        sbyte* name;
-        sbyte* USR;
-        CXCursor cursor;
-        CXIdxAttrInfo* attributes;
-        uint numAttributes;
+        public CXIdxEntityKind kind;
+        public CXIdxEntityCXXTemplateKind templateKind;
+        public CXIdxEntityLanguage lang;
+        public IntPtr name;
+        public IntPtr USR;
+        public CXCursor cursor;
+        public CXIdxAttrInfo* attributes;
+        public uint numAttributes;
     }
 }

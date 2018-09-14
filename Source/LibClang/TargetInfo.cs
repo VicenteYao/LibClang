@@ -22,11 +22,6 @@ namespace LibClang
             clang.clang_TargetInfo_dispose(this.Value);
         }
 
-        protected override bool EqualsCore(ClangObject<IntPtr> clangObject)
-        {
-            return this.Value == clangObject.Value;
-        }
-
         public int PointerWidth
         {
             get;

@@ -7,81 +7,46 @@ using LibClang.Intertop;
 
 namespace LibClang
 {
-    public class DiagnosticSet : ClangObject<IntPtr>, IReadOnlyList<Diagnostic>, IEnumerable<Diagnostic>
+    public class DiagnosticSet : ClangObjectList<Diagnostic, IntPtr>, IReadOnlyList<Diagnostic>
     {
         internal DiagnosticSet(IntPtr value)
         {
             this.Value = value;
+            this._count = (int)clang.clang_getNumDiagnosticsInSet(this.Value);
         }
 
-        public static bool TryLoadDiagnostics(string fileName, out DiagnosticSet diagnosticSet)
+        private int _count;
+
+        public static bool TryLoadDiagnostics(string fileName, out DiagnosticSet diagnosticSet, out CXLoadDiag_Error error)
         {
-            CXLoadDiag_Error loadDiag_Error = CXLoadDiag_Error.CXLoadDiag_None;
+            error = CXLoadDiag_Error.CXLoadDiag_None;
             CXString cXString;
             diagnosticSet = null;
-            IntPtr diagnostic = clang.clang_loadDiagnostics(fileName, out loadDiag_Error, out cXString);
-            if (diagnostic != IntPtr.Zero)
+            IntPtr diagnostic = clang.clang_loadDiagnostics(fileName, out error, out cXString);
+            if (diagnostic == IntPtr.Zero)
             {
-                diagnosticSet = new DiagnosticSet(diagnostic);
+                return false;
             }
-            return diagnostic != IntPtr.Zero;
+            diagnosticSet = new DiagnosticSet(diagnostic);
+            return true;
         }
 
-        private ReadOnlyCollection<Diagnostic> diagnostics;
-
-        protected ReadOnlyCollection<Diagnostic> Diagnostics
-        {
-            get
-            {
-                if (this.diagnostics == null)
-                {
-                    uint count = clang.clang_getNumDiagnosticsInSet(this.Value);
-                    Diagnostic[] diagnosticArray = new Diagnostic[count];
-                    for (uint i = 0; i < count; i++)
-                    {
-                        IntPtr pDiagnostic = clang.clang_getDiagnosticInSet(this.Value, i);
-                        diagnosticArray[i] = new Diagnostic(pDiagnostic);
-                    }
-                    this.diagnostics = new ReadOnlyCollection<Diagnostic>(diagnosticArray);
-                }
-                return this.diagnostics;
-            }
-        }
-
-        public Diagnostic this[int index]
-        {
-            get
-            {
-                return this.Diagnostics[index];
-            }
-        }
-
-        public int Count
-        {
-            get
-            {
-                return this.Diagnostics.Count;
-            }
-        }
-
-        public IEnumerator<Diagnostic> GetEnumerator()
-        {
-            return this.Diagnostics.GetEnumerator();
-        }
 
         protected override void Dispose()
         {
             clang.clang_disposeDiagnosticSet(this.Value);
         }
 
-        protected override bool EqualsCore(ClangObject<IntPtr> clangObject)
+        protected override int GetCountCore()
         {
-            return this.Value == clangObject.Value;
+            return this._count;
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
+        protected override Diagnostic EnsureItemAt(int index)
         {
-            return this.GetEnumerator();
+            IntPtr pDiagnostic = clang.clang_getDiagnosticInSet(this.Value, (uint)index);
+            return new Diagnostic(pDiagnostic);
         }
+
     }
 }

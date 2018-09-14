@@ -43,10 +43,5 @@ namespace LibClang
         {
             clang.clang_remap_dispose(this.Value);
         }
-
-        protected override bool EqualsCore(ClangObject<IntPtr> clangObject)
-        {
-            return this.Value == clangObject.Value;
-        }
     }
 }
