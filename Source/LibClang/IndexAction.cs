@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using LibClang.Intertop;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace LibClang
 {
@@ -14,129 +15,154 @@ namespace LibClang
         {
             this._indexActionEventHandler = indexActionEventHandler;
             this.Value = value;
-            EnsureCallbacks();
+            this.EnsureCallbacks();
         }
         private IndexerCallbacks _indexerCallbacks = default(IndexerCallbacks);
         private IIndexActionEventHandler _indexActionEventHandler;
 
+        private abortQuery abortQuery;
+        private diagnostic diagnostic;
+        private enteredMainFile enteredMainFile;
+        private importedASTFile importedASTFile;
+        private ppIncludedFile ppIncludedFile;
+        private indexDeclaration indexDeclaration;
+        private indexEntityReference indexEntityReference;
+        private startedTranslationUnit startedTranslationUnit;
+
         private unsafe void EnsureCallbacks()
         {
-           this._indexerCallbacks.abortQuery = Marshal.GetFunctionPointerForDelegate(new abortQuery((clientData, reserve) =>
-            {
-                if (this._indexActionEventHandler!=null)
-                {
-                    return this._indexActionEventHandler.OnQueryAbort() ? 1 : 0;
-                }
-                return 1;
-            }));
-            this._indexerCallbacks.diagnostic = Marshal.GetFunctionPointerForDelegate(new diagnostic((clientData, diagnostic, reserve) =>
-            {
-                using (DiagnosticSet diagnostics = new DiagnosticSet(diagnostic))
-                {
-                    this._indexActionEventHandler?.OnDiagnostic(diagnostics);
-                }  
-            }));
 
-            this._indexerCallbacks.enteredMainFile = Marshal.GetFunctionPointerForDelegate(new enteredMainFile((clientFile, cxFile, reserve) =>
-            {
-                using (File file = new File(cxFile))
-                {
-                    File result = this._indexActionEventHandler?.OnEnteredMainFile(file);
+            this.abortQuery = new abortQuery(HandleAbortQuery);
+            this.diagnostic = new diagnostic(HandleDiagnostic);
+            this.enteredMainFile = new enteredMainFile(HandleEnteredMainFile);
+            this.importedASTFile = new importedASTFile(HandleImportedASTFile);
+            this.ppIncludedFile = new ppIncludedFile(HandlePPIncludedFile);
+            this.indexDeclaration = new indexDeclaration(HandleIndexDeclaration);
+            this.indexEntityReference = new indexEntityReference(HandleEntityReference);
+            this.startedTranslationUnit = new startedTranslationUnit(HandleStartedTranslationUnit);
 
-                    return result == null ? IntPtr.Zero : result.Value;
-                }
-            }));
-
-            this._indexerCallbacks.importedASTFile = Marshal.GetFunctionPointerForDelegate(new importedASTFile((clientData, reserve) =>
-            {
-                return IntPtr.Zero;
-            }));
-
-            this._indexerCallbacks.includedFile = Marshal.GetFunctionPointerForDelegate(new ppIncludedFile((clientData, fileInfo) =>
-            {
-                CXIdxIncludedFileInfo* cXIdxIncludedFileInfo = (CXIdxIncludedFileInfo*)fileInfo;
-                IndexIncludedFileInfo indexIncludedFileInfo = new IndexIncludedFileInfo(cXIdxIncludedFileInfo);
-                File result = this._indexActionEventHandler?.OnIncludeFile(indexIncludedFileInfo);
-                return result == null ? IntPtr.Zero : result.Value;
-            }));
-
-            this._indexerCallbacks.indexDeclaration = Marshal.GetFunctionPointerForDelegate(new indexDeclaration((clientData, declInfo) =>
-             {
-                 //CXIdxDeclInfo* pIndexDeclInfo = (CXIdxDeclInfo*)declInfo;
-                 //IndexDeclInfo indexDeclInfo = new IndexDeclInfo(*pIndexDeclInfo);
-                 //this._indexActionEventHandler?.OnIndexDeclaration(indexDeclInfo);
-             }));
-
-            this._indexerCallbacks.indexEntityReference = Marshal.GetFunctionPointerForDelegate(new indexEntityReference((clientData, refInfo) =>
-             {
-                 CXIdxEntityRefInfo* pIndexEntityRefInfo = (CXIdxEntityRefInfo*)refInfo;
-                 CXIdxEntityRefInfo  copy= new CXIdxEntityRefInfo();
-                 copy.container = pIndexEntityRefInfo->container;
-                 copy.cursor = pIndexEntityRefInfo->cursor;
-                 copy.kind = pIndexEntityRefInfo->kind;
-                 copy.loc = pIndexEntityRefInfo->loc;
-                 copy.parentEntity = pIndexEntityRefInfo->parentEntity;
-                 copy.referencedEntity = pIndexEntityRefInfo->referencedEntity;
-                 copy.role = pIndexEntityRefInfo->role;
-                 using (IndexEntityRefInfo indexEntityRefInfo = new IndexEntityRefInfo(copy))
-                 {
-                     this._indexActionEventHandler?.OnIndexEntityRefInfo(indexEntityRefInfo);
-                 } 
-             }));
-            this._indexerCallbacks.startedTranslationUnit = Marshal.GetFunctionPointerForDelegate(new startedTranslationUnit((clientData, reserved) =>
-            {
-                
-                return IntPtr.Zero;
-            }));
+            this._indexerCallbacks.abortQuery = Marshal.GetFunctionPointerForDelegate(this.abortQuery);
+            this._indexerCallbacks.diagnostic = Marshal.GetFunctionPointerForDelegate(this.diagnostic);
+            this._indexerCallbacks.enteredMainFile = Marshal.GetFunctionPointerForDelegate(this.enteredMainFile);
+            this._indexerCallbacks.importedASTFile = Marshal.GetFunctionPointerForDelegate(this.importedASTFile);
+            this._indexerCallbacks.includedFile = Marshal.GetFunctionPointerForDelegate(this.ppIncludedFile);
+            this._indexerCallbacks.indexDeclaration = Marshal.GetFunctionPointerForDelegate(this.indexDeclaration);
+            this._indexerCallbacks.indexEntityReference = Marshal.GetFunctionPointerForDelegate(this.indexEntityReference);
+            this._indexerCallbacks.startedTranslationUnit = Marshal.GetFunctionPointerForDelegate(this.startedTranslationUnit);
         }
 
+        private IntPtr HandleStartedTranslationUnit(IntPtr client_data, IntPtr reserved)
+        {
+            this._indexActionEventHandler?.OnStartTranslationUnit();
+            return IntPtr.Zero;
+        }
 
+        private unsafe void HandleEntityReference(IntPtr client_data, IntPtr refInfo)
+        {
+            CXIdxEntityRefInfo* pIndexEntityRefInfo = (CXIdxEntityRefInfo*)refInfo;
+            using (IndexEntityRefInfo indexEntityRefInfo = new IndexEntityRefInfo(*pIndexEntityRefInfo))
+            {
+                this._indexActionEventHandler?.OnIndexEntityRefInfo(indexEntityRefInfo);
+            }
+        }
+
+        private unsafe void HandleIndexDeclaration(IntPtr client_data, IntPtr declInfo)
+        {
+            CXIdxDeclInfo* pIndexDeclInfo = (CXIdxDeclInfo*)declInfo;
+            IndexDeclInfo indexDeclInfo = new IndexDeclInfo(*pIndexDeclInfo);
+            this._indexActionEventHandler?.OnIndexDeclaration(indexDeclInfo);
+        }
+
+        private unsafe IntPtr HandlePPIncludedFile(IntPtr client_data, IntPtr fileInfo)
+        {
+            CXIdxIncludedFileInfo* cXIdxIncludedFileInfo = (CXIdxIncludedFileInfo*)fileInfo;
+            IndexIncludedFileInfo indexIncludedFileInfo = new IndexIncludedFileInfo(cXIdxIncludedFileInfo);
+            File result = this._indexActionEventHandler?.OnIncludeFile(indexIncludedFileInfo);
+            return result == null ? IntPtr.Zero : result.Value;
+        }
+
+        private IntPtr HandleImportedASTFile(IntPtr client_data, IntPtr fileInfo)
+        {
+            return IntPtr.Zero;
+        }
+
+        private IntPtr HandleEnteredMainFile(IntPtr client_data, IntPtr mainFile, IntPtr reserved)
+        {
+            using (File file = new File(mainFile))
+            {
+                File result = this._indexActionEventHandler?.OnEnteredMainFile(file);
+                return result == null ? IntPtr.Zero : result.Value;
+            }
+        }
+
+        private void HandleDiagnostic(IntPtr client_data, IntPtr set, IntPtr reserved)
+        {
+            using (DiagnosticSet diagnostics = new DiagnosticSet(set))
+            {
+                this._indexActionEventHandler?.OnDiagnostic(diagnostics);
+            }
+        }
+
+        private int HandleAbortQuery(IntPtr client_data, IntPtr reserved)
+        {
+            if (this._indexActionEventHandler != null)
+            {
+                return this._indexActionEventHandler.OnQueryAbort() ? 1 : 0;
+            }
+            return 1;
+        }
 
         protected override void Dispose()
         {
             clang.clang_IndexAction_dispose(this.Value);
         }
 
-        public unsafe bool Index(TranslationUnit translationUnit, CXIndexOptFlags indexOptFlags)
+        public unsafe CXErrorCode Index(TranslationUnit translationUnit, CXIndexOptFlags indexOptFlags)
         {
-            using (Pointer<IndexerCallbacks> ptrIndexerCallbacks=new Pointer<IndexerCallbacks>(this._indexerCallbacks))
+            using (Pointer<IndexerCallbacks> ptrIndexerCallbacks = new Pointer<IndexerCallbacks>(this._indexerCallbacks))
             {
-                return clang.clang_indexTranslationUnit(this.Value,
+                CXErrorCode errorCode = (CXErrorCode)clang.clang_indexTranslationUnit(this.Value,
                     IntPtr.Zero,
                     ptrIndexerCallbacks,
                     (uint)(ptrIndexerCallbacks.Size),
-                    (uint)indexOptFlags, translationUnit.Value) > 0;
+                    (uint)indexOptFlags, translationUnit.Value);
+                return errorCode;
             }
         }
 
-        public void IndexSourceFile(string sourceFile,string[] cmdLineArgs,UnsavedFile[] unsavedFiles,CXIndexOptFlags indexOptFlags,CXTranslationUnit_Flags translationUnit_Flags)
+        public CXErrorCode IndexSourceFile(string sourceFile, out TranslationUnit translationUnit, string[] cmdLineArgs, UnsavedFile[] unsavedFiles, CXIndexOptFlags indexOptFlags, CXTranslationUnit_Flags translationUnit_Flags)
         {
-            if (cmdLineArgs==null)
+            translationUnit = null;
+            if (cmdLineArgs == null)
             {
                 cmdLineArgs = new string[0];
             }
-            if (unsavedFiles==null)
+            if (unsavedFiles == null)
             {
                 unsavedFiles = new UnsavedFile[0];
             }
             using (Pointer<IndexerCallbacks> ptrIndexerCallbacks = new Pointer<IndexerCallbacks>(this._indexerCallbacks))
             {
                 IntPtr pTU = IntPtr.Zero;
-                clang.clang_indexSourceFile(this.Value,
-                    IntPtr.Zero,
-                    ptrIndexerCallbacks,
-                    (uint)(ptrIndexerCallbacks.Size), 
-                    (uint)indexOptFlags,
-                    sourceFile,
-                    cmdLineArgs,
-                    cmdLineArgs.Length,
-                    unsavedFiles.Select(x => x.Value).ToArray(),
-                    (uint)unsavedFiles.Length,
-                    out pTU,
-                      (uint)translationUnit_Flags
-                    );
+                CXErrorCode errorCode = (CXErrorCode)clang.clang_indexSourceFile(this.Value,
+                     IntPtr.Zero,
+                     ptrIndexerCallbacks,
+                     (uint)(ptrIndexerCallbacks.Size),
+                     (uint)indexOptFlags,
+                     sourceFile,
+                     cmdLineArgs,
+                     cmdLineArgs.Length,
+                     unsavedFiles.Select(x => x.Value).ToArray(),
+                     (uint)unsavedFiles.Length,
+                     out pTU,
+                       (uint)translationUnit_Flags
+                     );
+                if (pTU != IntPtr.Zero)
+                {
+                    translationUnit = new TranslationUnit(pTU);
+                }
+                return errorCode;
             }
-
         }
 
     }

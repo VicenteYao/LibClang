@@ -36,7 +36,10 @@ namespace LibClang
             {
                 if (this.parentEntiry == null)
                 {
-                    this.parentEntiry = new IndexEntityInfo((IntPtr)this.Value.parentEntity);
+                    if (this.Value.referencedEntity != (CXIdxEntityInfo*)0)
+                    {
+                        this.parentEntiry = new IndexEntityInfo((IntPtr)this.Value.parentEntity);
+                    }
                 }
                 return this.parentEntiry;
             }
@@ -49,22 +52,12 @@ namespace LibClang
             {
                 if (this.referencedEntity == null)
                 {
-                    this.referencedEntity = new IndexEntityInfo((IntPtr)this.Value.parentEntity);
+                    if (this.Value.referencedEntity != (CXIdxEntityInfo*)0)
+                    {
+                        this.referencedEntity = new IndexEntityInfo((IntPtr)this.Value.referencedEntity);
+                    }
                 }
                 return this.referencedEntity;
-            }
-        }
-
-        private IndexLocation location;
-        public IndexLocation Location
-        {
-            get
-            {
-                if (this.location == null)
-                {
-                    this.location = new IndexLocation(this.Value.loc);
-                }
-                return this.location;
             }
         }
 

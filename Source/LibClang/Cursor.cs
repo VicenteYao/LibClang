@@ -377,5 +377,10 @@ namespace LibClang
         {
             return clang.clang_equalCursors(this.Value, clangObject.Value) > 0;
         }
+
+        public override string ToString()
+        {
+            return string.Format("{0}{1}", this.DisplayName, this.SourceLocation);
+        }
     }
 }

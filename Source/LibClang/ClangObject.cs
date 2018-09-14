@@ -30,7 +30,7 @@ namespace LibClang
 
         public static bool operator ==(ClangObject<T> left, ClangObject<T> right)
         {
-            if (object.ReferenceEquals(left, null) && object.ReferenceEquals(left, right))
+            if ((object.ReferenceEquals(left, null) || object.ReferenceEquals(right, null)) && object.ReferenceEquals(left, right))
             {
                 return true;
             }
@@ -39,7 +39,7 @@ namespace LibClang
 
         public static bool operator !=(ClangObject<T> left, ClangObject<T> right)
         {
-            if (object.ReferenceEquals(left, null) && object.ReferenceEquals(left, right))
+            if ((object.ReferenceEquals(left, null) || object.ReferenceEquals(right, null)) && object.ReferenceEquals(left, right))
             {
                 return false;
             }

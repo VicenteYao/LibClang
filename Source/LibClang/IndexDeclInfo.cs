@@ -13,13 +13,13 @@ namespace LibClang
         }
 
         private IndexEntityInfo entityInfo;
-        public IndexEntityInfo EntityInfo
+        public unsafe IndexEntityInfo EntityInfo
         {
             get
             {
                 if (this.entityInfo == null)
                 {
-                    this.entityInfo = new IndexEntityInfo(this.Value.entityInfo);
+                    this.entityInfo = new IndexEntityInfo((IntPtr)this.Value.entityInfo);
                 }
                 return this.entityInfo;
             }

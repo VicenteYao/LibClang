@@ -12,7 +12,7 @@ namespace LibClang.Intertop
           * A value of this enumeration type can be returned if the target type is not
           * a valid argument to sizeof, alignof or offsetof.
           */
-    enum CXTypeLayoutError
+    public  enum CXTypeLayoutError
     {
         /**
          * Type is of kind CXType_Invalid.

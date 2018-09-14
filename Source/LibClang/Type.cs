@@ -12,16 +12,13 @@ namespace LibClang
             this.Value = type;
         }
 
-        private uint? _addressSpace;
+        private uint _addressSpace;
         public uint AddressSpace
         {
             get
             {
-                if (!this._addressSpace.HasValue)
-                {
-                    this._addressSpace = clang.clang_getAddressSpace(this.Value);
-                }
-                return this._addressSpace.Value;
+                this._addressSpace = clang.clang_getAddressSpace(this.Value);
+                return this._addressSpace;
             }
         }
         
@@ -36,7 +33,7 @@ namespace LibClang
                     int type = clang.clang_getExceptionSpecificationType(this.Value);
                     if (type == -1)
                     {
-                        throw new InvalidOperationException();
+                        this.exceptionSpecificationType = (CXCursor_ExceptionSpecificationKind)CXCursor_ExceptionSpecificationKind.CXCursor_ExceptionSpecificationKind_None;
                     }
                     else
                     {
@@ -47,16 +44,13 @@ namespace LibClang
             }
         }
 
-        private CXCallingConv? callingConv;
+        private CXCallingConv callingConv;
         public CXCallingConv FunctionTypeCallingConversation
         {
             get
             {
-                if (!this.callingConv.HasValue)
-                {
-                    this.callingConv = clang.clang_getFunctionTypeCallingConv(this.Value);
-                }
-                return this.callingConv.Value;
+                this.callingConv = clang.clang_getFunctionTypeCallingConv(this.Value);
+                return this.callingConv;
             }
         }
 
@@ -69,23 +63,19 @@ namespace LibClang
             {
                 if (this._arrayElementType == null)
                 {
-
                     this._arrayElementType = new Type(clang.clang_getArrayElementType(this.Value));
                 }
                 return this._arrayElementType;
             }
         }
 
-        public long? arraySize;
+        public long arraySize;
         public long ArraySize
         {
             get
             {
-                if (!this.arraySize.HasValue)
-                {
-                    this.arraySize = clang.clang_getArraySize(this.Value);
-                }
-                return this.arraySize.Value;
+                this.arraySize = clang.clang_getArraySize(this.Value);
+                return this.arraySize;
             }
         }
 
@@ -212,6 +202,29 @@ namespace LibClang
         {
             return clang.clang_equalTypes(this.Value, clangObject.Value) > 0;
         }
+
+
+        public long SizeOf
+        {
+            get
+            {
+                return clang.clang_Type_getSizeOf(this.Value);
+            }
+        }
+
+        public long Align
+        {
+            get
+            {
+                return clang.clang_Type_getAlignOf(this.Value);
+            }
+        }
+
+        public long OffsetOf(string fieldName)
+        {
+            return clang.clang_Type_getOffsetOf(this.Value, fieldName);
+        }
+
 
       
     }

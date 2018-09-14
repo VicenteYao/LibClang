@@ -25,5 +25,10 @@ namespace LibClang
                 return this._sourceLocation;
             }
         }
+
+        public override string ToString()
+        {
+            return this.SourceLocation.ToString();
+        }
     }
 }

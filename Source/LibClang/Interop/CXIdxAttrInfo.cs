@@ -6,8 +6,8 @@ namespace LibClang.Intertop
 {
     public struct CXIdxAttrInfo
     {
-        CXIdxAttrKind kind;
-        CXCursor cursor;
-        CXIdxLoc loc;
+        public CXIdxAttrKind kind;
+        public CXCursor cursor;
+        public CXIdxLoc loc;
     }
 }
