@@ -1,19 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LibClang.Intertop
+﻿namespace LibClang.Intertop
 {
-    /**
-     * Identifies an array of ranges.
-     */
+    /// <summary>
+    /// Defines the <see cref="CXSourceRangeList" />
+    /// </summary>
     public unsafe struct CXSourceRangeList
     {
-        /** The number of ranges in the \c ranges array. */
+        /// <summary>
+        /// Defines the count
+        /// </summary>
         public uint count;
-        /**
-         * An array of \c CXSourceRanges.
-         */
+
+        /// <summary>
+        /// Defines the ranges
+        /// </summary>
         public CXSourceRange* ranges;
     }
 }

@@ -1,12 +1,16 @@
-﻿using LibClang.Intertop;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LibClang
+﻿namespace LibClang
 {
+    using LibClang.Intertop;
+
+    /// <summary>
+    /// Defines the <see cref="IndexIncludedFileInfo" />
+    /// </summary>
     public class IndexIncludedFileInfo
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="IndexIncludedFileInfo"/> class.
+        /// </summary>
+        /// <param name="cXIdxIncludedFileInfo">The cXIdxIncludedFileInfo<see cref="CXIdxIncludedFileInfo*"/></param>
         internal unsafe IndexIncludedFileInfo(CXIdxIncludedFileInfo* cXIdxIncludedFileInfo)
         {
             this.HashLocation = new IndexLocation(cXIdxIncludedFileInfo->hashLoc);
@@ -16,18 +20,34 @@ namespace LibClang
             this.FileName = new string(cXIdxIncludedFileInfo->filename);
         }
 
+        /// <summary>
+        /// Gets the HashLocation
+        /// </summary>
         public IndexLocation HashLocation { get; private set; }
 
+        /// <summary>
+        /// Gets the FileName
+        /// </summary>
         public string FileName { get; private set; }
 
+        /// <summary>
+        /// Gets the File
+        /// </summary>
         public File File { get; private set; }
 
+        /// <summary>
+        /// Gets a value indicating whether IsImport
+        /// </summary>
         public bool IsImport { get; private set; }
 
+        /// <summary>
+        /// Gets a value indicating whether IsAngled
+        /// </summary>
         public bool IsAngled { get; private set; }
 
+        /// <summary>
+        /// Gets a value indicating whether IsModuleImport
+        /// </summary>
         public bool IsModuleImport { get; private set; }
-          
-
     }
 }

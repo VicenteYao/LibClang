@@ -1,17 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LibClang.Intertop
+﻿namespace LibClang.Intertop
 {
-    /**
-    * Uniquely identifies a CXFile, that refers to the same underlying file,
-    * across an indexing session.
-    */
+    /// <summary>
+    /// Defines the <see cref="CXFileUniqueID" />
+    /// </summary>
     public struct CXFileUniqueID
     {
+        /// <summary>
+        /// Defines the data1
+        /// </summary>
         public ulong data1;
+
+        /// <summary>
+        /// Defines the data2
+        /// </summary>
         public ulong data2;
+
+        /// <summary>
+        /// Defines the data3
+        /// </summary>
         public ulong data3;
     }
 }

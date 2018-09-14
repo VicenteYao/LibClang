@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LibClang.Intertop
+﻿namespace LibClang.Intertop
 {
     /**
           * List the possible error codes for \c clang_Type_getSizeOf,
@@ -12,11 +8,11 @@ namespace LibClang.Intertop
           * A value of this enumeration type can be returned if the target type is not
           * a valid argument to sizeof, alignof or offsetof.
           */
-    public  enum CXTypeLayoutError
+    public enum CXTypeLayoutError
     {
         /**
-         * Type is of kind CXType_Invalid.
-         */
+                         * Type is of kind CXType_Invalid.
+                         */
         CXTypeLayoutError_Invalid = -1,
         /**
          * The type is an incomplete Type.

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LibClang.Intertop
+﻿namespace LibClang.Intertop
 {
     /**
   * @}
@@ -24,25 +20,21 @@ namespace LibClang.Intertop
     public enum CXTokenKind
     {
         /**
-         * A token that contains some kind of punctuation.
-         */
+                         * A token that contains some kind of punctuation.
+                         */
         CXToken_Punctuation,
-
         /**
          * A language keyword.
          */
         CXToken_Keyword,
-
         /**
          * An identifier (that is not a keyword).
          */
         CXToken_Identifier,
-
         /**
          * A numeric, string, or character literal.
          */
         CXToken_Literal,
-
         /**
          * A comment.
          */

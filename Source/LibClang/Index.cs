@@ -1,20 +1,37 @@
-﻿using System;
-using System.Runtime.InteropServices;
-using LibClang.Intertop;
-using System.Linq;
-
-namespace LibClang
+﻿namespace LibClang
 {
+    using LibClang.Intertop;
+    using System;
+    using System.Linq;
+
+    /// <summary>
+    /// Defines the <see cref="Index" />
+    /// </summary>
     public unsafe class Index : ClangObject
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Index"/> class.
+        /// </summary>
+        /// <param name="excludeDeclarationsFromPCH">The excludeDeclarationsFromPCH<see cref="bool"/></param>
+        /// <param name="displayDiagnostics">The displayDiagnostics<see cref="bool"/></param>
         public Index(bool excludeDeclarationsFromPCH, bool displayDiagnostics)
         {
             this.m_value = clang.clang_createIndex(excludeDeclarationsFromPCH ? 1 : 0, excludeDeclarationsFromPCH ? 1 : 0);
         }
 
+        /// <summary>
+        /// Defines the _globalOptFlags
+        /// </summary>
         private CXGlobalOptFlags _globalOptFlags;
+
+        /// <summary>
+        /// Defines the m_value
+        /// </summary>
         private IntPtr m_value;
 
+        /// <summary>
+        /// Gets or sets the GlobalOptFlags
+        /// </summary>
         public CXGlobalOptFlags GlobalOptFlags
         {
             get { return _globalOptFlags = (CXGlobalOptFlags)clang.clang_CXIndex_getGlobalOptions(this.m_value); }
@@ -26,8 +43,16 @@ namespace LibClang
             }
         }
 
+        /// <summary>
+        /// Gets the Value
+        /// </summary>
         protected internal override ValueType Value => throw new NotImplementedException();
 
+        /// <summary>
+        /// The CreateTranslationUnit
+        /// </summary>
+        /// <param name="astFileName">The astFileName<see cref="string"/></param>
+        /// <returns>The <see cref="TranslationUnit"/></returns>
         public TranslationUnit CreateTranslationUnit(string astFileName)
         {
             IntPtr pTranslationUnit = clang.clang_createTranslationUnit(this.m_value, astFileName);
@@ -38,6 +63,12 @@ namespace LibClang
             return new TranslationUnit(pTranslationUnit);
         }
 
+        /// <summary>
+        /// The CreateTranslationUnit
+        /// </summary>
+        /// <param name="astFileName">The astFileName<see cref="string"/></param>
+        /// <param name="errorCode">The errorCode<see cref="CXErrorCode"/></param>
+        /// <returns>The <see cref="TranslationUnit"/></returns>
         public TranslationUnit CreateTranslationUnit(string astFileName, out CXErrorCode errorCode)
         {
             IntPtr pTranslationUnit = IntPtr.Zero;
@@ -49,6 +80,13 @@ namespace LibClang
             return new TranslationUnit(pTranslationUnit);
         }
 
+        /// <summary>
+        /// The CreateTranslationUnit
+        /// </summary>
+        /// <param name="sourceFileName">The sourceFileName<see cref="string"/></param>
+        /// <param name="cmdArgs">The cmdArgs<see cref="string[]"/></param>
+        /// <param name="unsavedFiles">The unsavedFiles<see cref="UnsavedFile[]"/></param>
+        /// <returns>The <see cref="TranslationUnit"/></returns>
         public TranslationUnit CreateTranslationUnit(string sourceFileName, string[] cmdArgs, UnsavedFile[] unsavedFiles)
         {
             IntPtr pTranslationUnit = IntPtr.Zero;
@@ -68,6 +106,14 @@ namespace LibClang
             return new TranslationUnit(pTranslationUnit);
         }
 
+        /// <summary>
+        /// The Parse
+        /// </summary>
+        /// <param name="sourceFileName">The sourceFileName<see cref="string"/></param>
+        /// <param name="globalOptFlags">The globalOptFlags<see cref="CXGlobalOptFlags"/></param>
+        /// <param name="cmdLineArgs">The cmdLineArgs<see cref="string[]"/></param>
+        /// <param name="unsavedFiles">The unsavedFiles<see cref="UnsavedFile[]"/></param>
+        /// <returns>The <see cref="TranslationUnit"/></returns>
         public TranslationUnit Parse(string sourceFileName, CXGlobalOptFlags globalOptFlags, string[] cmdLineArgs, UnsavedFile[] unsavedFiles)
         {
             IntPtr pTranslationUnit = IntPtr.Zero;
@@ -79,7 +125,7 @@ namespace LibClang
             {
                 unsavedFiles = new UnsavedFile[0];
             }
-            pTranslationUnit = clang.clang_parseTranslationUnit(this.m_value, sourceFileName, cmdLineArgs, cmdLineArgs.Length, unsavedFiles.Select(x =>(CXUnsavedFile) x.Value).ToArray(), (uint)unsavedFiles.Length, (uint)globalOptFlags);
+            pTranslationUnit = clang.clang_parseTranslationUnit(this.m_value, sourceFileName, cmdLineArgs, cmdLineArgs.Length, unsavedFiles.Select(x => (CXUnsavedFile)x.Value).ToArray(), (uint)unsavedFiles.Length, (uint)globalOptFlags);
             if (pTranslationUnit == IntPtr.Zero)
             {
                 return null;
@@ -87,6 +133,15 @@ namespace LibClang
             return new TranslationUnit(pTranslationUnit);
         }
 
+        /// <summary>
+        /// The Parse
+        /// </summary>
+        /// <param name="sourceFileName">The sourceFileName<see cref="string"/></param>
+        /// <param name="globalOptFlags">The globalOptFlags<see cref="CXGlobalOptFlags"/></param>
+        /// <param name="cmdLineArgs">The cmdLineArgs<see cref="string[]"/></param>
+        /// <param name="unsavedFiles">The unsavedFiles<see cref="UnsavedFile[]"/></param>
+        /// <param name="errorCode">The errorCode<see cref="CXErrorCode"/></param>
+        /// <returns>The <see cref="TranslationUnit"/></returns>
         public TranslationUnit Parse(string sourceFileName, CXGlobalOptFlags globalOptFlags, string[] cmdLineArgs, UnsavedFile[] unsavedFiles, out CXErrorCode errorCode)
         {
             IntPtr pTranslationUnit = IntPtr.Zero;
@@ -106,6 +161,15 @@ namespace LibClang
             return new TranslationUnit(pTranslationUnit);
         }
 
+        /// <summary>
+        /// The ParseWithFullArguments
+        /// </summary>
+        /// <param name="sourceFileName">The sourceFileName<see cref="string"/></param>
+        /// <param name="globalOptFlags">The globalOptFlags<see cref="CXGlobalOptFlags"/></param>
+        /// <param name="cmdLineArgs">The cmdLineArgs<see cref="string[]"/></param>
+        /// <param name="unsavedFiles">The unsavedFiles<see cref="UnsavedFile[]"/></param>
+        /// <param name="errorCode">The errorCode<see cref="CXErrorCode"/></param>
+        /// <returns>The <see cref="TranslationUnit"/></returns>
         public TranslationUnit ParseWithFullArguments(string sourceFileName, CXGlobalOptFlags globalOptFlags, string[] cmdLineArgs, UnsavedFile[] unsavedFiles, out CXErrorCode errorCode)
         {
             IntPtr pTranslationUnit = IntPtr.Zero;
@@ -125,10 +189,11 @@ namespace LibClang
             return new TranslationUnit(pTranslationUnit);
         }
 
-
-
-
-
+        /// <summary>
+        /// The CreateIndexAction
+        /// </summary>
+        /// <param name="indexActionEventHandler">The indexActionEventHandler<see cref="IIndexActionEventHandler"/></param>
+        /// <returns>The <see cref="IndexAction"/></returns>
         public IndexAction CreateIndexAction(IIndexActionEventHandler indexActionEventHandler)
         {
             IntPtr pIndexAction = clang.clang_IndexAction_create(this.m_value);
@@ -139,11 +204,12 @@ namespace LibClang
             return new IndexAction(indexActionEventHandler, pIndexAction);
         }
 
-
+        /// <summary>
+        /// The Dispose
+        /// </summary>
         protected override void Dispose()
         {
             clang.clang_disposeIndex(this.m_value);
         }
-
     }
 }

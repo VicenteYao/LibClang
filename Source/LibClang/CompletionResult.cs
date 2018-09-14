@@ -1,27 +1,47 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Text;
-using LibClang.Intertop;
-
-namespace LibClang
+﻿namespace LibClang
 {
-     public class CompletionResult:ClangObject
+    using LibClang.Intertop;
+    using System;
+
+    /// <summary>
+    /// Defines the <see cref="CompletionResult" />
+    /// </summary>
+    public class CompletionResult : ClangObject
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CompletionResult"/> class.
+        /// </summary>
+        /// <param name="completionResult">The completionResult<see cref="CXCompletionResult"/></param>
+        /// <param name="fixIts">The fixIts<see cref="FixIt[]"/></param>
         internal CompletionResult(CXCompletionResult completionResult, FixIt[] fixIts)
         {
             this.FixIts = fixIts;
             this.CursorKind = completionResult.CursorKind;
         }
 
+        /// <summary>
+        /// Defines the m_value
+        /// </summary>
         private CXCompletionResult m_value;
 
+        /// <summary>
+        /// Gets the CursorKind
+        /// </summary>
         public CXCursorKind CursorKind { get; private set; }
 
+        /// <summary>
+        /// Gets the FixIts
+        /// </summary>
         public FixIt[] FixIts { get; private set; }
 
-
+        /// <summary>
+        /// Defines the _completionChunk
+        /// </summary>
         private CompletionChunkList _completionChunk;
+
+        /// <summary>
+        /// Gets the CompletionChunks
+        /// </summary>
         public unsafe CompletionChunkList CompletionChunks
         {
             get
@@ -34,8 +54,14 @@ namespace LibClang
             }
         }
 
+        /// <summary>
+        /// Defines the _annotations
+        /// </summary>
         private CompletionResultAnnotationList _annotations;
 
+        /// <summary>
+        /// Gets the Annotations
+        /// </summary>
         public CompletionResultAnnotationList Annotations
         {
             get
@@ -48,6 +74,12 @@ namespace LibClang
             }
         }
 
-        protected internal override ValueType Value { get { return this.m_value; } }
+        /// <summary>
+        /// Gets the Value
+        /// </summary>
+        protected internal override ValueType Value
+        {
+            get { return this.m_value; }
+        }
     }
 }

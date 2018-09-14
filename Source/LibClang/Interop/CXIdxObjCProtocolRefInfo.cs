@@ -1,13 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LibClang.Intertop
+﻿namespace LibClang.Intertop
 {
+    /// <summary>
+    /// Defines the <see cref="CXIdxObjCProtocolRefInfo" />
+    /// </summary>
     public struct CXIdxObjCProtocolRefInfo
     {
-        CXIdxEntityInfo protocol;
-        CXCursor cursor;
-        CXIdxLoc loc;
+        /// <summary>
+        /// Defines the protocol
+        /// </summary>
+        internal CXIdxEntityInfo protocol;
+
+        /// <summary>
+        /// Defines the cursor
+        /// </summary>
+        internal CXCursor cursor;
+
+        /// <summary>
+        /// Defines the loc
+        /// </summary>
+        internal CXIdxLoc loc;
     }
 }

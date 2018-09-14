@@ -1,34 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Runtime.InteropServices;
-
-namespace LibClang.Intertop
+﻿namespace LibClang.Intertop
 {
-    /**
-          * Provides the contents of a file that has not yet been saved to disk.
-          *
-          * Each CXUnsavedFile instance provides the name of a file on the
-          * system along with the current contents of that file that have not
-          * yet been saved to disk.
-          */
+    using System;
+
+    /// <summary>
+    /// Defines the <see cref="CXUnsavedFile" />
+    /// </summary>
     public unsafe struct CXUnsavedFile
     {
-        /**
-         * The file whose contents have not yet been saved.
-         *
-         * This file must already exist in the file system.
-         */
+        /// <summary>
+        /// Defines the Filename
+        /// </summary>
         public IntPtr Filename;
 
-        /**
-         * A buffer containing the unsaved contents of this file.
-         */
+        /// <summary>
+        /// Defines the Contents
+        /// </summary>
         public IntPtr Contents;
 
-        /**
-         * The length of the unsaved contents of this buffer.
-         */
+        /// <summary>
+        /// Defines the Length
+        /// </summary>
         public uint Length;
     }
 }

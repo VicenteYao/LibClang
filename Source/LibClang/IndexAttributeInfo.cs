@@ -1,20 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using LibClang.Intertop;
-
-namespace LibClang
+﻿namespace LibClang
 {
+    using LibClang.Intertop;
+    using System;
+
+    /// <summary>
+    /// Defines the <see cref="IndexAttributeInfo" />
+    /// </summary>
     public class IndexAttributeInfo : ClangObject
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="IndexAttributeInfo"/> class.
+        /// </summary>
+        /// <param name="attrInfo">The attrInfo<see cref="CXIdxAttrInfo"/></param>
         internal IndexAttributeInfo(CXIdxAttrInfo attrInfo)
         {
             this.m_value = attrInfo;
         }
 
+        /// <summary>
+        /// Defines the cursor
+        /// </summary>
         private Cursor cursor;
 
-        public  Cursor Cursor
+        /// <summary>
+        /// Gets the Cursor
+        /// </summary>
+        public Cursor Cursor
         {
             get
             {
@@ -26,10 +37,20 @@ namespace LibClang
             }
         }
 
+        /// <summary>
+        /// Defines the indexLocation
+        /// </summary>
         private IndexLocation indexLocation;
+
+        /// <summary>
+        /// Defines the m_value
+        /// </summary>
         private CXIdxAttrInfo m_value;
 
-        public  IndexLocation IndexLocation
+        /// <summary>
+        /// Gets the IndexLocation
+        /// </summary>
+        public IndexLocation IndexLocation
         {
             get
             {
@@ -41,6 +62,9 @@ namespace LibClang
             }
         }
 
+        /// <summary>
+        /// Gets the Kind
+        /// </summary>
         public CXIdxAttrKind Kind
         {
             get
@@ -49,6 +73,12 @@ namespace LibClang
             }
         }
 
-        protected internal override ValueType Value { get { return this.m_value; } }
+        /// <summary>
+        /// Gets the Value
+        /// </summary>
+        protected internal override ValueType Value
+        {
+            get { return this.m_value; }
+        }
     }
 }

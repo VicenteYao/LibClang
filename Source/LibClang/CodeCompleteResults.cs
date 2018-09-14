@@ -1,21 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using LibClang.Intertop;
-using System.Runtime.InteropServices;
-
-namespace LibClang
+﻿namespace LibClang
 {
+    using LibClang.Intertop;
+    using System;
+
+    /// <summary>
+    /// Defines the <see cref="CodeCompleteResults" />
+    /// </summary>
     public unsafe class CodeCompleteResults : ClangObject
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CodeCompleteResults"/> class.
+        /// </summary>
+        /// <param name="completeResults">The completeResults<see cref="CXCodeCompleteResults*"/></param>
         internal CodeCompleteResults(CXCodeCompleteResults* completeResults)
         {
             this.m_value = completeResults;
         }
 
+        /// <summary>
+        /// Defines the m_value
+        /// </summary>
         private CXCodeCompleteResults* m_value;
 
+        /// <summary>
+        /// Defines the completionResults
+        /// </summary>
         private CompletionResultList completionResults;
+
+        /// <summary>
+        /// Gets the CompletionResults
+        /// </summary>
         public unsafe CompletionResultList CompletionResults
         {
             get
@@ -28,12 +42,22 @@ namespace LibClang
             }
         }
 
+        /// <summary>
+        /// The Dispose
+        /// </summary>
         protected override void Dispose()
         {
             clang.clang_disposeCodeCompleteResults((CXCodeCompleteResults*)(IntPtr)this.m_value);
         }
 
+        /// <summary>
+        /// Defines the _diagnostics
+        /// </summary>
         private Diagnostic[] _diagnostics;
+
+        /// <summary>
+        /// Gets the Diagnostics
+        /// </summary>
         public Diagnostic[] Diagnostics
         {
             get
@@ -51,22 +75,41 @@ namespace LibClang
             }
         }
 
+        /// <summary>
+        /// Defines the context
+        /// </summary>
         private CXCompletionContext? context;
+
+        /// <summary>
+        /// Gets the Context
+        /// </summary>
         public CXCompletionContext Context
         {
             get
             {
                 if (!this.context.HasValue)
                 {
-                    
+
                     this.context = (CXCompletionContext)clang.clang_codeCompleteGetContexts(this.m_value);
                 }
                 return this.context.Value;
             }
         }
 
-        protected internal override ValueType Value { get { return (IntPtr)this.m_value; } }
+        /// <summary>
+        /// Gets the Value
+        /// </summary>
+        protected internal override ValueType Value
+        {
+            get { return (IntPtr)this.m_value; }
+        }
 
-
+        /// <summary>
+        /// The Sort
+        /// </summary>
+        public void Sort()
+        {
+            clang.clang_sortCodeCompletionResults(this.m_value->Results, this.m_value->NumResults);
+        }
     }
 }

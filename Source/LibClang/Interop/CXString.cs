@@ -1,20 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LibClang.Intertop
+﻿namespace LibClang.Intertop
 {
-    /**
-     * A character string.
-     *
-     * The \c CXString type is used to return strings from the interface when
-     * the ownership of that string might differ from one call to the next.
-     * Use \c clang_getCString() to retrieve the string data and, once finished
-     * with the string data, call \c clang_disposeString() to free the string.
-     */
+    using System;
+
+    /// <summary>
+    /// Defines the <see cref="CXString" />
+    /// </summary>
     public struct CXString
     {
-        IntPtr data;
-        uint private_flags;
+        /// <summary>
+        /// Defines the data
+        /// </summary>
+        internal IntPtr data;
+
+        /// <summary>
+        /// Defines the private_flags
+        /// </summary>
+        internal uint private_flags;
     }
 }

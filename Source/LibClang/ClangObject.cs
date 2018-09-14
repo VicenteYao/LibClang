@@ -1,23 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LibClang
+﻿namespace LibClang
 {
+    using System;
+
+    /// <summary>
+    /// Defines the <see cref="ClangObject" />
+    /// </summary>
     public abstract class ClangObject : IDisposable
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ClangObject"/> class.
+        /// </summary>
         internal ClangObject()
         {
-
         }
 
+        /// <summary>
+        /// Gets the Value
+        /// </summary>
         protected internal abstract ValueType Value { get; }
 
+        /// <summary>
+        /// The Dispose
+        /// </summary>
         protected virtual void Dispose()
         {
-
         }
 
+        /// <summary>
+        /// The Equals
+        /// </summary>
+        /// <param name="obj">The obj<see cref="object"/></param>
+        /// <returns>The <see cref="bool"/></returns>
         public override bool Equals(object obj)
         {
             if (obj is ClangObject)
@@ -27,6 +40,10 @@ namespace LibClang
             }
             return false;
         }
+
+
+
+
 
         public static bool operator ==(ClangObject left, ClangObject right)
         {
@@ -45,17 +62,28 @@ namespace LibClang
             }
             return !left.Equals(right);
         }
-
+        /// <summary>
+        /// The EqualsCore
+        /// </summary>
+        /// <param name="clangObject">The clangObject<see cref="ClangObject"/></param>
+        /// <returns>The <see cref="bool"/></returns>
         protected virtual bool EqualsCore(ClangObject clangObject)
         {
             return this.Value.Equals(clangObject.Value);
         }
 
+        /// <summary>
+        /// The GetHashCode
+        /// </summary>
+        /// <returns>The <see cref="int"/></returns>
         public override int GetHashCode()
         {
             return base.GetHashCode();
         }
 
+        /// <summary>
+        /// The Dispose
+        /// </summary>
         void IDisposable.Dispose()
         {
             this.Dispose();

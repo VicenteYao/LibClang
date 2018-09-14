@@ -1,27 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Text;
-using LibClang.Intertop;
-
-namespace LibClang
+﻿namespace LibClang
 {
+    using LibClang.Intertop;
+    using System;
+    using System.Runtime.InteropServices;
+
+    /// <summary>
+    /// Defines the <see cref="Cursor" />
+    /// </summary>
     public class Cursor : ClangObject
     {
+        /// <summary>
+        /// Initializes static members of the <see cref="Cursor"/> class.
+        /// </summary>
         static Cursor()
         {
             Cursor.Null = new Cursor(clang.clang_getNullCursor());
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Cursor"/> class.
+        /// </summary>
+        /// <param name="cursor">The cursor<see cref="CXCursor"/></param>
         internal Cursor(CXCursor cursor)
         {
             this.m_value = cursor;
         }
 
+        /// <summary>
+        /// Defines the m_value
+        /// </summary>
         private CXCursor m_value;
 
+        /// <summary>
+        /// Defines the _translationUnit
+        /// </summary>
         private TranslationUnit _translationUnit;
-        protected TranslationUnit TranslationUnit 
+
+        /// <summary>
+        /// Gets the TranslationUnit
+        /// </summary>
+        protected TranslationUnit TranslationUnit
         {
             get
             {
@@ -33,7 +51,42 @@ namespace LibClang
             }
         }
 
+        /// <summary>
+        /// Defines the platformAvailibility
+        /// </summary>
+        private PlatformAvailibility[] platformAvailibility;
 
+        /// <summary>
+        /// The GetPlatformAvailibility
+        /// </summary>
+        /// <returns>The <see cref="PlatformAvailibility[]"/></returns>
+        public PlatformAvailibility[] GetPlatformAvailibility()
+        {
+            if (this.platformAvailibility == null)
+            {
+                int always_deprecated;
+                CXString deprecated_message;
+                int always_unavailable;
+                CXString unavailable_message;
+                CXPlatformAvailability[] availability;
+                int availability_size = 0;
+                clang.clang_getCursorPlatformAvailability(this.m_value,
+                    out always_deprecated,
+                    out deprecated_message,
+                    out always_unavailable,
+                    out unavailable_message,
+                    out availability,
+                    availability_size);
+            }
+            return this.platformAvailibility;
+        }
+
+        /// <summary>
+        /// The FindReferencesInFiles
+        /// </summary>
+        /// <param name="file">The file<see cref="File"/></param>
+        /// <param name="searchFunc">The searchFunc<see cref="Func{Cursor, SourceRange, bool}"/></param>
+        /// <returns>The <see cref="CXResult"/></returns>
         public CXResult FindReferencesInFiles(File file, Func<Cursor, SourceRange, bool> searchFunc)
         {
             CXCursorAndRangeVisitor cursorAndRangeVisitor = default(CXCursorAndRangeVisitor);
@@ -51,8 +104,14 @@ namespace LibClang
             return clang.clang_findReferencesInFile(this.m_value, (IntPtr)file.Value, cursorAndRangeVisitor);
         }
 
+        /// <summary>
+        /// Gets the Null
+        /// </summary>
         public static Cursor Null { get; private set; }
 
+        /// <summary>
+        /// Gets a value indicating whether IsNull
+        /// </summary>
         public bool IsNull
         {
             get
@@ -61,14 +120,20 @@ namespace LibClang
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether IsAnonymous
+        /// </summary>
         public bool IsAnonymous
         {
             get
             {
-              return  clang.clang_Cursor_isAnonymous(this.m_value) > 0;
+                return clang.clang_Cursor_isAnonymous(this.m_value) > 0;
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether IsDynamicCall
+        /// </summary>
         public bool IsDynamicCall
         {
             get
@@ -77,6 +142,9 @@ namespace LibClang
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether IsFunctionInlined
+        /// </summary>
         public bool IsFunctionInlined
         {
             get
@@ -85,7 +153,14 @@ namespace LibClang
             }
         }
 
+        /// <summary>
+        /// Defines the cursorKind
+        /// </summary>
         private CXCursorKind cursorKind;
+
+        /// <summary>
+        /// Gets the CursorKind
+        /// </summary>
         public CXCursorKind CursorKind
         {
             get
@@ -95,7 +170,14 @@ namespace LibClang
             }
         }
 
+        /// <summary>
+        /// Defines the _arguments
+        /// </summary>
         private Cursor[] _arguments;
+
+        /// <summary>
+        /// Gets the Arguments
+        /// </summary>
         public Cursor[] Arguments
         {
             get
@@ -122,7 +204,14 @@ namespace LibClang
             }
         }
 
+        /// <summary>
+        /// Defines the overridesCursors
+        /// </summary>
         private OverriddenCursors overridesCursors;
+
+        /// <summary>
+        /// Gets the OverridesCursors
+        /// </summary>
         public unsafe OverriddenCursors OverridesCursors
         {
             get
@@ -135,12 +224,19 @@ namespace LibClang
             }
         }
 
+        /// <summary>
+        /// Defines the templateArguments
+        /// </summary>
         private CursorTemplateArguments templateArguments;
+
+        /// <summary>
+        /// Gets the TemplateArguments
+        /// </summary>
         public CursorTemplateArguments TemplateArguments
         {
             get
             {
-                if (this.templateArguments==null)
+                if (this.templateArguments == null)
                 {
                     this.templateArguments = new CursorTemplateArguments(this.m_value);
                 }
@@ -148,14 +244,21 @@ namespace LibClang
             }
         }
 
+        /// <summary>
+        /// Defines the _recieverType
+        /// </summary>
         private Type _recieverType;
+
+        /// <summary>
+        /// Gets the RecieverType
+        /// </summary>
         public Type RecieverType
         {
             get
             {
                 if (this._recieverType == null)
                 {
-                    if (this.m_value.kind== CXCursorKind.CXCursor_CXXMethod)
+                    if (this.m_value.kind == CXCursorKind.CXCursor_CXXMethod)
                     {
                         CXType receiverType = clang.clang_Cursor_getReceiverType(this.m_value);
 
@@ -167,9 +270,14 @@ namespace LibClang
             }
         }
 
-
+        /// <summary>
+        /// Defines the _module
+        /// </summary>
         private Module _module;
 
+        /// <summary>
+        /// Gets the Module
+        /// </summary>
         public Module Module
         {
             get
@@ -183,9 +291,14 @@ namespace LibClang
             }
         }
 
-
+        /// <summary>
+        /// Defines the _displayName
+        /// </summary>
         private string _displayName;
 
+        /// <summary>
+        /// Gets the DisplayName
+        /// </summary>
         public string DisplayName
         {
             get
@@ -198,12 +311,19 @@ namespace LibClang
             }
         }
 
+        /// <summary>
+        /// Defines the _typedefDeclUnderlyingType
+        /// </summary>
         private Type _typedefDeclUnderlyingType;
+
+        /// <summary>
+        /// Gets the TypedefDeclUnderlyingType
+        /// </summary>
         public Type TypedefDeclUnderlyingType
         {
             get
             {
-                if (this._typedefDeclUnderlyingType == null)
+                if (this._typedefDeclUnderlyingType == null && this.CursorKind == CXCursorKind.CXCursor_TypedefDecl)
                 {
                     this._typedefDeclUnderlyingType = new Type(clang.clang_getTypedefDeclUnderlyingType(this.m_value));
                 }
@@ -211,12 +331,19 @@ namespace LibClang
             }
         }
 
+        /// <summary>
+        /// Defines the _commentRange
+        /// </summary>
         private SourceRange _commentRange;
+
+        /// <summary>
+        /// Gets the CommentRange
+        /// </summary>
         public SourceRange CommentRange
         {
             get
             {
-                if (this._commentRange==null)
+                if (this._commentRange == null)
                 {
                     this._commentRange = new SourceRange(clang.clang_Cursor_getCommentRange(this.m_value));
                 }
@@ -224,7 +351,14 @@ namespace LibClang
             }
         }
 
+        /// <summary>
+        /// Defines the _sourceLocation
+        /// </summary>
         private SourceLocation _sourceLocation;
+
+        /// <summary>
+        /// Gets the SourceLocation
+        /// </summary>
         public SourceLocation SourceLocation
         {
             get
@@ -237,12 +371,19 @@ namespace LibClang
             }
         }
 
+        /// <summary>
+        /// Defines the _includedFile
+        /// </summary>
         private File _includedFile;
+
+        /// <summary>
+        /// Gets the IncludedFile
+        /// </summary>
         public File IncludedFile
         {
             get
             {
-                if (this._includedFile==null)
+                if (this._includedFile == null)
                 {
                     IntPtr pFile = clang.clang_getIncludedFile(this.m_value);
                     this._includedFile = new File(pFile);
@@ -251,13 +392,19 @@ namespace LibClang
             }
         }
 
+        /// <summary>
+        /// Defines the _CXXManglings
+        /// </summary>
         private string[] _CXXManglings;
 
+        /// <summary>
+        /// Gets the CXXManglings
+        /// </summary>
         public unsafe string[] CXXManglings
         {
             get
             {
-                if (this._CXXManglings==null)
+                if (this._CXXManglings == null)
                 {
                     this._CXXManglings = NativeMethodsHelper.ToStringArrayAndDispose(clang.clang_Cursor_getCXXManglings(this.m_value));
                 }
@@ -265,11 +412,19 @@ namespace LibClang
             }
         }
 
+        /// <summary>
+        /// Defines the _mangling
+        /// </summary>
         private string _mangling;
+
+        /// <summary>
+        /// Gets the Mangling
+        /// </summary>
         public string Mangling
         {
-            get {
-                if (this._mangling==null)
+            get
+            {
+                if (this._mangling == null)
                 {
                     this._mangling = clang.clang_Cursor_getMangling(this.m_value).ToStringAndDispose();
                 }
@@ -277,12 +432,19 @@ namespace LibClang
             }
         }
 
+        /// <summary>
+        /// Defines the _briefCommentText
+        /// </summary>
         private string _briefCommentText;
+
+        /// <summary>
+        /// Gets the BriefCommentText
+        /// </summary>
         public string BriefCommentText
         {
             get
             {
-                if (this._briefCommentText==null)
+                if (this._briefCommentText == null)
                 {
                     this._briefCommentText = clang.clang_Cursor_getBriefCommentText(this.m_value).ToStringAndDispose();
                 }
@@ -290,7 +452,14 @@ namespace LibClang
             }
         }
 
+        /// <summary>
+        /// Defines the _rawCommentText
+        /// </summary>
         private string _rawCommentText;
+
+        /// <summary>
+        /// Gets the RawCommentText
+        /// </summary>
         public string RawCommentText
         {
             get
@@ -303,8 +472,14 @@ namespace LibClang
             }
         }
 
-
+        /// <summary>
+        /// Defines the _storageClass
+        /// </summary>
         private CX_StorageClass _storageClass;
+
+        /// <summary>
+        /// Gets the StorageClass
+        /// </summary>
         public CX_StorageClass StorageClass
         {
             get
@@ -314,8 +489,14 @@ namespace LibClang
             }
         }
 
+        /// <summary>
+        /// Defines the _languageKind
+        /// </summary>
         private CXLanguageKind _languageKind;
 
+        /// <summary>
+        /// Gets the LanguageKind
+        /// </summary>
         public CXLanguageKind LanguageKind
         {
             get
@@ -325,7 +506,14 @@ namespace LibClang
             }
         }
 
+        /// <summary>
+        /// Defines the _visibility
+        /// </summary>
         private CXVisibilityKind _visibility;
+
+        /// <summary>
+        /// Gets the Visibility
+        /// </summary>
         public CXVisibilityKind Visibility
         {
             get
@@ -335,7 +523,65 @@ namespace LibClang
             }
         }
 
+        /// <summary>
+        /// Defines the tlsKind
+        /// </summary>
+        private CXTLSKind tlsKind;
+
+        /// <summary>
+        /// Gets the TlsKind
+        /// </summary>
+        public CXTLSKind TlsKind
+        {
+            get
+            {
+                this.tlsKind = clang.clang_getCursorTLSKind(this.m_value);
+                return this.tlsKind;
+            }
+        }
+
+        /// <summary>
+        /// Defines the hasAttributes
+        /// </summary>
+        private bool hasAttributes;
+
+        /// <summary>
+        /// Gets a value indicating whether HasAttributes
+        /// </summary>
+        public bool HasAttributes
+        {
+            get
+            {
+                this.hasAttributes = clang.clang_Cursor_hasAttrs(this.m_value) > 0;
+                return this.hasAttributes;
+            }
+        }
+
+        /// <summary>
+        /// Defines the isInvalidDeclaration
+        /// </summary>
+        private bool isInvalidDeclaration;
+
+        /// <summary>
+        /// Gets a value indicating whether IsInvalidDeclaration
+        /// </summary>
+        public bool IsInvalidDeclaration
+        {
+            get
+            {
+                this.isInvalidDeclaration = clang.clang_isInvalidDeclaration(this.m_value) > 0;
+                return this.isInvalidDeclaration;
+            }
+        }
+
+        /// <summary>
+        /// Defines the _availability
+        /// </summary>
         private CXAvailabilityKind _availability;
+
+        /// <summary>
+        /// Gets the Availability
+        /// </summary>
         public CXAvailabilityKind Availability
         {
             get
@@ -345,8 +591,15 @@ namespace LibClang
             }
         }
 
+        /// <summary>
+        /// Defines the _linkage
+        /// </summary>
         private CXLinkageKind _linkage;
-        public CXLinkageKind  Linkage
+
+        /// <summary>
+        /// Gets the Linkage
+        /// </summary>
+        public CXLinkageKind Linkage
         {
             get
             {
@@ -355,8 +608,14 @@ namespace LibClang
             }
         }
 
+        /// <summary>
+        /// Defines the _evalResult
+        /// </summary>
         private EvalResult _evalResult;
 
+        /// <summary>
+        /// Gets the EvalResult
+        /// </summary>
         public EvalResult EvalResult
         {
             get
@@ -369,17 +628,21 @@ namespace LibClang
             }
         }
 
-
-
-
+        /// <summary>
+        /// Defines the resultType
+        /// </summary>
         private Type resultType;
+
+        /// <summary>
+        /// Gets the ResultType
+        /// </summary>
         public Type ResultType
         {
             get
             {
-                if (this.resultType==null)
+                if (this.resultType == null)
                 {
-                    if (this.m_value.kind== CXCursorKind.CXCursor_CXXMethod)
+                    if (this.m_value.kind == CXCursorKind.CXCursor_CXXMethod)
                     {
                         CXType cxResultType = clang.clang_getCursorResultType(this.m_value);
                         this.resultType = new Type(cxResultType);
@@ -389,18 +652,36 @@ namespace LibClang
             }
         }
 
-        protected internal override ValueType Value { get { return this.m_value; } }
+        /// <summary>
+        /// Gets the Value
+        /// </summary>
+        protected internal override ValueType Value
+        {
+            get { return this.m_value; }
+        }
 
+        /// <summary>
+        /// The Dispose
+        /// </summary>
         protected override void Dispose()
         {
             clang.clang_Cursor_Evaluate(this.m_value);
         }
 
+        /// <summary>
+        /// The EqualsCore
+        /// </summary>
+        /// <param name="clangObject">The clangObject<see cref="ClangObject"/></param>
+        /// <returns>The <see cref="bool"/></returns>
         protected override bool EqualsCore(ClangObject clangObject)
         {
             return clang.clang_equalCursors(this.m_value, (CXCursor)clangObject.Value) > 0;
         }
 
+        /// <summary>
+        /// The ToString
+        /// </summary>
+        /// <returns>The <see cref="string"/></returns>
         public override string ToString()
         {
             return string.Format("{0}{1}", this.DisplayName, this.SourceLocation);

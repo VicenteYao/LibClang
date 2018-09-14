@@ -1,18 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using LibClang.Intertop;
-
-namespace LibClang
+﻿namespace LibClang
 {
+    using LibClang.Intertop;
+    using System;
+
+    /// <summary>
+    /// Defines the <see cref="Module" />
+    /// </summary>
     public class Module : ClangObject
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Module"/> class.
+        /// </summary>
+        /// <param name="value">The value<see cref="IntPtr"/></param>
         internal Module(IntPtr value)
         {
             this.m_value = value;
         }
 
+        /// <summary>
+        /// Defines the _name
+        /// </summary>
         private string _name;
+
+        /// <summary>
+        /// Gets the Name
+        /// </summary>
         public string Name
         {
             get
@@ -25,7 +37,14 @@ namespace LibClang
             }
         }
 
+        /// <summary>
+        /// Defines the _fullName
+        /// </summary>
         private string _fullName;
+
+        /// <summary>
+        /// Gets the FullName
+        /// </summary>
         public string FullName
         {
             get
@@ -38,7 +57,14 @@ namespace LibClang
             }
         }
 
+        /// <summary>
+        /// Defines the _Astfile
+        /// </summary>
         private File _Astfile;
+
+        /// <summary>
+        /// Gets the AstFile
+        /// </summary>
         public File AstFile
         {
             get
@@ -55,8 +81,14 @@ namespace LibClang
             }
         }
 
-
+        /// <summary>
+        /// Defines the _parent
+        /// </summary>
         private Module _parent;
+
+        /// <summary>
+        /// Gets the Parent
+        /// </summary>
         public Module Parent
         {
             get
@@ -69,9 +101,19 @@ namespace LibClang
             }
         }
 
+        /// <summary>
+        /// Defines the _isSystem
+        /// </summary>
         private bool? _isSystem;
+
+        /// <summary>
+        /// Defines the m_value
+        /// </summary>
         private IntPtr m_value;
 
+        /// <summary>
+        /// Gets a value indicating whether IsSystem
+        /// </summary>
         public bool IsSystem
         {
             get
@@ -84,12 +126,19 @@ namespace LibClang
             }
         }
 
-        protected internal override ValueType Value { get { return this.m_value; } }
-
-        protected override void Dispose()
+        /// <summary>
+        /// Gets the Value
+        /// </summary>
+        protected internal override ValueType Value
         {
-        
+            get { return this.m_value; }
         }
 
+        /// <summary>
+        /// The Dispose
+        /// </summary>
+        protected override void Dispose()
+        {
+        }
     }
 }

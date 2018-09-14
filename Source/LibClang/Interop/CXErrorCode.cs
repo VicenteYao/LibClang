@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LibClang.Intertop
+﻿namespace LibClang.Intertop
 {
     /**
 * Error codes returned by libclang routines.
@@ -13,10 +9,9 @@ namespace LibClang.Intertop
     public enum CXErrorCode
     {
         /**
-         * No error.
-         */
+                         * No error.
+                         */
         CXError_Success = 0,
-
         /**
          * A generic error code, no further details are available.
          *
@@ -24,18 +19,15 @@ namespace LibClang.Intertop
          * libclang versions.
          */
         CXError_Failure = 1,
-
         /**
          * libclang crashed while performing the requested operation.
          */
         CXError_Crashed = 2,
-
         /**
          * The function detected that the arguments violate the function
          * contract.
          */
         CXError_InvalidArguments = 3,
-
         /**
          * An AST deserialization error has occurred.
          */

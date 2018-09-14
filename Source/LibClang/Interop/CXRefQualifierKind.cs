@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LibClang.Intertop
+﻿namespace LibClang.Intertop
 {
+    /// <summary>
+    /// Defines the CXRefQualifierKind
+    /// </summary>
     public enum CXRefQualifierKind
     {
         /** No ref-qualifier was provided. */

@@ -1,14 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LibClang.Intertop
+﻿namespace LibClang.Intertop
 {
+    /// <summary>
+    /// Defines the <see cref="CXIdxIBOutletCollectionAttrInfo" />
+    /// </summary>
     public struct CXIdxIBOutletCollectionAttrInfo
     {
-        CXIdxAttrInfo attrInfo;
-        CXIdxEntityInfo objcClass;
-        CXCursor classCursor;
-        CXIdxLoc classLoc;
+        /// <summary>
+        /// Defines the attrInfo
+        /// </summary>
+        internal CXIdxAttrInfo attrInfo;
+
+        /// <summary>
+        /// Defines the objcClass
+        /// </summary>
+        internal CXIdxEntityInfo objcClass;
+
+        /// <summary>
+        /// Defines the classCursor
+        /// </summary>
+        internal CXCursor classCursor;
+
+        /// <summary>
+        /// Defines the classLoc
+        /// </summary>
+        internal CXIdxLoc classLoc;
     }
 }

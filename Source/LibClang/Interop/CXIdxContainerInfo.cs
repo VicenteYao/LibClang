@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LibClang.Intertop
+﻿namespace LibClang.Intertop
 {
-
-
-
-
+    /// <summary>
+    /// Defines the <see cref="CXIdxContainerInfo" />
+    /// </summary>
     public unsafe struct CXIdxContainerInfo
     {
-        public   CXCursor cursor;
+        /// <summary>
+        /// Defines the cursor
+        /// </summary>
+        public CXCursor cursor;
     }
 }

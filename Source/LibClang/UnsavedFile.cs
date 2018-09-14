@@ -1,13 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Text;
-using LibClang.Intertop;
-
-namespace LibClang
+﻿namespace LibClang
 {
+    using LibClang.Intertop;
+    using System;
+    using System.Runtime.InteropServices;
+
+    /// <summary>
+    /// Defines the <see cref="UnsavedFile" />
+    /// </summary>
     public class UnsavedFile : ClangObject
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UnsavedFile"/> class.
+        /// </summary>
+        /// <param name="fileName">The fileName<see cref="string"/></param>
         public UnsavedFile(string fileName)
         {
             string contents = System.IO.File.ReadAllText(fileName);
@@ -19,16 +24,26 @@ namespace LibClang
             };
         }
 
+        /// <summary>
+        /// Defines the m_value
+        /// </summary>
         private CXUnsavedFile m_value;
 
+        /// <summary>
+        /// The Dispose
+        /// </summary>
         protected override void Dispose()
         {
             Marshal.FreeHGlobal(this.m_value.Filename);
             Marshal.FreeHGlobal(this.m_value.Contents);
         }
 
-        protected internal override ValueType Value { get { return this.m_value; } }
-
-
+        /// <summary>
+        /// Gets the Value
+        /// </summary>
+        protected internal override ValueType Value
+        {
+            get { return this.m_value; }
+        }
     }
 }

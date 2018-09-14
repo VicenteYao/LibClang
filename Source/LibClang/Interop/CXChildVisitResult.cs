@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LibClang.Intertop
+﻿namespace LibClang.Intertop
 {
-
     /**
      * @}
      */
@@ -28,8 +23,8 @@ namespace LibClang.Intertop
     public enum CXChildVisitResult
     {
         /**
-         * Terminates the cursor traversal.
-         */
+                         * Terminates the cursor traversal.
+                         */
         CXChildVisit_Break,
         /**
          * Continues the cursor traversal with the next sibling of

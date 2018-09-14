@@ -1,13 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using LibClang.Intertop;
-
-namespace LibClang
+﻿namespace LibClang
 {
-    public class ImportedAstFileInfo:ClangObject
-    {
+    using LibClang.Intertop;
+    using System;
 
+    /// <summary>
+    /// Defines the <see cref="ImportedAstFileInfo" />
+    /// </summary>
+    public class ImportedAstFileInfo : ClangObject
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ImportedAstFileInfo"/> class.
+        /// </summary>
+        /// <param name="importedASTFileInfo">The importedASTFileInfo<see cref="CXIdxImportedASTFileInfo"/></param>
         internal ImportedAstFileInfo(CXIdxImportedASTFileInfo importedASTFileInfo)
         {
             this.m_value = importedASTFileInfo;
@@ -17,17 +21,37 @@ namespace LibClang
             this.IsImplicit = importedASTFileInfo.isImplicit > 0;
         }
 
+        /// <summary>
+        /// Defines the m_value
+        /// </summary>
         private CXIdxImportedASTFileInfo m_value;
 
+        /// <summary>
+        /// Gets the File
+        /// </summary>
         public File File { get; private set; }
 
-        public Module Module { get;private set; }
+        /// <summary>
+        /// Gets the Module
+        /// </summary>
+        public Module Module { get; private set; }
 
+        /// <summary>
+        /// Gets the IndexLocation
+        /// </summary>
         public IndexLocation IndexLocation { get; private set; }
 
-
+        /// <summary>
+        /// Gets a value indicating whether IsImplicit
+        /// </summary>
         public bool IsImplicit { get; private set; }
 
-        protected internal override ValueType Value { get { return this.m_value; } }
+        /// <summary>
+        /// Gets the Value
+        /// </summary>
+        protected internal override ValueType Value
+        {
+            get { return this.m_value; }
+        }
     }
 }

@@ -1,17 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LibClang.Intertop
+﻿namespace LibClang.Intertop
 {
-    /**
-     * The type of an element in the abstract syntax tree.
-     *
-     */
+    using System;
+
+    /// <summary>
+    /// Defines the <see cref="CXType" />
+    /// </summary>
     public struct CXType
     {
+        /// <summary>
+        /// Defines the kind
+        /// </summary>
         public CXTypeKind kind;
+
+        /// <summary>
+        /// Defines the data1
+        /// </summary>
         public IntPtr data1;
+
+        /// <summary>
+        /// Defines the data2
+        /// </summary>
         public IntPtr data2;
-    };
+    }
+
+
+;
 }

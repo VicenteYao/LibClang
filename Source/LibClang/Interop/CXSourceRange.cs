@@ -1,20 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LibClang.Intertop
+﻿namespace LibClang.Intertop
 {
-    /**
-     * Identifies a half-open character range in the source code.
-     *
-     * Use clang_getRangeStart() and clang_getRangeEnd() to retrieve the
-     * starting and end locations from a source range, respectively.
-     */
+    using System;
+
+    /// <summary>
+    /// Defines the <see cref="CXSourceRange" />
+    /// </summary>
     public struct CXSourceRange
     {
+        /// <summary>
+        /// Defines the ptr_data1
+        /// </summary>
         public IntPtr ptr_data1;
+
+        /// <summary>
+        /// Defines the ptr_data2
+        /// </summary>
         public IntPtr ptr_data2;
+
+        /// <summary>
+        /// Defines the begin_int_data
+        /// </summary>
         public uint begin_int_data;
+
+        /// <summary>
+        /// Defines the end_int_data
+        /// </summary>
         public uint end_int_data;
     }
 }

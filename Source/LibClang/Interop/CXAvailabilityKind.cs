@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LibClang.Intertop
+﻿namespace LibClang.Intertop
 {
     /**
          * Describes the availability of a particular entity, which indicates
@@ -12,8 +8,8 @@ namespace LibClang.Intertop
     public enum CXAvailabilityKind
     {
         /**
-         * The entity is available.
-         */
+                         * The entity is available.
+                         */
         CXAvailability_Available,
         /**
          * The entity is available, but has been deprecated (and its use is

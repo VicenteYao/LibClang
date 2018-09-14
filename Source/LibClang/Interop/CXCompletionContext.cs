@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LibClang.Intertop
+﻿namespace LibClang.Intertop
 {
     /**
            * Bits that represent the context under which completion is occurring.
@@ -13,16 +9,14 @@ namespace LibClang.Intertop
     public enum CXCompletionContext
     {
         /**
-         * The context for completions is unexposed, as only Clang results
-         * should be included. (This is equivalent to having no context bits set.)
-         */
+                         * The context for completions is unexposed, as only Clang results
+                         * should be included. (This is equivalent to having no context bits set.)
+                         */
         CXCompletionContext_Unexposed = 0,
-
         /**
          * Completions for any possible type should be included in the results.
          */
         CXCompletionContext_AnyType = 1 << 0,
-
         /**
          * Completions for any possible value (variables, function calls, etc.)
          * should be included in the results.
@@ -43,7 +37,6 @@ namespace LibClang.Intertop
          * included in the results.
          */
         CXCompletionContext_CXXClassTypeValue = 1 << 4,
-
         /**
          * Completions for fields of the member being accessed using the dot
          * operator should be included in the results.
@@ -59,7 +52,6 @@ namespace LibClang.Intertop
          * using the dot operator should be included in the results.
          */
         CXCompletionContext_ObjCPropertyAccess = 1 << 7,
-
         /**
          * Completions for enum tags should be included in the results.
          */
@@ -72,7 +64,6 @@ namespace LibClang.Intertop
          * Completions for struct tags should be included in the results.
          */
         CXCompletionContext_StructTag = 1 << 10,
-
         /**
          * Completions for C++ class names should be included in the results.
          */
@@ -87,7 +78,6 @@ namespace LibClang.Intertop
          * the results.
          */
         CXCompletionContext_NestedNameSpecifier = 1 << 13,
-
         /**
          * Completions for Objective-C interfaces (classes) should be included
          * in the results.
@@ -118,22 +108,18 @@ namespace LibClang.Intertop
          * the results.
          */
         CXCompletionContext_ObjCSelectorName = 1 << 19,
-
         /**
          * Completions for preprocessor macro names should be included in
          * the results.
          */
         CXCompletionContext_MacroName = 1 << 20,
-
         /**
          * Natural language completions should be included in the results.
          */
         CXCompletionContext_NaturalLanguage = 1 << 21,
-
         /**
          * The current context is unknown, so set all contexts.
          */
         CXCompletionContext_Unknown = ((1 << 22) - 1)
     }
-
 }

@@ -1,16 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LibClang.Intertop
+﻿namespace LibClang.Intertop
 {
+    using System;
+
+    /// <summary>
+    /// Defines the <see cref="CXIdxObjCInterfaceDeclInfo" />
+    /// </summary>
     public struct CXIdxObjCInterfaceDeclInfo
     {
-        /* CXIdxObjCContainerDeclInfo*/
-        IntPtr containerInfo;
-        /*CXIdxBaseClassInfo*/
-        IntPtr superInfo;
-        /* CXIdxObjCProtocolRefListInfo*/
-        IntPtr protocols;
+        /// <summary>
+        /// Defines the containerInfo
+        /// </summary>
+        internal IntPtr containerInfo;
+
+        /// <summary>
+        /// Defines the superInfo
+        /// </summary>
+        internal IntPtr superInfo;
+
+        /// <summary>
+        /// Defines the protocols
+        /// </summary>
+        internal IntPtr protocols;
     }
 }

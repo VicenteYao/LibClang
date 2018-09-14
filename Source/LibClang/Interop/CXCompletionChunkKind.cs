@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LibClang.Intertop
+﻿namespace LibClang.Intertop
 {
-
     /**
      * Describes a single piece of text within a code-completion string.
      *
@@ -15,38 +10,38 @@ namespace LibClang.Intertop
     public enum CXCompletionChunkKind
     {
         /**
-         * A code-completion string that describes "optional" text that
-         * could be a part of the template (but is not required).
-         *
-         * The Optional chunk is the only kind of chunk that has a code-completion
-         * string for its representation, which is accessible via
-         * \c clang_getCompletionChunkCompletionString(). The code-completion string
-         * describes an additional part of the template that is completely optional.
-         * For example, optional chunks can be used to describe the placeholders for
-         * arguments that match up with defaulted function parameters, e.g. given:
-         *
-         * \code
-         * void f(int x, float y = 3.14, double z = 2.71828);
-         * \endcode
-         *
-         * The code-completion string for this function would contain:
-         *   - a TypedText chunk for "f".
-         *   - a LeftParen chunk for "(".
-         *   - a Placeholder chunk for "int x"
-         *   - an Optional chunk containing the remaining defaulted arguments, e.g.,
-         *       - a Comma chunk for ","
-         *       - a Placeholder chunk for "float y"
-         *       - an Optional chunk containing the last defaulted argument:
-         *           - a Comma chunk for ","
-         *           - a Placeholder chunk for "double z"
-         *   - a RightParen chunk for ")"
-         *
-         * There are many ways to handle Optional chunks. Two simple approaches are:
-         *   - Completely ignore optional chunks, in which case the template for the
-         *     function "f" would only include the first parameter ("int x").
-         *   - Fully expand all optional chunks, in which case the template for the
-         *     function "f" would have all of the parameters.
-         */
+                         * A code-completion string that describes "optional" text that
+                         * could be a part of the template (but is not required).
+                         *
+                         * The Optional chunk is the only kind of chunk that has a code-completion
+                         * string for its representation, which is accessible via
+                         * \c clang_getCompletionChunkCompletionString(). The code-completion string
+                         * describes an additional part of the template that is completely optional.
+                         * For example, optional chunks can be used to describe the placeholders for
+                         * arguments that match up with defaulted function parameters, e.g. given:
+                         *
+                         * \code
+                         * void f(int x, float y = 3.14, double z = 2.71828);
+                         * \endcode
+                         *
+                         * The code-completion string for this function would contain:
+                         *   - a TypedText chunk for "f".
+                         *   - a LeftParen chunk for "(".
+                         *   - a Placeholder chunk for "int x"
+                         *   - an Optional chunk containing the remaining defaulted arguments, e.g.,
+                         *       - a Comma chunk for ","
+                         *       - a Placeholder chunk for "float y"
+                         *       - an Optional chunk containing the last defaulted argument:
+                         *           - a Comma chunk for ","
+                         *           - a Placeholder chunk for "double z"
+                         *   - a RightParen chunk for ")"
+                         *
+                         * There are many ways to handle Optional chunks. Two simple approaches are:
+                         *   - Completely ignore optional chunks, in which case the template for the
+                         *     function "f" would only include the first parameter ("int x").
+                         *   - Fully expand all optional chunks, in which case the template for the
+                         *     function "f" would have all of the parameters.
+                         */
         CXCompletionChunk_Optional,
         /**
          * Text that a user would be expected to type to get this
@@ -176,5 +171,4 @@ namespace LibClang.Intertop
          */
         CXCompletionChunk_VerticalSpace
     }
-
 }

@@ -1,22 +1,30 @@
-﻿using LibClang.Intertop;
-using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Text;
-
-namespace LibClang
+﻿namespace LibClang
 {
+    using LibClang.Intertop;
+
+    /// <summary>
+    /// Defines the <see cref="NativeMethodsHelper" />
+    /// </summary>
     internal static unsafe class NativeMethodsHelper
     {
-
-        internal static  string ToStringAndDispose(this CXString cxString)
+        /// <summary>
+        /// The ToStringAndDispose
+        /// </summary>
+        /// <param name="cxString">The cxString<see cref="CXString"/></param>
+        /// <returns>The <see cref="string"/></returns>
+        internal static string ToStringAndDispose(this CXString cxString)
         {
             var pString = clang.clang_getCString(cxString);
-            string result= new string(pString);
+            string result = new string(pString);
             clang.clang_disposeString(cxString);
             return result;
         }
 
+        /// <summary>
+        /// The ToStringArrayAndDispose
+        /// </summary>
+        /// <param name="pStringSet">The pStringSet<see cref="CXStringSet*"/></param>
+        /// <returns>The <see cref="string[]"/></returns>
         internal static string[] ToStringArrayAndDispose(CXStringSet* pStringSet)
         {
             if (pStringSet == (CXStringSet*)0)
@@ -31,8 +39,5 @@ namespace LibClang
             clang.clang_disposeStringSet(pStringSet);
             return stringArray;
         }
-
-
-
     }
 }

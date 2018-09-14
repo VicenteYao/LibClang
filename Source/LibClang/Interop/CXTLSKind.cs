@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LibClang.Intertop
+﻿namespace LibClang.Intertop
 {
     /**
      * Describe the "thread-local storage (TLS) kind" of the declaration
@@ -10,8 +6,17 @@ namespace LibClang.Intertop
      */
     public enum CXTLSKind
     {
+        /// <summary>
+        /// Defines the CXTLS_None
+        /// </summary>
         CXTLS_None = 0,
+        /// <summary>
+        /// Defines the CXTLS_Dynamic
+        /// </summary>
         CXTLS_Dynamic,
+        /// <summary>
+        /// Defines the CXTLS_Static
+        /// </summary>
         CXTLS_Static
     }
 }

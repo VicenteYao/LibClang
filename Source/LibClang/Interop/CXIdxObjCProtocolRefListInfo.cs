@@ -1,14 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LibClang.Intertop
+﻿namespace LibClang.Intertop
 {
+    using System;
 
+    /// <summary>
+    /// Defines the <see cref="CXIdxObjCProtocolRefListInfo" />
+    /// </summary>
     public struct CXIdxObjCProtocolRefListInfo
     {
-        /* CXIdxObjCProtocolRefInfo*/
-        IntPtr protocols;
-        uint numProtocols;
+        /// <summary>
+        /// Defines the protocols
+        /// </summary>
+        internal IntPtr protocols;
+
+        /// <summary>
+        /// Defines the numProtocols
+        /// </summary>
+        internal uint numProtocols;
     }
 }

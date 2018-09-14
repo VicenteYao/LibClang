@@ -12,7 +12,6 @@ namespace TestApp
 
             var indexAction = index.CreateIndexAction(new IndexActionEventHandler());
 
-
             foreach (var item in translationUnit.ResourceUsages)
             {
                 Console.WriteLine("{0}:{1}", item.Name,item.Amount);

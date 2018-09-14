@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LibClang.Intertop
+﻿namespace LibClang.Intertop
 {
     /**
           * Flags that control how translation units are saved.
@@ -14,8 +10,8 @@ namespace LibClang.Intertop
     public enum CXSaveTranslationUnit_Flags
     {
         /**
-         * Used to indicate that no special saving options are needed.
-         */
+                         * Used to indicate that no special saving options are needed.
+                         */
         CXSaveTranslationUnit_None = 0x0
     };
 }

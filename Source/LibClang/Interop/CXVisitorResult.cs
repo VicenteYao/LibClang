@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LibClang.Intertop
+﻿namespace LibClang.Intertop
 {
     /**
        * @}
@@ -12,10 +8,15 @@ namespace LibClang.Intertop
      *
      * @{
      */
-
     public enum CXVisitorResult
     {
+        /// <summary>
+        /// Defines the CXVisit_Break
+        /// </summary>
         CXVisit_Break,
+        /// <summary>
+        /// Defines the CXVisit_Continue
+        /// </summary>
         CXVisit_Continue
     }
 }

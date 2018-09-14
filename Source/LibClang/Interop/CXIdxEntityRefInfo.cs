@@ -1,44 +1,43 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LibClang.Intertop
+﻿namespace LibClang.Intertop
 {
-    /**
-            * Data for IndexerCallbacks#indexEntityReference.
-            */
+    /// <summary>
+    /// Defines the <see cref="CXIdxEntityRefInfo" />
+    /// </summary>
     public unsafe struct CXIdxEntityRefInfo
     {
-      public   CXIdxEntityRefKind kind;
-        /**
-         * Reference cursor.
-         */
-        public CXCursor cursor;
-        public CXIdxLoc loc;
-        /**
-         * The entity that gets referenced.
-         */
+        /// <summary>
+        /// Defines the kind
+        /// </summary>
+        public CXIdxEntityRefKind kind;
 
-        public  CXIdxEntityInfo* referencedEntity;
-        /**
-         * Immediate "parent" of the reference. For example:
-         *
-         * \code
-         * Foo *var;
-         * \endcode
-         *
-         * The parent of reference of type 'Foo' is the variable 'var'.
-         * For references inside statement bodies of functions/methods,
-         * the parentEntity will be the function/method.
-         */
+        /// <summary>
+        /// Defines the cursor
+        /// </summary>
+        public CXCursor cursor;
+
+        /// <summary>
+        /// Defines the loc
+        /// </summary>
+        public CXIdxLoc loc;
+
+        /// <summary>
+        /// Defines the referencedEntity
+        /// </summary>
+        public CXIdxEntityInfo* referencedEntity;
+
+        /// <summary>
+        /// Defines the parentEntity
+        /// </summary>
         public CXIdxEntityInfo* parentEntity;
-        /**
-         * Lexical container context of the reference.
-         */
+
+        /// <summary>
+        /// Defines the container
+        /// </summary>
         public CXIdxContainerInfo* container;
-        /**
-         * Sets of symbol roles of the reference.
-         */
+
+        /// <summary>
+        /// Defines the role
+        /// </summary>
         public CXSymbolRole role;
     }
 }

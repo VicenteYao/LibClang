@@ -1,20 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using LibClang.Intertop;
-
-namespace LibClang
+﻿namespace LibClang
 {
+    using LibClang.Intertop;
+    using System;
+
+    /// <summary>
+    /// Defines the <see cref="Diagnostic" />
+    /// </summary>
     public class Diagnostic : ClangObject
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Diagnostic"/> class.
+        /// </summary>
+        /// <param name="value">The value<see cref="IntPtr"/></param>
         internal Diagnostic(IntPtr value)
         {
             this.m_value = value;
         }
 
+        /// <summary>
+        /// Defines the m_value
+        /// </summary>
         private IntPtr m_value;
 
+        /// <summary>
+        /// Defines the _CXDiagnosticDisplayOptions
+        /// </summary>
         private static CXDiagnosticDisplayOptions _CXDiagnosticDisplayOptions;
+
+        /// <summary>
+        /// Gets the DefaultDisplayOptions
+        /// </summary>
         public static CXDiagnosticDisplayOptions DefaultDisplayOptions
         {
             get
@@ -24,13 +39,24 @@ namespace LibClang
             }
         }
 
+        /// <summary>
+        /// The Format
+        /// </summary>
+        /// <param name="diagnosticDisplayOptions">The diagnosticDisplayOptions<see cref="CXDiagnosticDisplayOptions"/></param>
+        /// <returns>The <see cref="string"/></returns>
         public string Format(CXDiagnosticDisplayOptions diagnosticDisplayOptions)
         {
             return clang.clang_formatDiagnostic(this.m_value, (uint)diagnosticDisplayOptions).ToStringAndDispose();
         }
 
+        /// <summary>
+        /// Defines the _sourceLocation
+        /// </summary>
         private SourceLocation _sourceLocation;
 
+        /// <summary>
+        /// Gets the SourceLocation
+        /// </summary>
         public SourceLocation SourceLocation
         {
             get
@@ -43,21 +69,34 @@ namespace LibClang
             }
         }
 
-        private DiagnosticSet _diagnosticSet;
+        /// <summary>
+        /// Defines the _childDiagnostics
+        /// </summary>
+        private DiagnosticSet _childDiagnostics;
 
-        public DiagnosticSet DiagnosticSet
+        /// <summary>
+        /// Gets the ChildDiagnostics
+        /// </summary>
+        public DiagnosticSet ChildDiagnostics
         {
             get
             {
-                if (this._diagnosticSet==null)
+                if (this._childDiagnostics == null)
                 {
-                    this._diagnosticSet = new DiagnosticSet(clang.clang_getChildDiagnostics(this.m_value));
+                    this._childDiagnostics = new DiagnosticSet(clang.clang_getChildDiagnostics(this.m_value));
                 }
-                return this._diagnosticSet;
+                return this._childDiagnostics;
             }
         }
 
+        /// <summary>
+        /// Defines the categoryText
+        /// </summary>
         private string categoryText;
+
+        /// <summary>
+        /// Gets the CategoryText
+        /// </summary>
         public string CategoryText
         {
             get
@@ -70,9 +109,14 @@ namespace LibClang
             }
         }
 
-        
-
+        /// <summary>
+        /// Defines the spelling
+        /// </summary>
         private string spelling;
+
+        /// <summary>
+        /// Gets the Spelling
+        /// </summary>
         public string Spelling
         {
             get
@@ -85,15 +129,22 @@ namespace LibClang
             }
         }
 
-
+        /// <summary>
+        /// The Dispose
+        /// </summary>
         protected override void Dispose()
         {
             clang.clang_disposeDiagnostic(this.m_value);
         }
 
-
+        /// <summary>
+        /// Defines the _category
+        /// </summary>
         private int _category;
 
+        /// <summary>
+        /// Gets the Category
+        /// </summary>
         public int Category
         {
             get
@@ -103,8 +154,15 @@ namespace LibClang
             }
         }
 
+        /// <summary>
+        /// Defines the _severity
+        /// </summary>
         private CXDiagnosticSeverity _severity;
-        CXDiagnosticSeverity Severity
+
+        /// <summary>
+        /// Gets the Severity
+        /// </summary>
+        internal CXDiagnosticSeverity Severity
         {
             get
             {
@@ -113,7 +171,14 @@ namespace LibClang
             }
         }
 
+        /// <summary>
+        /// Defines the _sourceRanges
+        /// </summary>
         private SourceRange[] _sourceRanges;
+
+        /// <summary>
+        /// Gets the SourceRanges
+        /// </summary>
         public SourceRange[] SourceRanges
         {
             get
@@ -131,12 +196,19 @@ namespace LibClang
             }
         }
 
+        /// <summary>
+        /// Defines the _fixIts
+        /// </summary>
         private FixIt[] _fixIts;
+
+        /// <summary>
+        /// Gets the FixIts
+        /// </summary>
         public FixIt[] FixIts
         {
             get
             {
-                if (this._fixIts==null)
+                if (this._fixIts == null)
                 {
                     uint fixitsCount = clang.clang_getDiagnosticNumFixIts(this.m_value);
                     this._fixIts = new FixIt[fixitsCount];
@@ -152,8 +224,18 @@ namespace LibClang
             }
         }
 
-        protected internal override ValueType Value { get { return this.m_value; } }
+        /// <summary>
+        /// Gets the Value
+        /// </summary>
+        protected internal override ValueType Value
+        {
+            get { return this.m_value; }
+        }
 
+        /// <summary>
+        /// The ToString
+        /// </summary>
+        /// <returns>The <see cref="string"/></returns>
         public override string ToString()
         {
             return string.Format("{0}:{1}", this.CategoryText, this.Spelling);

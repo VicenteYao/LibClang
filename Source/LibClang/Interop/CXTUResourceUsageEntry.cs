@@ -1,16 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LibClang.Intertop
+﻿namespace LibClang.Intertop
 {
+    /// <summary>
+    /// Defines the <see cref="CXTUResourceUsageEntry" />
+    /// </summary>
     public struct CXTUResourceUsageEntry
     {
-        /* The memory usage category. */
+        /// <summary>
+        /// Defines the kind
+        /// </summary>
         public CXTUResourceUsageKind kind;
-        /* Amount of resources used.
-            The units will depend on the resource kind. */
+
+        /// <summary>
+        /// Defines the amount
+        /// </summary>
         public uint amount;
     }
-
 }

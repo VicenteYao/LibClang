@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LibClang.Intertop
+﻿namespace LibClang.Intertop
 {
-
+    /// <summary>
+    /// Defines the CXResult
+    /// </summary>
     public enum CXResult
     {
         /**
-         * Function returned successfully.
-         */
+                         * Function returned successfully.
+                         */
         CXResult_Success = 0,
         /**
          * One of the parameters was invalid for the function.
@@ -20,6 +18,5 @@ namespace LibClang.Intertop
          * CXVisit_Break)
          */
         CXResult_VisitBreak = 2
-
     }
 }

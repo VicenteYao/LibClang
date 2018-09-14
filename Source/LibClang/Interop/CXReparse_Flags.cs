@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LibClang.Intertop
+﻿namespace LibClang.Intertop
 {
-
     /**
      * Flags that control the reparsing of translation units.
      *
@@ -15,8 +10,8 @@ namespace LibClang.Intertop
     public enum CXReparse_Flags
     {
         /**
-         * Used to indicate that no special reparsing options are needed.
-         */
+                         * Used to indicate that no special reparsing options are needed.
+                         */
         CXReparse_None = 0x0
     };
 }

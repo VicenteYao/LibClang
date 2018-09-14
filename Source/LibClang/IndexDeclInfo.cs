@@ -1,18 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using LibClang.Intertop;
-
-namespace LibClang
+﻿namespace LibClang
 {
+    using LibClang.Intertop;
+    using System;
+
+    /// <summary>
+    /// Defines the <see cref="IndexDeclInfo" />
+    /// </summary>
     public class IndexDeclInfo : ClangObject
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="IndexDeclInfo"/> class.
+        /// </summary>
+        /// <param name="cXIdxDeclInfo">The cXIdxDeclInfo<see cref="CXIdxDeclInfo"/></param>
         internal IndexDeclInfo(CXIdxDeclInfo cXIdxDeclInfo)
         {
             this.m_value = cXIdxDeclInfo;
         }
 
+        /// <summary>
+        /// Defines the entityInfo
+        /// </summary>
         private IndexEntityInfo entityInfo;
+
+        /// <summary>
+        /// Gets the EntityInfo
+        /// </summary>
         public unsafe IndexEntityInfo EntityInfo
         {
             get
@@ -25,12 +37,19 @@ namespace LibClang
             }
         }
 
+        /// <summary>
+        /// Defines the cursor
+        /// </summary>
         private Cursor cursor;
+
+        /// <summary>
+        /// Gets the Cursor
+        /// </summary>
         public Cursor Cursor
         {
             get
             {
-                if (this.cursor==null)
+                if (this.cursor == null)
                 {
                     this.cursor = new Cursor(this.m_value.cursor);
                 }
@@ -38,12 +57,19 @@ namespace LibClang
             }
         }
 
+        /// <summary>
+        /// Defines the indexLocation
+        /// </summary>
         private IndexLocation indexLocation;
+
+        /// <summary>
+        /// Gets the IndexLocation
+        /// </summary>
         public IndexLocation IndexLocation
         {
             get
             {
-                if (this.indexLocation==null)
+                if (this.indexLocation == null)
                 {
                     this.indexLocation = new IndexLocation(this.m_value.loc);
                 }
@@ -51,12 +77,17 @@ namespace LibClang
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether IsRedeclaration
+        /// </summary>
         public bool IsRedeclaration
         {
             get { return this.m_value.isRedeclaration > 0; }
-
         }
 
+        /// <summary>
+        /// Gets a value indicating whether IsDefinition
+        /// </summary>
         public bool IsDefinition
         {
             get
@@ -65,6 +96,9 @@ namespace LibClang
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether IsContainer
+        /// </summary>
         public bool IsContainer
         {
             get
@@ -73,6 +107,9 @@ namespace LibClang
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether IsImplicit
+        /// </summary>
         public bool IsImplicit
         {
             get
@@ -81,6 +118,9 @@ namespace LibClang
             }
         }
 
+        /// <summary>
+        /// Gets the Flags
+        /// </summary>
         public CXIdxDeclInfoFlags Flags
         {
             get
@@ -89,10 +129,19 @@ namespace LibClang
             }
         }
 
-
+        /// <summary>
+        /// Defines the attributes
+        /// </summary>
         private IndexAttributeInfoList attributes;
+
+        /// <summary>
+        /// Defines the m_value
+        /// </summary>
         private CXIdxDeclInfo m_value;
 
+        /// <summary>
+        /// Gets the Attributes
+        /// </summary>
         public unsafe IndexAttributeInfoList Attributes
         {
             get
@@ -106,13 +155,21 @@ namespace LibClang
             }
         }
 
-        protected internal override ValueType Value { get { return this.m_value; } }
+        /// <summary>
+        /// Gets the Value
+        /// </summary>
+        protected internal override ValueType Value
+        {
+            get { return this.m_value; }
+        }
 
+        /// <summary>
+        /// The ToString
+        /// </summary>
+        /// <returns>The <see cref="string"/></returns>
         public override string ToString()
         {
             return string.Format("{0}{1}", this.IndexLocation, this.EntityInfo);
         }
-
-
     }
 }

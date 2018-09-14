@@ -1,33 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using CXFile = System.IntPtr;
-
-namespace LibClang.Intertop
+﻿namespace LibClang.Intertop
 {
-    /**
-           * Data for ppIncludedFile callback.
-           */
+    using CXFile = System.IntPtr;
+
+    /// <summary>
+    /// Defines the <see cref="CXIdxIncludedFileInfo" />
+    /// </summary>
     public unsafe struct CXIdxIncludedFileInfo
     {
-        /**
-         * Location of '#' in the \#include/\#import directive.
-         */
+        /// <summary>
+        /// Defines the hashLoc
+        /// </summary>
         public CXIdxLoc hashLoc;
-        /**
-         * Filename as written in the \#include/\#import directive.
-         */
+
+        /// <summary>
+        /// Defines the filename
+        /// </summary>
         public sbyte* filename;
-        /**
-         * The actual file that the \#include/\#import directive resolved to.
-         */
-        CXFile file;
+
+        /// <summary>
+        /// Defines the file
+        /// </summary>
+        internal CXFile file;
+
+        /// <summary>
+        /// Defines the isImport
+        /// </summary>
         public int isImport;
+
+        /// <summary>
+        /// Defines the isAngled
+        /// </summary>
         public int isAngled;
-        /**
-         * Non-zero if the directive was automatically turned into a module
-         * import.
-         */
+
+        /// <summary>
+        /// Defines the isModuleImport
+        /// </summary>
         public int isModuleImport;
     }
 }

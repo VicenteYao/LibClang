@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LibClang.Intertop
+﻿namespace LibClang.Intertop
 {
+    /// <summary>
+    /// Defines the CXVisibilityKind
+    /// </summary>
     public enum CXVisibilityKind
     {
         /** This value indicates that no visibility information is available
-         * for a provided CXCursor. */
+                         * for a provided CXCursor. */
         CXVisibility_Invalid,
-
         /** Symbol not seen by the linker. */
         CXVisibility_Hidden,
         /** Symbol seen by the linker but resolves to a symbol inside this object. */

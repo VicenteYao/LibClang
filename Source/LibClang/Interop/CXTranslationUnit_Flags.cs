@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LibClang.Intertop
+﻿namespace LibClang.Intertop
 {
     /**
            * Flags that control the creation of translation units.
@@ -14,11 +10,10 @@ namespace LibClang.Intertop
     public enum CXTranslationUnit_Flags
     {
         /**
-         * Used to indicate that no special translation-unit options are
-         * needed.
-         */
+                         * Used to indicate that no special translation-unit options are
+                         * needed.
+                         */
         CXTranslationUnit_None = 0x0,
-
         /**
          * Used to indicate that the parser should construct a "detailed"
          * preprocessing record, including all macro definitions and instantiations.
@@ -30,7 +25,6 @@ namespace LibClang.Intertop
          * behavior of the preprocessor.
          */
         CXTranslationUnit_DetailedPreprocessingRecord = 0x01,
-
         /**
          * Used to indicate that the translation unit is incomplete.
          *
@@ -43,7 +37,6 @@ namespace LibClang.Intertop
          * intent of producing a precompiled header.
          */
         CXTranslationUnit_Incomplete = 0x02,
-
         /**
          * Used to indicate that the translation unit should be built with an
          * implicit precompiled header for the preamble.
@@ -59,7 +52,6 @@ namespace LibClang.Intertop
          * precompiled header to improve parsing performance.
          */
         CXTranslationUnit_PrecompiledPreamble = 0x04,
-
         /**
          * Used to indicate that the translation unit should cache some
          * code-completion results with each reparse of the source file.
@@ -69,7 +61,6 @@ namespace LibClang.Intertop
          * code-completion operations.
          */
         CXTranslationUnit_CacheCompletionResults = 0x08,
-
         /**
          * Used to indicate that the translation unit will be serialized with
          * \c clang_saveTranslationUnit.
@@ -78,7 +69,6 @@ namespace LibClang.Intertop
          * producing a precompiled header.
          */
         CXTranslationUnit_ForSerialization = 0x10,
-
         /**
          * DEPRECATED: Enabled chained precompiled preambles in C++.
          *
@@ -86,7 +76,6 @@ namespace LibClang.Intertop
          * we are testing C++ precompiled preamble support. It is deprecated.
          */
         CXTranslationUnit_CXXChainedPCH = 0x20,
-
         /**
          * Used to indicate that function/method bodies should be skipped while
          * parsing.
@@ -95,14 +84,12 @@ namespace LibClang.Intertop
          * ignoring the usages.
          */
         CXTranslationUnit_SkipFunctionBodies = 0x40,
-
         /**
          * Used to indicate that brief documentation comments should be
          * included into the set of code completions returned from this translation
          * unit.
          */
         CXTranslationUnit_IncludeBriefCommentsInCodeCompletion = 0x80,
-
         /**
          * Used to indicate that the precompiled preamble should be created on
          * the first parse. Otherwise it will be created on the first reparse. This
@@ -110,7 +97,6 @@ namespace LibClang.Intertop
          * reduced runtime on the second parse (can now reuse the preamble).
          */
         CXTranslationUnit_CreatePreambleOnFirstParse = 0x100,
-
         /**
          * Do not stop processing when fatal errors are encountered.
          *
@@ -121,12 +107,10 @@ namespace LibClang.Intertop
          * as possible should be reported. Use this flag to enable this behavior.
          */
         CXTranslationUnit_KeepGoing = 0x200,
-
         /**
          * Sets the preprocessor in a mode for parsing a single file only.
          */
         CXTranslationUnit_SingleFileParse = 0x400,
-
         /**
          * Used in combination with CXTranslationUnit_SkipFunctionBodies to
          * constrain the skipping of function bodies to the preamble.
