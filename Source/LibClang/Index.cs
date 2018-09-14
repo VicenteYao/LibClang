@@ -5,29 +5,32 @@ using System.Linq;
 
 namespace LibClang
 {
-    public unsafe class Index : ClangObject<IntPtr>, IDisposable
+    public unsafe class Index : ClangObject
     {
         public Index(bool excludeDeclarationsFromPCH, bool displayDiagnostics)
         {
-            this.Value = clang.clang_createIndex(excludeDeclarationsFromPCH ? 1 : 0, excludeDeclarationsFromPCH ? 1 : 0);
+            this.m_value = clang.clang_createIndex(excludeDeclarationsFromPCH ? 1 : 0, excludeDeclarationsFromPCH ? 1 : 0);
         }
 
         private CXGlobalOptFlags _globalOptFlags;
+        private IntPtr m_value;
 
         public CXGlobalOptFlags GlobalOptFlags
         {
-            get { return _globalOptFlags = (CXGlobalOptFlags)clang.clang_CXIndex_getGlobalOptions(this.Value); }
+            get { return _globalOptFlags = (CXGlobalOptFlags)clang.clang_CXIndex_getGlobalOptions(this.m_value); }
             set
             {
 
                 _globalOptFlags = value;
-                clang.clang_CXIndex_setGlobalOptions(this.Value, (uint)value);
+                clang.clang_CXIndex_setGlobalOptions(this.m_value, (uint)value);
             }
         }
 
+        protected internal override ValueType Value => throw new NotImplementedException();
+
         public TranslationUnit CreateTranslationUnit(string astFileName)
         {
-            IntPtr pTranslationUnit = clang.clang_createTranslationUnit(this.Value, astFileName);
+            IntPtr pTranslationUnit = clang.clang_createTranslationUnit(this.m_value, astFileName);
             if (pTranslationUnit == IntPtr.Zero)
             {
                 return null;
@@ -38,7 +41,7 @@ namespace LibClang
         public TranslationUnit CreateTranslationUnit(string astFileName, out CXErrorCode errorCode)
         {
             IntPtr pTranslationUnit = IntPtr.Zero;
-            errorCode = clang.clang_createTranslationUnit2(this.Value, astFileName, out pTranslationUnit);
+            errorCode = clang.clang_createTranslationUnit2(this.m_value, astFileName, out pTranslationUnit);
             if (pTranslationUnit == IntPtr.Zero)
             {
                 return null;
@@ -57,7 +60,7 @@ namespace LibClang
             {
                 unsavedFiles = new UnsavedFile[0];
             }
-            pTranslationUnit = clang.clang_createTranslationUnitFromSourceFile(this.Value, sourceFileName, cmdArgs.Length, cmdArgs, (uint)unsavedFiles.Length, unsavedFiles.Select(x => x.Value).ToArray());
+            pTranslationUnit = clang.clang_createTranslationUnitFromSourceFile(this.m_value, sourceFileName, cmdArgs.Length, cmdArgs, (uint)unsavedFiles.Length, unsavedFiles.Select(x => (CXUnsavedFile)x.Value).ToArray());
             if (pTranslationUnit == IntPtr.Zero)
             {
                 return null;
@@ -76,7 +79,7 @@ namespace LibClang
             {
                 unsavedFiles = new UnsavedFile[0];
             }
-            pTranslationUnit = clang.clang_parseTranslationUnit(this.Value, sourceFileName, cmdLineArgs, cmdLineArgs.Length, unsavedFiles.Select(x => x.Value).ToArray(), (uint)unsavedFiles.Length, (uint)globalOptFlags);
+            pTranslationUnit = clang.clang_parseTranslationUnit(this.m_value, sourceFileName, cmdLineArgs, cmdLineArgs.Length, unsavedFiles.Select(x =>(CXUnsavedFile) x.Value).ToArray(), (uint)unsavedFiles.Length, (uint)globalOptFlags);
             if (pTranslationUnit == IntPtr.Zero)
             {
                 return null;
@@ -95,7 +98,7 @@ namespace LibClang
             {
                 unsavedFiles = new UnsavedFile[0];
             }
-            errorCode = clang.clang_parseTranslationUnit2(this.Value, sourceFileName, cmdLineArgs, cmdLineArgs.Length, unsavedFiles.Select(x => x.Value).ToArray(), (uint)unsavedFiles.Length, (uint)globalOptFlags, out pTranslationUnit);
+            errorCode = clang.clang_parseTranslationUnit2(this.m_value, sourceFileName, cmdLineArgs, cmdLineArgs.Length, unsavedFiles.Select(x => (CXUnsavedFile)x.Value).ToArray(), (uint)unsavedFiles.Length, (uint)globalOptFlags, out pTranslationUnit);
             if (pTranslationUnit == IntPtr.Zero)
             {
                 return null;
@@ -114,7 +117,7 @@ namespace LibClang
             {
                 unsavedFiles = new UnsavedFile[0];
             }
-            errorCode = clang.clang_parseTranslationUnit2FullArgv(this.Value, sourceFileName, cmdLineArgs, cmdLineArgs.Length, unsavedFiles.Select(x => x.Value).ToArray(), (uint)unsavedFiles.Length, (uint)globalOptFlags, out pTranslationUnit);
+            errorCode = clang.clang_parseTranslationUnit2FullArgv(this.m_value, sourceFileName, cmdLineArgs, cmdLineArgs.Length, unsavedFiles.Select(x => (CXUnsavedFile)x.Value).ToArray(), (uint)unsavedFiles.Length, (uint)globalOptFlags, out pTranslationUnit);
             if (pTranslationUnit == IntPtr.Zero)
             {
                 return null;
@@ -128,7 +131,7 @@ namespace LibClang
 
         public IndexAction CreateIndexAction(IIndexActionEventHandler indexActionEventHandler)
         {
-            IntPtr pIndexAction = clang.clang_IndexAction_create(this.Value);
+            IntPtr pIndexAction = clang.clang_IndexAction_create(this.m_value);
             if (pIndexAction == IntPtr.Zero)
             {
                 return null;
@@ -139,7 +142,7 @@ namespace LibClang
 
         protected override void Dispose()
         {
-            clang.clang_disposeIndex(this.Value);
+            clang.clang_disposeIndex(this.m_value);
         }
 
     }

@@ -4,19 +4,19 @@ using System.Text;
 
 namespace LibClang
 {
-    public  class TypeTemplateArgument
+    public  class TemplateArgument
     {
-        internal TypeTemplateArgument(Type type)
+        internal TemplateArgument(Type type)
         {
             this.Type = type;
         }
 
-        internal TypeTemplateArgument(uint uintValue)
+        internal TemplateArgument(uint uintValue)
         {
             this.UIntValue = uintValue;
         }
 
-        internal TypeTemplateArgument(long longValue)
+        internal TemplateArgument(long longValue)
         {
             this.LongValue = longValue;
         }

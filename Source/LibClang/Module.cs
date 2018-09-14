@@ -5,11 +5,11 @@ using LibClang.Intertop;
 
 namespace LibClang
 {
-    public class Module : ClangObject<IntPtr>
+    public class Module : ClangObject
     {
         internal Module(IntPtr value)
         {
-            this.Value = value;
+            this.m_value = value;
         }
 
         private string _name;
@@ -19,7 +19,7 @@ namespace LibClang
             {
                 if (this._name == null)
                 {
-                    this._name = clang.clang_Module_getName(this.Value).ToStringAndDispose();
+                    this._name = clang.clang_Module_getName(this.m_value).ToStringAndDispose();
                 }
                 return this._name;
             }
@@ -32,7 +32,7 @@ namespace LibClang
             {
                 if (this._fullName == null)
                 {
-                    this._fullName = clang.clang_Module_getFullName(this.Value).ToStringAndDispose();
+                    this._fullName = clang.clang_Module_getFullName(this.m_value).ToStringAndDispose();
                 }
                 return this._fullName;
             }
@@ -45,7 +45,7 @@ namespace LibClang
             {
                 if (this._Astfile == null)
                 {
-                    IntPtr file = clang.clang_Module_getASTFile(this.Value);
+                    IntPtr file = clang.clang_Module_getASTFile(this.m_value);
                     if (file != IntPtr.Zero)
                     {
                         this._Astfile = new File(file);
@@ -63,25 +63,28 @@ namespace LibClang
             {
                 if (this._parent == null)
                 {
-                    this._parent = new Module(clang.clang_Module_getParent(this.Value));
+                    this._parent = new Module(clang.clang_Module_getParent(this.m_value));
                 }
                 return this._parent;
             }
         }
 
         private bool? _isSystem;
+        private IntPtr m_value;
+
         public bool IsSystem
         {
             get
             {
                 if (!this._isSystem.HasValue)
                 {
-                    this._isSystem = clang.clang_Module_isSystem(this.Value) > 0;
+                    this._isSystem = clang.clang_Module_isSystem(this.m_value) > 0;
                 }
                 return this._isSystem.Value;
             }
         }
 
+        protected internal override ValueType Value { get { return this.m_value; } }
 
         protected override void Dispose()
         {

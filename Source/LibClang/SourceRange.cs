@@ -5,7 +5,7 @@ using LibClang.Intertop;
 
 namespace LibClang
 {
-    public class SourceRange : ClangObject<CXSourceRange>
+    public class SourceRange : ClangObject
     {
 
         static SourceRange()
@@ -17,7 +17,7 @@ namespace LibClang
 
         internal SourceRange(CXSourceRange sourceRange)
         {
-            this.Value = sourceRange;
+            this.m_value = sourceRange;
         }
 
 
@@ -25,13 +25,13 @@ namespace LibClang
         {
             get
             {
-                return clang.clang_Range_isNull(this.Value) > 0;
+                return clang.clang_Range_isNull(this.m_value) > 0;
             }
         }
 
         public SourceRange(SourceLocation begin, SourceLocation end)
         {
-            this.Value = clang.clang_getRange(begin.Value, end.Value);
+            this.m_value = clang.clang_getRange((CXSourceLocation)begin.Value, (CXSourceLocation)end.Value);
         }
 
         private SourceLocation begin;
@@ -42,28 +42,38 @@ namespace LibClang
             {
                 if (this.begin==null)
                 {
-                    this.begin = new SourceLocation(clang.clang_getRangeStart(this.Value));
+                    this.begin = new SourceLocation(clang.clang_getRangeStart(this.m_value));
                 }
                 return this.begin;
             }
         }
 
         private SourceLocation end;
+        private CXSourceRange m_value;
+
         public SourceLocation End
         {
             get
             {
                 if (this.end == null)
                 {
-                    this.end = new SourceLocation(clang.clang_getRangeEnd(this.Value));
+                    this.end = new SourceLocation(clang.clang_getRangeEnd(this.m_value));
                 }
                 return this.end;
             }
         }
 
-        protected override bool EqualsCore(ClangObject<CXSourceRange> clangObject)
+        protected internal override ValueType Value
         {
-            return clang.clang_equalRanges(this.Value, clangObject.Value) > 0;
+            get
+            {
+                return this.m_value;
+            }
+        }
+
+        protected override bool EqualsCore(ClangObject clangObject)
+        {
+            return clang.clang_equalRanges(this.m_value, (CXSourceRange)clangObject.Value) > 0;
         }
 
         public override string ToString()

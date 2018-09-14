@@ -6,14 +6,15 @@ using LibClang.Intertop;
 
 namespace LibClang
 {
-     public class CompletionResult:ClangObject<CXCompletionResult>
+     public class CompletionResult:ClangObject
     {
         internal CompletionResult(CXCompletionResult completionResult, FixIt[] fixIts)
         {
             this.FixIts = fixIts;
             this.CursorKind = completionResult.CursorKind;
-            this.Value = completionResult;
         }
+
+        private CXCompletionResult m_value;
 
         public CXCursorKind CursorKind { get; private set; }
 
@@ -27,7 +28,7 @@ namespace LibClang
             {
                 if (this._completionChunk == null)
                 {
-                    this._completionChunk = new CompletionChunkList(this.Value);
+                    this._completionChunk = new CompletionChunkList(this.m_value);
                 }
                 return this._completionChunk;
             }
@@ -41,21 +42,12 @@ namespace LibClang
             {
                 if (this._annotations == null)
                 {
-                    this._annotations = new CompletionResultAnnotationList(this.Value);
+                    this._annotations = new CompletionResultAnnotationList(this.m_value);
                 }
                 return this._annotations;
             }
         }
 
-
-        protected override void Dispose()
-        {
-
-        }
-
-        protected override bool EqualsCore(ClangObject<CXCompletionResult> clangObject)
-        {
-            return false;
-        }
+        protected internal override ValueType Value { get { return this.m_value; } }
     }
 }

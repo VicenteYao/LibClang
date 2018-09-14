@@ -7,15 +7,19 @@ using LibClang.Intertop;
 
 namespace LibClang
 {
-    public class DiagnosticSet : ClangObjectList<Diagnostic, IntPtr>, IReadOnlyList<Diagnostic>
+    public class DiagnosticSet : ClangObjectList<Diagnostic>
     {
         internal DiagnosticSet(IntPtr value)
         {
-            this.Value = value;
-            this._count = (int)clang.clang_getNumDiagnosticsInSet(this.Value);
+            this.m_value = value;
+            this._count= (int)clang.clang_getNumDiagnosticsInSet(this.m_value);
         }
 
+        private IntPtr m_value;
+
         private int _count;
+
+        protected internal override ValueType Value { get { return this.m_value; } }
 
         public static bool TryLoadDiagnostics(string fileName, out DiagnosticSet diagnosticSet, out CXLoadDiag_Error error)
         {
@@ -34,7 +38,7 @@ namespace LibClang
 
         protected override void Dispose()
         {
-            clang.clang_disposeDiagnosticSet(this.Value);
+            clang.clang_disposeDiagnosticSet(this.m_value);
         }
 
         protected override int GetCountCore()
@@ -44,7 +48,7 @@ namespace LibClang
 
         protected override Diagnostic EnsureItemAt(int index)
         {
-            IntPtr pDiagnostic = clang.clang_getDiagnosticInSet(this.Value, (uint)index);
+            IntPtr pDiagnostic = clang.clang_getDiagnosticInSet(this.m_value, (uint)index);
             return new Diagnostic(pDiagnostic);
         }
 

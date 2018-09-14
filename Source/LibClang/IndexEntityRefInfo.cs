@@ -5,19 +5,19 @@ using LibClang.Intertop;
 
 namespace LibClang
 {
-    public class IndexEntityRefInfo : ClangObject<CXIdxEntityRefInfo>
+    public class IndexEntityRefInfo : ClangObject
     {
 
         internal IndexEntityRefInfo(CXIdxEntityRefInfo cXIdxEntityRefInfo)
         {
-            this.Value = cXIdxEntityRefInfo;
+            this.m_value = cXIdxEntityRefInfo;
         }
 
         public CXIdxEntityRefKind EntityRefKind
         {
             get
             {
-                return this.Value.kind;
+                return this.m_value.kind;
             }
         }
 
@@ -25,7 +25,7 @@ namespace LibClang
         {
             get
             {
-                return this.Value.role;
+                return this.m_value.role;
             }
         }
 
@@ -36,9 +36,9 @@ namespace LibClang
             {
                 if (this.parentEntiry == null)
                 {
-                    if (this.Value.referencedEntity != (CXIdxEntityInfo*)0)
+                    if (this.m_value.referencedEntity != (CXIdxEntityInfo*)0)
                     {
-                        this.parentEntiry = new IndexEntityInfo((IntPtr)this.Value.parentEntity);
+                        this.parentEntiry = new IndexEntityInfo((IntPtr)this.m_value.parentEntity);
                     }
                 }
                 return this.parentEntiry;
@@ -52,9 +52,9 @@ namespace LibClang
             {
                 if (this.referencedEntity == null)
                 {
-                    if (this.Value.referencedEntity != (CXIdxEntityInfo*)0)
+                    if (this.m_value.referencedEntity != (CXIdxEntityInfo*)0)
                     {
-                        this.referencedEntity = new IndexEntityInfo((IntPtr)this.Value.referencedEntity);
+                        this.referencedEntity = new IndexEntityInfo((IntPtr)this.m_value.referencedEntity);
                     }
                 }
                 return this.referencedEntity;
@@ -68,25 +68,27 @@ namespace LibClang
             {
                 if (this.cursor == null)
                 {
-                    this.cursor = new Cursor(this.Value.cursor);
+                    this.cursor = new Cursor(this.m_value.cursor);
                 }
                 return this.cursor;
             }
         }
 
         private IndexLocation indexLocation;
+        private CXIdxEntityRefInfo m_value;
+
         public IndexLocation IndexLocation
         {
             get
             {
                 if (this.indexLocation == null)
                 {
-                    this.indexLocation = new IndexLocation(this.Value.loc);
+                    this.indexLocation = new IndexLocation(this.m_value.loc);
                 }
                 return this.indexLocation;
             }
         }
 
-
+        protected internal override ValueType Value { get { return this.m_value; } }
     }
 }

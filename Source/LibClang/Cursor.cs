@@ -6,7 +6,7 @@ using LibClang.Intertop;
 
 namespace LibClang
 {
-    public class Cursor : ClangObject<CXCursor>
+    public class Cursor : ClangObject
     {
         static Cursor()
         {
@@ -15,8 +15,10 @@ namespace LibClang
 
         internal Cursor(CXCursor cursor)
         {
-            this.Value = cursor;
+            this.m_value = cursor;
         }
+
+        private CXCursor m_value;
 
         private TranslationUnit _translationUnit;
         protected TranslationUnit TranslationUnit 
@@ -25,7 +27,7 @@ namespace LibClang
             {
                 if (this._translationUnit == null)
                 {
-                    this._translationUnit = new TranslationUnit(clang.clang_Cursor_getTranslationUnit(this.Value));
+                    this._translationUnit = new TranslationUnit(clang.clang_Cursor_getTranslationUnit(this.m_value));
                 }
                 return this._translationUnit;
             }
@@ -46,7 +48,7 @@ namespace LibClang
                 }
                 return CXVisitorResult.CXVisit_Break;
             }));
-            return clang.clang_findReferencesInFile(this.Value, file.Value, cursorAndRangeVisitor);
+            return clang.clang_findReferencesInFile(this.m_value, (IntPtr)file.Value, cursorAndRangeVisitor);
         }
 
         public static Cursor Null { get; private set; }
@@ -55,7 +57,7 @@ namespace LibClang
         {
             get
             {
-                return clang.clang_Cursor_isNull(this.Value) > 0;
+                return clang.clang_Cursor_isNull(this.m_value) > 0;
             }
         }
 
@@ -63,7 +65,7 @@ namespace LibClang
         {
             get
             {
-              return  clang.clang_Cursor_isAnonymous(this.Value) > 0;
+              return  clang.clang_Cursor_isAnonymous(this.m_value) > 0;
             }
         }
 
@@ -71,7 +73,7 @@ namespace LibClang
         {
             get
             {
-                return clang.clang_Cursor_isDynamicCall(this.Value) > 0;
+                return clang.clang_Cursor_isDynamicCall(this.m_value) > 0;
             }
         }
 
@@ -79,7 +81,7 @@ namespace LibClang
         {
             get
             {
-                return clang.clang_Cursor_isFunctionInlined(this.Value) > 0;
+                return clang.clang_Cursor_isFunctionInlined(this.m_value) > 0;
             }
         }
 
@@ -88,7 +90,7 @@ namespace LibClang
         {
             get
             {
-                this.cursorKind = clang.clang_getCursorKind(this.Value);
+                this.cursorKind = clang.clang_getCursorKind(this.m_value);
                 return this.cursorKind;
             }
         }
@@ -100,7 +102,7 @@ namespace LibClang
             {
                 if (this._arguments == null)
                 {
-                    int argumentsCount = clang.clang_Cursor_getNumArguments(this.Value);
+                    int argumentsCount = clang.clang_Cursor_getNumArguments(this.m_value);
                     if (argumentsCount == -1)
                     {
                         this._arguments = new Cursor[0];
@@ -110,7 +112,7 @@ namespace LibClang
                         this._arguments = new Cursor[argumentsCount];
                         for (uint i = 0; i < argumentsCount; i++)
                         {
-                            CXCursor argument = clang.clang_Cursor_getArgument(this.Value, i);
+                            CXCursor argument = clang.clang_Cursor_getArgument(this.m_value, i);
                             this._arguments[i] = new Cursor(argument);
                         }
                     }
@@ -127,7 +129,7 @@ namespace LibClang
             {
                 if (this.overridesCursors == null)
                 {
-                    this.overridesCursors = new OverriddenCursors(this.Value);
+                    this.overridesCursors = new OverriddenCursors(this.m_value);
                 }
                 return overridesCursors;
             }
@@ -140,22 +142,28 @@ namespace LibClang
             {
                 if (this.templateArguments==null)
                 {
-                    this.templateArguments = new CursorTemplateArguments(this.Value);
+                    this.templateArguments = new CursorTemplateArguments(this.m_value);
                 }
                 return this.templateArguments;
             }
         }
 
-        private Type reciever;
-        public Type Reciever
+        private Type _recieverType;
+        public Type RecieverType
         {
             get
             {
-                if (this.reciever == null)
+                if (this._recieverType == null)
                 {
-                    this.reciever = new Type(clang.clang_Cursor_getReceiverType(this.Value));
+                    if (this.m_value.kind== CXCursorKind.CXCursor_CXXMethod)
+                    {
+                        CXType receiverType = clang.clang_Cursor_getReceiverType(this.m_value);
+
+                        this._recieverType = new Type(receiverType);
+                    }
+
                 }
-                return this.reciever;
+                return this._recieverType;
             }
         }
 
@@ -168,7 +176,7 @@ namespace LibClang
             {
                 if (this._module == null)
                 {
-                    IntPtr module = clang.clang_Cursor_getModule(this.Value);
+                    IntPtr module = clang.clang_Cursor_getModule(this.m_value);
                     this._module = new Module(module);
                 }
                 return this._module;
@@ -184,7 +192,7 @@ namespace LibClang
             {
                 if (this._displayName == null)
                 {
-                    this._displayName = clang.clang_getCursorDisplayName(this.Value).ToStringAndDispose();
+                    this._displayName = clang.clang_getCursorDisplayName(this.m_value).ToStringAndDispose();
                 }
                 return _displayName;
             }
@@ -197,7 +205,7 @@ namespace LibClang
             {
                 if (this._typedefDeclUnderlyingType == null)
                 {
-                    this._typedefDeclUnderlyingType = new Type(clang.clang_getTypedefDeclUnderlyingType(this.Value));
+                    this._typedefDeclUnderlyingType = new Type(clang.clang_getTypedefDeclUnderlyingType(this.m_value));
                 }
                 return this._typedefDeclUnderlyingType;
             }
@@ -210,7 +218,7 @@ namespace LibClang
             {
                 if (this._commentRange==null)
                 {
-                    this._commentRange = new SourceRange(clang.clang_Cursor_getCommentRange(this.Value));
+                    this._commentRange = new SourceRange(clang.clang_Cursor_getCommentRange(this.m_value));
                 }
                 return this._commentRange;
             }
@@ -223,7 +231,7 @@ namespace LibClang
             {
                 if (this._sourceLocation == null)
                 {
-                    this._sourceLocation = new SourceLocation(clang.clang_getCursorLocation(this.Value));
+                    this._sourceLocation = new SourceLocation(clang.clang_getCursorLocation(this.m_value));
                 }
                 return this._sourceLocation;
             }
@@ -236,7 +244,7 @@ namespace LibClang
             {
                 if (this._includedFile==null)
                 {
-                    IntPtr pFile = clang.clang_getIncludedFile(this.Value);
+                    IntPtr pFile = clang.clang_getIncludedFile(this.m_value);
                     this._includedFile = new File(pFile);
                 }
                 return this._includedFile;
@@ -251,7 +259,7 @@ namespace LibClang
             {
                 if (this._CXXManglings==null)
                 {
-                    this._CXXManglings = NativeMethodsHelper.ToStringArrayAndDispose(clang.clang_Cursor_getCXXManglings(this.Value));
+                    this._CXXManglings = NativeMethodsHelper.ToStringArrayAndDispose(clang.clang_Cursor_getCXXManglings(this.m_value));
                 }
                 return this._CXXManglings;
             }
@@ -263,7 +271,7 @@ namespace LibClang
             get {
                 if (this._mangling==null)
                 {
-                    this._mangling = clang.clang_Cursor_getMangling(this.Value).ToStringAndDispose();
+                    this._mangling = clang.clang_Cursor_getMangling(this.m_value).ToStringAndDispose();
                 }
                 return this._mangling;
             }
@@ -276,7 +284,7 @@ namespace LibClang
             {
                 if (this._briefCommentText==null)
                 {
-                    this._briefCommentText = clang.clang_Cursor_getBriefCommentText(this.Value).ToStringAndDispose();
+                    this._briefCommentText = clang.clang_Cursor_getBriefCommentText(this.m_value).ToStringAndDispose();
                 }
                 return this._briefCommentText;
             }
@@ -289,7 +297,7 @@ namespace LibClang
             {
                 if (this._rawCommentText == null)
                 {
-                    this._rawCommentText = clang.clang_Cursor_getRawCommentText(this.Value).ToStringAndDispose();
+                    this._rawCommentText = clang.clang_Cursor_getRawCommentText(this.m_value).ToStringAndDispose();
                 }
                 return this._rawCommentText;
             }
@@ -301,7 +309,7 @@ namespace LibClang
         {
             get
             {
-                this._storageClass = clang.clang_Cursor_getStorageClass(this.Value);
+                this._storageClass = clang.clang_Cursor_getStorageClass(this.m_value);
                 return this._storageClass;
             }
         }
@@ -312,7 +320,7 @@ namespace LibClang
         {
             get
             {
-                this._languageKind = clang.clang_getCursorLanguage(this.Value);
+                this._languageKind = clang.clang_getCursorLanguage(this.m_value);
                 return this._languageKind;
             }
         }
@@ -322,7 +330,7 @@ namespace LibClang
         {
             get
             {
-                this._visibility = clang.clang_getCursorVisibility(this.Value);
+                this._visibility = clang.clang_getCursorVisibility(this.m_value);
                 return this._visibility;
             }
         }
@@ -332,7 +340,7 @@ namespace LibClang
         {
             get
             {
-                this._availability = clang.clang_getCursorAvailability(this.Value);
+                this._availability = clang.clang_getCursorAvailability(this.m_value);
                 return this._availability;
             }
         }
@@ -342,7 +350,7 @@ namespace LibClang
         {
             get
             {
-                this._linkage = clang.clang_getCursorLinkage(this.Value);
+                this._linkage = clang.clang_getCursorLinkage(this.m_value);
                 return this._linkage;
             }
         }
@@ -355,7 +363,7 @@ namespace LibClang
             {
                 if (this._evalResult == null)
                 {
-                    this._evalResult = new EvalResult(clang.clang_Cursor_Evaluate(this.Value));
+                    this._evalResult = new EvalResult(clang.clang_Cursor_Evaluate(this.m_value));
                 }
                 return this._evalResult;
             }
@@ -371,22 +379,26 @@ namespace LibClang
             {
                 if (this.resultType==null)
                 {
-                    CXType cxResultType = clang.clang_getCursorResultType(this.Value);
-                    this.resultType = new Type(cxResultType);
+                    if (this.m_value.kind== CXCursorKind.CXCursor_CXXMethod)
+                    {
+                        CXType cxResultType = clang.clang_getCursorResultType(this.m_value);
+                        this.resultType = new Type(cxResultType);
+                    }
                 }
                 return this.resultType;
             }
         }
 
+        protected internal override ValueType Value { get { return this.m_value; } }
 
         protected override void Dispose()
         {
-            clang.clang_Cursor_Evaluate(this.Value);
+            clang.clang_Cursor_Evaluate(this.m_value);
         }
 
-        protected override bool EqualsCore(ClangObject<CXCursor> clangObject)
+        protected override bool EqualsCore(ClangObject clangObject)
         {
-            return clang.clang_equalCursors(this.Value, clangObject.Value) > 0;
+            return clang.clang_equalCursors(this.m_value, (CXCursor)clangObject.Value) > 0;
         }
 
         public override string ToString()

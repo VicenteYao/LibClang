@@ -6,12 +6,14 @@ using System.Runtime.InteropServices;
 
 namespace LibClang
 {
-    public unsafe class CodeCompleteResults : ClangObject<IntPtr>
+    public unsafe class CodeCompleteResults : ClangObject
     {
-        internal CodeCompleteResults(IntPtr completeResults)
+        internal CodeCompleteResults(CXCodeCompleteResults* completeResults)
         {
-            this.Value = completeResults;
+            this.m_value = completeResults;
         }
+
+        private CXCodeCompleteResults* m_value;
 
         private CompletionResultList completionResults;
         public unsafe CompletionResultList CompletionResults
@@ -20,7 +22,7 @@ namespace LibClang
             {
                 if (this.completionResults == null)
                 {
-                    this.completionResults = new CompletionResultList((CXCodeCompleteResults*)this.Value);
+                    this.completionResults = new CompletionResultList(this.m_value);
                 }
                 return this.completionResults;
             }
@@ -28,7 +30,7 @@ namespace LibClang
 
         protected override void Dispose()
         {
-            clang.clang_disposeCodeCompleteResults((CXCodeCompleteResults*)this.Value);
+            clang.clang_disposeCodeCompleteResults((CXCodeCompleteResults*)(IntPtr)this.m_value);
         }
 
         private Diagnostic[] _diagnostics;
@@ -38,11 +40,11 @@ namespace LibClang
             {
                 if (this._diagnostics == null)
                 {
-                    uint diagnosticCount = clang.clang_codeCompleteGetNumDiagnostics((CXCodeCompleteResults*)this.Value);
+                    uint diagnosticCount = clang.clang_codeCompleteGetNumDiagnostics(this.m_value);
                     this._diagnostics = new Diagnostic[diagnosticCount];
                     for (uint i = 0; i < diagnosticCount; i++)
                     {
-                        this._diagnostics[i] = new Diagnostic(clang.clang_codeCompleteGetDiagnostic((CXCodeCompleteResults*)this.Value, i));
+                        this._diagnostics[i] = new Diagnostic(clang.clang_codeCompleteGetDiagnostic(this.m_value, i));
                     }
                 }
                 return this._diagnostics;
@@ -57,16 +59,14 @@ namespace LibClang
                 if (!this.context.HasValue)
                 {
                     
-                    this.context = (CXCompletionContext)clang.clang_codeCompleteGetContexts((CXCodeCompleteResults*)this.Value);
+                    this.context = (CXCompletionContext)clang.clang_codeCompleteGetContexts(this.m_value);
                 }
                 return this.context.Value;
             }
         }
 
-        protected override bool EqualsCore(ClangObject<IntPtr> clangObject)
-        {
-            return this.Value == clangObject.Value;
-        }
+        protected internal override ValueType Value { get { return (IntPtr)this.m_value; } }
+
 
     }
 }

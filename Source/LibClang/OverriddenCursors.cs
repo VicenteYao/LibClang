@@ -6,18 +6,21 @@ using LibClang.Intertop;
 
 namespace LibClang
 {
-    public unsafe class OverriddenCursors : ClangObjectList<Cursor, CXCursor>
+    public unsafe class OverriddenCursors : ClangObjectList<Cursor>
     {
         internal OverriddenCursors(CXCursor cursor)
         {
-            this.Value = cursor;
+            this.m_value = cursor;
             uint cursorsCount = 0;
-            clang.clang_getOverriddenCursors(this.Value, out pCursors, out cursorsCount);
+            clang.clang_getOverriddenCursors(this.m_value, out pCursors, out cursorsCount);
             this._count = (int)cursorsCount;
         }
 
         private CXCursor* pCursors;
         private int _count;
+        private CXCursor m_value;
+
+        protected internal override ValueType Value { get { return this.m_value; } }
 
         protected unsafe override void Dispose()
         {

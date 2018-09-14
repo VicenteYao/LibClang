@@ -7,20 +7,9 @@ namespace LibClang
 {
     internal class Pointer<T> : IDisposable
     {
-        internal Pointer(T[] array)
-        {
-            this.m_arrayLength = array.Length;
-            this.Size = Marshal.SizeOf(Marshal.SizeOf(typeof(T)) * array.Length);
-            this.m_ptr = Marshal.AllocHGlobal(this.Size);
-            for (int i = 0; i < array.Length; i++)
-            {
-                Marshal.StructureToPtr(array.GetValue(i), (this.m_ptr + i), false);
-            }
-        }
 
         public int Size { get; private set; }
 
-        private T[] m_arrayValue;
         private T m_value;
 
         private int m_arrayLength;
@@ -36,11 +25,6 @@ namespace LibClang
         public TResult Cast<TResult>(Func<T, TResult> castFunc)
         {
             return castFunc(this.m_value);
-        }
-
-        public TResult Cast<TResult>(Func<T[], TResult> castFunc)
-        {
-            return castFunc(this.m_arrayValue);
         }
 
 

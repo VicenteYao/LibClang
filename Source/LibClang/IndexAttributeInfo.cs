@@ -5,11 +5,11 @@ using LibClang.Intertop;
 
 namespace LibClang
 {
-    public class IndexAttributeInfo : ClangObject<CXIdxAttrInfo>
+    public class IndexAttributeInfo : ClangObject
     {
         internal IndexAttributeInfo(CXIdxAttrInfo attrInfo)
         {
-            this.Value = attrInfo;
+            this.m_value = attrInfo;
         }
 
         private Cursor cursor;
@@ -20,13 +20,14 @@ namespace LibClang
             {
                 if (this.cursor == null)
                 {
-                    this.cursor = new Cursor(this.Value.cursor);
+                    this.cursor = new Cursor(this.m_value.cursor);
                 }
                 return this.cursor;
             }
         }
 
         private IndexLocation indexLocation;
+        private CXIdxAttrInfo m_value;
 
         public  IndexLocation IndexLocation
         {
@@ -34,7 +35,7 @@ namespace LibClang
             {
                 if (this.indexLocation == null)
                 {
-                    this.indexLocation = new IndexLocation(this.Value.loc);
+                    this.indexLocation = new IndexLocation(this.m_value.loc);
                 }
                 return this.indexLocation;
             }
@@ -44,9 +45,10 @@ namespace LibClang
         {
             get
             {
-                return this.Value.kind;
+                return this.m_value.kind;
             }
         }
 
+        protected internal override ValueType Value { get { return this.m_value; } }
     }
 }

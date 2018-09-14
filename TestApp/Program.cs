@@ -11,6 +11,13 @@ namespace TestApp
             LibClang.TranslationUnit translationUnit = index.CreateTranslationUnit(@"D:\clang.ast");
 
             var indexAction = index.CreateIndexAction(new IndexActionEventHandler());
+
+
+            foreach (var item in translationUnit.ResourceUsages)
+            {
+                Console.WriteLine("{0}:{1}", item.Name,item.Amount);
+            }
+
             indexAction.Index(translationUnit, LibClang.Intertop.CXIndexOptFlags.CXIndexOpt_IndexFunctionLocalSymbols);
             Console.ReadLine();
         }

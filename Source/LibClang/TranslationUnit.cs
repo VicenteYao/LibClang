@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Text;
-using LibClang.Intertop;
+﻿using LibClang.Intertop;
+using System;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace LibClang
 {
-    public class TranslationUnit : ClangObject<IntPtr>
+    public class TranslationUnit : ClangObject
     {
         internal TranslationUnit(IntPtr pTranlationUnit)
         {
-            this.Value = pTranlationUnit;
+            this.m_value = pTranlationUnit;
         }
 
         public unsafe CodeCompleteResults CodeCompleteAt(string completeFileName, uint completeline, uint completeColumn, UnsavedFile[] unsavedFiles, CXCodeComplete_Flags flags)
@@ -20,13 +18,13 @@ namespace LibClang
             {
                 unsavedFiles = new UnsavedFile[0];
             }
-            CXCodeCompleteResults* pCodeComplete = clang.clang_codeCompleteAt(this.Value, completeFileName, completeline, completeColumn, unsavedFiles.Select(x => x.Value).ToArray(), (uint)unsavedFiles.Length, (uint)flags);
-            return new CodeCompleteResults((IntPtr)pCodeComplete);
+            CXCodeCompleteResults* pCodeComplete = clang.clang_codeCompleteAt(this.m_value, completeFileName, completeline, completeColumn, unsavedFiles.Select(x => (CXUnsavedFile)x.Value).ToArray(), (uint)unsavedFiles.Length, (uint)flags);
+            return new CodeCompleteResults((CXCodeCompleteResults*)pCodeComplete);
         }
 
         public void Suspend()
         {
-            clang.clang_suspendTranslationUnit(this.Value);
+            clang.clang_suspendTranslationUnit(this.m_value);
         }
 
         private CXSaveTranslationUnit_Flags? _defaultSaveFlags;
@@ -36,21 +34,21 @@ namespace LibClang
             {
                 if (!this._defaultSaveFlags.HasValue)
                 {
-                    this._defaultSaveFlags = (CXSaveTranslationUnit_Flags)clang.clang_defaultSaveOptions(this.Value);
+                    this._defaultSaveFlags = (CXSaveTranslationUnit_Flags)clang.clang_defaultSaveOptions(this.m_value);
                 }
                 return this._defaultSaveFlags.Value;
             }
         }
 
-        private TranslationUnitResourceUsage _resourceUsage;
-        public TranslationUnitResourceUsage ResourceUsage
+        private TranslationUnitResourceUsages _resourceUsages;
+        public TranslationUnitResourceUsages ResourceUsages
         {
             get
             {
                 CXTUResourceUsage cXTUResourceUsage;
-                cXTUResourceUsage = clang.clang_getCXTUResourceUsage(this.Value);
-                this._resourceUsage = new TranslationUnitResourceUsage(cXTUResourceUsage);
-                return this._resourceUsage;
+                cXTUResourceUsage = clang.clang_getCXTUResourceUsage(this.m_value);
+                this._resourceUsages = new TranslationUnitResourceUsages(cXTUResourceUsage);
+                return this._resourceUsages;
             }
         }
 
@@ -69,7 +67,7 @@ namespace LibClang
                 }
                 return CXVisitorResult.CXVisit_Break;
             }));
-            return clang.clang_findIncludesInFile(this.Value, file.Value, cursorAndRangeVisitor);
+            return clang.clang_findIncludesInFile(this.m_value, (IntPtr)file.Value, cursorAndRangeVisitor);
         }
 
         private CXReparse_Flags _defaultReparseFlags;
@@ -78,7 +76,7 @@ namespace LibClang
             get
             {
 
-                this._defaultReparseFlags = (CXReparse_Flags)clang.clang_defaultReparseOptions(this.Value);
+                this._defaultReparseFlags = (CXReparse_Flags)clang.clang_defaultReparseOptions(this.m_value);
                 return this._defaultReparseFlags;
             }
         }
@@ -86,12 +84,12 @@ namespace LibClang
 
         public void Reparse(UnsavedFile[] unsavedFiles, CXReparse_Flags reparseFlags)
         {
-            clang.clang_reparseTranslationUnit(this.Value, (uint)unsavedFiles.Length, unsavedFiles.Select(x => x.Value).ToArray(), (uint)reparseFlags);
+            clang.clang_reparseTranslationUnit(this.m_value, (uint)unsavedFiles.Length, unsavedFiles.Select(x => (CXUnsavedFile)x.Value).ToArray(), (uint)reparseFlags);
         }
 
         public void Save(string fileName,CXSaveTranslationUnit_Flags saveTranslationUnit_Flags)
         {
-            clang.clang_saveTranslationUnit(this.Value, fileName, (uint)saveTranslationUnit_Flags);
+            clang.clang_saveTranslationUnit(this.m_value, fileName, (uint)saveTranslationUnit_Flags);
         }
 
         private string _spelling;
@@ -101,7 +99,7 @@ namespace LibClang
             {
                 if (this._spelling==null)
                 {
-                    this._spelling = clang.clang_getTranslationUnitSpelling(this.Value).ToStringAndDispose();
+                    this._spelling = clang.clang_getTranslationUnitSpelling(this.m_value).ToStringAndDispose();
                 }
                 return this._spelling;
             }
@@ -113,7 +111,7 @@ namespace LibClang
         {
             get
             {
-                CXCursor cursor = clang.clang_getTranslationUnitCursor(this.Value);
+                CXCursor cursor = clang.clang_getTranslationUnitCursor(this.m_value);
                 this._cursor = new Cursor(cursor);
                 return this._cursor;
             }
@@ -126,7 +124,7 @@ namespace LibClang
             {
                 if (this._targetInfo == null)
                 {
-                    IntPtr value = clang.clang_getTranslationUnitTargetInfo(this.Value);
+                    IntPtr value = clang.clang_getTranslationUnitTargetInfo(this.m_value);
                     if (value != IntPtr.Zero)
                     {
                         this._targetInfo = new TargetInfo(value);
@@ -143,11 +141,11 @@ namespace LibClang
             {
                 if (_diagnostics==null)
                 {
-                    uint diagnosticCount = clang.clang_getNumDiagnostics(this.Value);
+                    uint diagnosticCount = clang.clang_getNumDiagnostics(this.m_value);
                     this._diagnostics = new Diagnostic[diagnosticCount];
                     for (uint i = 0; i < diagnosticCount; i++)
                     {
-                        this._diagnostics[i] = new Diagnostic(clang.clang_getDiagnostic(this.Value, i));
+                        this._diagnostics[i] = new Diagnostic(clang.clang_getDiagnostic(this.m_value, i));
                     }
                 }
                 return this._diagnostics;
@@ -155,6 +153,8 @@ namespace LibClang
         }
 
         private DiagnosticSet _diagnosticSet;
+        private IntPtr m_value;
+
         public DiagnosticSet DiagnosticSet
         {
             get
@@ -162,25 +162,24 @@ namespace LibClang
                
                 if (this._diagnosticSet == null)
                 {
-                    this._diagnosticSet = new DiagnosticSet(clang.clang_getDiagnosticSetFromTU(this.Value));
+                    this._diagnosticSet = new DiagnosticSet(clang.clang_getDiagnosticSetFromTU(this.m_value));
                 }
                 return this._diagnosticSet;
             }
         }
 
-        
-
+        protected internal override ValueType Value { get { return this.m_value; } }
 
         protected override void Dispose()
         {
-            clang.clang_disposeTranslationUnit(this.Value);
+            clang.clang_disposeTranslationUnit(this.m_value);
         }
 
         public unsafe TokenList Tokenize(SourceRange sourceRange)
         {
             CXToken* pToken = null;
             uint tokenCount = 0;
-            clang.clang_tokenize(this.Value, sourceRange.Value, out pToken, out tokenCount);
+            clang.clang_tokenize(this.m_value, (CXSourceRange)sourceRange.Value, out pToken, out tokenCount);
             return new TokenList(this, pToken, (int)tokenCount);
         }
 
@@ -190,22 +189,22 @@ namespace LibClang
             {
                 return;
             }
-            clang.clang_annotateTokens(this.Value, tokens.Select(x => x.Value).ToArray(), (uint)tokens.Length, cursors.Select(x => x.Value).ToArray());
+            clang.clang_annotateTokens(this.m_value, tokens.Select(x => (CXToken)x.Value).ToArray(), (uint)tokens.Length, cursors.Select(x => (CXCursor)x.Value).ToArray());
         }
 
         public Cursor GetCursor(SourceLocation sourceLocation)
         {
-            return new Cursor(clang.clang_getCursor(this.Value, sourceLocation.Value));
+            return new Cursor(clang.clang_getCursor(this.m_value, (CXSourceLocation)sourceLocation.Value));
         }
 
         public SourceLocation GetSourceLocation(File file, uint line, uint column)
         {
-            return new SourceLocation(clang.clang_getLocation(this.Value, file.Value, line, column));
+            return new SourceLocation(clang.clang_getLocation(this.m_value, (IntPtr)file.Value, line, column));
         }
 
         public SourceLocation GetSourceLocation(File file, uint offset)
         {
-            return new SourceLocation(clang.clang_getLocationForOffset(this.Value, file.Value, offset));
+            return new SourceLocation(clang.clang_getLocationForOffset(this.m_value, (IntPtr)file.Value, offset));
         }
 
         public SourceRange GetSourceRange(File file, uint beginLine, uint beginColumn, uint endLine, uint endColumn)
@@ -224,7 +223,7 @@ namespace LibClang
 
         public File GetFile(string fileName)
         {
-            IntPtr pFile = clang.clang_getFile(this.Value, fileName);
+            IntPtr pFile = clang.clang_getFile(this.m_value, fileName);
             if (pFile == IntPtr.Zero)
             {
                 return null;
@@ -236,13 +235,13 @@ namespace LibClang
         public unsafe string GetFileContents(File file)
         {
             uint size = 0;
-            string contents = new string(clang.clang_getFileContents(this.Value, file.Value, out size), 0, (int)size);
+            string contents = new string(clang.clang_getFileContents(this.m_value, (IntPtr)file.Value, out size), 0, (int)size);
             return contents;
         }
 
         public Module GetModule(File file)
         {
-            IntPtr pModule = clang.clang_getModuleForFile(this.Value, file.Value);
+            IntPtr pModule = clang.clang_getModuleForFile(this.m_value, (IntPtr)file.Value);
             if (pModule == IntPtr.Zero)
             {
                 return null;
@@ -254,11 +253,11 @@ namespace LibClang
 
         public File[] GetTopLeverHeaders(Module module)
         {
-            uint topleverHeadersCount = clang.clang_Module_getNumTopLevelHeaders(this.Value, module.Value);
+            uint topleverHeadersCount = clang.clang_Module_getNumTopLevelHeaders(this.m_value, (IntPtr)module.Value);
             File[] topleverHeaders = new File[topleverHeadersCount];
             for (uint i = 0; i < topleverHeadersCount; i++)
             {
-                topleverHeaders[i] = new File(clang.clang_Module_getTopLevelHeader(this.Value, module.Value, i));
+                topleverHeaders[i] = new File(clang.clang_Module_getTopLevelHeader(this.m_value, (IntPtr)module.Value, i));
             }
             return topleverHeaders;
         }
@@ -272,7 +271,7 @@ namespace LibClang
 
         public unsafe SourceRangeList GetSkippedRanges(File file)
         {
-            IntPtr pRangeList = clang.clang_getSkippedRanges(this.Value, file.Value);
+            IntPtr pRangeList = clang.clang_getSkippedRanges(this.m_value, (IntPtr)file.Value);
             if (pRangeList == IntPtr.Zero)
             {
                 return null;
@@ -283,7 +282,7 @@ namespace LibClang
 
         public unsafe SourceRangeList GetAllSkippedRanges()
         {
-            IntPtr pRangeList = clang.clang_getAllSkippedRanges(this.Value);
+            IntPtr pRangeList = clang.clang_getAllSkippedRanges(this.m_value);
             if (pRangeList == IntPtr.Zero)
             {
                 return null;
@@ -291,5 +290,6 @@ namespace LibClang
             CXSourceRangeList* pCXSourceRangeList = (CXSourceRangeList*)pRangeList;
             return new SourceRangeList(*pCXSourceRangeList);
         }
+
     }
 }

@@ -5,11 +5,11 @@ using LibClang.Intertop;
 
 namespace LibClang
 {
-    public class TargetInfo : ClangObject<IntPtr>
+    public class TargetInfo : ClangObject
     {
         internal unsafe TargetInfo(IntPtr value)
         {
-            this.Value = value;
+            this.m_value = value;
             this.PointerWidth = clang.clang_TargetInfo_getPointerWidth(value);
             CXString tripleString = clang.clang_TargetInfo_getTriple(value);
             this.Triple = NativeMethodsHelper.ToStringAndDispose(tripleString);
@@ -19,8 +19,10 @@ namespace LibClang
 
         protected override void Dispose()
         {
-            clang.clang_TargetInfo_dispose(this.Value);
+            clang.clang_TargetInfo_dispose(this.m_value);
         }
+
+        private IntPtr m_value;
 
         public int PointerWidth
         {
@@ -28,6 +30,6 @@ namespace LibClang
             private set;
         }
 
-
+        protected internal override ValueType Value { get { return this.m_value; } }
     }
 }

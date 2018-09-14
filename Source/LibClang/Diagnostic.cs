@@ -5,12 +5,14 @@ using LibClang.Intertop;
 
 namespace LibClang
 {
-    public class Diagnostic : ClangObject<IntPtr>
+    public class Diagnostic : ClangObject
     {
         internal Diagnostic(IntPtr value)
         {
-            this.Value = value;
+            this.m_value = value;
         }
+
+        private IntPtr m_value;
 
         private static CXDiagnosticDisplayOptions _CXDiagnosticDisplayOptions;
         public static CXDiagnosticDisplayOptions DefaultDisplayOptions
@@ -24,7 +26,7 @@ namespace LibClang
 
         public string Format(CXDiagnosticDisplayOptions diagnosticDisplayOptions)
         {
-            return clang.clang_formatDiagnostic(this.Value, (uint)diagnosticDisplayOptions).ToStringAndDispose();
+            return clang.clang_formatDiagnostic(this.m_value, (uint)diagnosticDisplayOptions).ToStringAndDispose();
         }
 
         private SourceLocation _sourceLocation;
@@ -35,7 +37,7 @@ namespace LibClang
             {
                 if (this._sourceLocation == null)
                 {
-                    this._sourceLocation = new SourceLocation(clang.clang_getDiagnosticLocation(this.Value));
+                    this._sourceLocation = new SourceLocation(clang.clang_getDiagnosticLocation(this.m_value));
                 }
                 return _sourceLocation;
             }
@@ -49,7 +51,7 @@ namespace LibClang
             {
                 if (this._diagnosticSet==null)
                 {
-                    this._diagnosticSet = new DiagnosticSet(clang.clang_getChildDiagnostics(this.Value));
+                    this._diagnosticSet = new DiagnosticSet(clang.clang_getChildDiagnostics(this.m_value));
                 }
                 return this._diagnosticSet;
             }
@@ -62,7 +64,7 @@ namespace LibClang
             {
                 if (this.categoryText == null)
                 {
-                    this.categoryText = clang.clang_getDiagnosticCategoryText(this.Value).ToStringAndDispose();
+                    this.categoryText = clang.clang_getDiagnosticCategoryText(this.m_value).ToStringAndDispose();
                 }
                 return this.categoryText;
             }
@@ -77,7 +79,7 @@ namespace LibClang
             {
                 if (this.spelling == null)
                 {
-                    this.spelling = clang.clang_getDiagnosticSpelling(this.Value).ToStringAndDispose();
+                    this.spelling = clang.clang_getDiagnosticSpelling(this.m_value).ToStringAndDispose();
                 }
                 return this.spelling;
             }
@@ -86,7 +88,7 @@ namespace LibClang
 
         protected override void Dispose()
         {
-            clang.clang_disposeDiagnostic(this.Value);
+            clang.clang_disposeDiagnostic(this.m_value);
         }
 
 
@@ -96,7 +98,7 @@ namespace LibClang
         {
             get
             {
-                this._category = (int)clang.clang_getDiagnosticCategory(this.Value);
+                this._category = (int)clang.clang_getDiagnosticCategory(this.m_value);
                 return this._category;
             }
         }
@@ -106,7 +108,7 @@ namespace LibClang
         {
             get
             {
-                this._severity = clang.clang_getDiagnosticSeverity(this.Value);
+                this._severity = clang.clang_getDiagnosticSeverity(this.m_value);
                 return this._severity;
             }
         }
@@ -118,11 +120,11 @@ namespace LibClang
             {
                 if (this._sourceRanges == null)
                 {
-                    uint sourceRangesCount = clang.clang_getDiagnosticNumRanges(this.Value);
+                    uint sourceRangesCount = clang.clang_getDiagnosticNumRanges(this.m_value);
                     this._sourceRanges = new SourceRange[(int)sourceRangesCount];
                     for (uint i = 0; i < sourceRangesCount; i++)
                     {
-                        this._sourceRanges[i] = new SourceRange(clang.clang_getDiagnosticRange(this.Value, i));
+                        this._sourceRanges[i] = new SourceRange(clang.clang_getDiagnosticRange(this.m_value, i));
                     }
                 }
                 return this._sourceRanges;
@@ -136,12 +138,12 @@ namespace LibClang
             {
                 if (this._fixIts==null)
                 {
-                    uint fixitsCount = clang.clang_getDiagnosticNumFixIts(this.Value);
+                    uint fixitsCount = clang.clang_getDiagnosticNumFixIts(this.m_value);
                     this._fixIts = new FixIt[fixitsCount];
                     for (uint i = 0; i < fixitsCount; i++)
                     {
                         CXSourceRange xSourceRange;
-                        string text = clang.clang_getDiagnosticFixIt(this.Value, i, out xSourceRange).ToStringAndDispose();
+                        string text = clang.clang_getDiagnosticFixIt(this.m_value, i, out xSourceRange).ToStringAndDispose();
                         SourceRange sourceRange = new SourceRange(xSourceRange);
                         this._fixIts[i] = new FixIt(text, sourceRange);
                     }
@@ -149,6 +151,8 @@ namespace LibClang
                 return this._fixIts;
             }
         }
+
+        protected internal override ValueType Value { get { return this.m_value; } }
 
         public override string ToString()
         {

@@ -5,17 +5,20 @@ using System.Text;
 
 namespace LibClang
 {
-    public class CompletionResultList : ClangObjectList<CompletionResult, IntPtr>
+    public class CompletionResultList : ClangObjectList<CompletionResult>
     {
+        private IntPtr m_value;
+
         internal unsafe CompletionResultList(CXCodeCompleteResults* pCompleteResults)
         {
-            this.Value = (IntPtr)pCompleteResults;
+            this.m_value = (IntPtr)pCompleteResults;
         }
 
+        protected internal override ValueType Value { get { return this.m_value; } }
 
         protected unsafe override CompletionResult EnsureItemAt(int index)
         {
-            CXCodeCompleteResults* pCXCodeCompleteResults = (CXCodeCompleteResults*)this.Value;
+            CXCodeCompleteResults* pCXCodeCompleteResults = (CXCodeCompleteResults*)this.m_value;
             uint fixitCount = clang.clang_getCompletionNumFixIts(pCXCodeCompleteResults, (uint)index);
             FixIt[] fixIts = new FixIt[fixitCount];
             for (uint J = 0; J < fixitCount; J++)
@@ -30,7 +33,7 @@ namespace LibClang
 
         protected unsafe override int GetCountCore()
         {
-            CXCodeCompleteResults* pCXCodeCompleteResults = (CXCodeCompleteResults*)this.Value;
+            CXCodeCompleteResults* pCXCodeCompleteResults = (CXCodeCompleteResults*)this.m_value;
             return (int)pCXCodeCompleteResults->NumResults;
         }
     }

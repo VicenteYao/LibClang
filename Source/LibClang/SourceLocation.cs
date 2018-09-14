@@ -5,7 +5,7 @@ using LibClang.Intertop;
 
 namespace LibClang
 {
-    public class SourceLocation : ClangObject<CXSourceLocation>
+    public class SourceLocation : ClangObject
     {
 
         static SourceLocation()
@@ -17,7 +17,7 @@ namespace LibClang
 
         internal SourceLocation(CXSourceLocation sourceLocation)
         {
-            this.Value = sourceLocation;
+            this.m_value = sourceLocation;
         }
 
         private void EnsurenExpansionLocation()
@@ -28,15 +28,15 @@ namespace LibClang
                 uint line;
                 uint column;
                 uint offset;
-                clang.clang_getExpansionLocation(this.Value, out filePtr, out line, out column, out offset);
+                clang.clang_getExpansionLocation(this.m_value, out filePtr, out line, out column, out offset);
                 File file = new File(filePtr);
                 this.expansionLocation = new ExpansionLocation(file, line, column, offset);
             }
         }
 
-        protected override bool EqualsCore(ClangObject<CXSourceLocation> clangObject)
+        protected override bool EqualsCore(ClangObject clangObject)
         {
-            return clang.clang_equalLocations(this.Value, clangObject.Value) > 0;
+            return clang.clang_equalLocations(this.m_value, (CXSourceLocation)clangObject.Value) > 0;
         }
 
         private class ExpansionLocation
@@ -113,7 +113,7 @@ namespace LibClang
                 CXString ptrFileName;
                 uint column;
                 uint line;
-                clang.clang_getPresumedLocation(this.Value, out ptrFileName, out line, out column);
+                clang.clang_getPresumedLocation(this.m_value, out ptrFileName, out line, out column);
                 this.presumedLocation = new  PresumedLocation(ptrFileName.ToStringAndDispose(), line, column);
             }
         }
@@ -127,7 +127,7 @@ namespace LibClang
             {
                 if (!this.isFromMainFile.HasValue)
                 {
-                    this.isFromMainFile = clang.clang_Location_isFromMainFile(this.Value) > 0;
+                    this.isFromMainFile = clang.clang_Location_isFromMainFile(this.m_value) > 0;
                 }
                 return this.isFromMainFile.Value;
             }
@@ -135,17 +135,21 @@ namespace LibClang
 
 
         private bool? isInSystemHeader;
+        private CXSourceLocation m_value;
+
         public bool IsInSystemHeader
         {
             get
             {
                 if (!this.isInSystemHeader.HasValue)
                 {
-                    this.isInSystemHeader = clang.clang_Location_isInSystemHeader(this.Value) > 0;
+                    this.isInSystemHeader = clang.clang_Location_isInSystemHeader(this.m_value) > 0;
                 }
                 return this.isInSystemHeader.Value;
             }
         }
+
+        protected internal override ValueType Value => throw new NotImplementedException();
 
         public override string ToString()
         {

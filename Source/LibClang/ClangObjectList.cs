@@ -5,7 +5,7 @@ using System.Text;
 
 namespace LibClang
 {
-    public abstract class ClangObjectList<TItem,TValue> : ClangObject<TValue>, IReadOnlyList<TItem> where TValue:struct where TItem:class
+    public abstract class ClangObjectList<TItem> : ClangObject, IReadOnlyList<TItem> where TItem:class
     {
         protected ClangObjectList()
         {
@@ -13,7 +13,7 @@ namespace LibClang
         }
 
 
-        private Dictionary<int, TItem> itemsDict;
+        private Dictionary<int, TItem> _items;
 
         public TItem this[int index]
         {
@@ -31,23 +31,23 @@ namespace LibClang
         {
             this.EnsureItemDictionary();
             TItem item = null;
-            if (!this.itemsDict.ContainsKey(index))
+            if (!this._items.ContainsKey(index))
             {
                 item = this.EnsureItemAt(index);
-                this.itemsDict.Add(index, item);
+                this._items.Add(index, item);
             }
             else
             {
-                item = this.itemsDict[index];
+                item = this._items[index];
             }
             return item;
         }
 
         private void EnsureItemDictionary()
         {
-            if (this.Count > 0 && this.itemsDict == null)
+            if (this.Count > 0 && this._items == null)
             {
-                this.itemsDict = new Dictionary<int, TItem>(this.Count);
+                this._items = new Dictionary<int, TItem>(this.Count);
             }
         }
 
@@ -74,13 +74,13 @@ namespace LibClang
 
         public struct Enumerable : IEnumerator<TItem>
         {
-            internal Enumerable(ClangObjectList<TItem, TValue> clangObjectList)
+            internal Enumerable(ClangObjectList<TItem> clangObjectList)
             {
                 this.clangObjectList = clangObjectList;
                 this.index = -1;
             }
 
-            private ClangObjectList<TItem, TValue> clangObjectList;
+            private ClangObjectList<TItem> clangObjectList;
             private int index;
 
             public TItem Current { get { return this.clangObjectList[this.index]; } }

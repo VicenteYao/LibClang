@@ -4,14 +4,14 @@ using System.Text;
 
 namespace LibClang
 {
-    public abstract class ClangObject<T> : IDisposable where T : struct
+    public abstract class ClangObject : IDisposable
     {
-        protected ClangObject()
+        internal ClangObject()
         {
 
         }
 
-        protected internal virtual T Value { get; protected set; }
+        protected internal abstract ValueType Value { get; }
 
         protected virtual void Dispose()
         {
@@ -20,15 +20,15 @@ namespace LibClang
 
         public override bool Equals(object obj)
         {
-            if (obj is ClangObject<T>)
+            if (obj is ClangObject)
             {
-                ClangObject<T> clangObject = obj as ClangObject<T>;
+                ClangObject clangObject = obj as ClangObject;
                 return this.EqualsCore(clangObject);
             }
             return false;
         }
 
-        public static bool operator ==(ClangObject<T> left, ClangObject<T> right)
+        public static bool operator ==(ClangObject left, ClangObject right)
         {
             if ((object.ReferenceEquals(left, null) || object.ReferenceEquals(right, null)) && object.ReferenceEquals(left, right))
             {
@@ -37,7 +37,7 @@ namespace LibClang
             return left.Equals(right);
         }
 
-        public static bool operator !=(ClangObject<T> left, ClangObject<T> right)
+        public static bool operator !=(ClangObject left, ClangObject right)
         {
             if ((object.ReferenceEquals(left, null) || object.ReferenceEquals(right, null)) && object.ReferenceEquals(left, right))
             {
@@ -46,7 +46,7 @@ namespace LibClang
             return !left.Equals(right);
         }
 
-        protected virtual bool EqualsCore(ClangObject<T> clangObject)
+        protected virtual bool EqualsCore(ClangObject clangObject)
         {
             return this.Value.Equals(clangObject.Value);
         }

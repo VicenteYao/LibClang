@@ -9,17 +9,17 @@ using System.Runtime.CompilerServices;
 
 namespace LibClang
 {
-    public   class IndexAction : ClangObject<IntPtr>
+    public   class IndexAction : ClangObject
     {
         internal IndexAction(IIndexActionEventHandler indexActionEventHandler, IntPtr value)
         {
             this._indexActionEventHandler = indexActionEventHandler;
-            this.Value = value;
+            this.m_value = value;
             this.EnsureCallbacks();
         }
         private IndexerCallbacks _indexerCallbacks = default(IndexerCallbacks);
         private IIndexActionEventHandler _indexActionEventHandler;
-
+        private IntPtr m_value;
         private abortQuery abortQuery;
         private diagnostic diagnostic;
         private enteredMainFile enteredMainFile;
@@ -28,6 +28,8 @@ namespace LibClang
         private indexDeclaration indexDeclaration;
         private indexEntityReference indexEntityReference;
         private startedTranslationUnit startedTranslationUnit;
+
+        protected internal override ValueType Value { get { return this.m_value; } }
 
         private unsafe void EnsureCallbacks()
         {
@@ -78,7 +80,7 @@ namespace LibClang
             CXIdxIncludedFileInfo* cXIdxIncludedFileInfo = (CXIdxIncludedFileInfo*)fileInfo;
             IndexIncludedFileInfo indexIncludedFileInfo = new IndexIncludedFileInfo(cXIdxIncludedFileInfo);
             File result = this._indexActionEventHandler?.OnIncludeFile(indexIncludedFileInfo);
-            return result == null ? IntPtr.Zero : result.Value;
+            return result == null ? IntPtr.Zero : (IntPtr)result.Value;
         }
 
         private IntPtr HandleImportedASTFile(IntPtr client_data, IntPtr fileInfo)
@@ -91,7 +93,7 @@ namespace LibClang
             using (File file = new File(mainFile))
             {
                 File result = this._indexActionEventHandler?.OnEnteredMainFile(file);
-                return result == null ? IntPtr.Zero : result.Value;
+                return result == null ? IntPtr.Zero : (IntPtr)result.Value;
             }
         }
 
@@ -114,18 +116,18 @@ namespace LibClang
 
         protected override void Dispose()
         {
-            clang.clang_IndexAction_dispose(this.Value);
+            clang.clang_IndexAction_dispose(this.m_value);
         }
 
         public unsafe CXErrorCode Index(TranslationUnit translationUnit, CXIndexOptFlags indexOptFlags)
         {
             using (Pointer<IndexerCallbacks> ptrIndexerCallbacks = new Pointer<IndexerCallbacks>(this._indexerCallbacks))
             {
-                CXErrorCode errorCode = (CXErrorCode)clang.clang_indexTranslationUnit(this.Value,
+                CXErrorCode errorCode = (CXErrorCode)clang.clang_indexTranslationUnit(this.m_value,
                     IntPtr.Zero,
                     ptrIndexerCallbacks,
                     (uint)(ptrIndexerCallbacks.Size),
-                    (uint)indexOptFlags, translationUnit.Value);
+                    (uint)indexOptFlags, (IntPtr)translationUnit.Value);
                 return errorCode;
             }
         }
@@ -144,7 +146,7 @@ namespace LibClang
             using (Pointer<IndexerCallbacks> ptrIndexerCallbacks = new Pointer<IndexerCallbacks>(this._indexerCallbacks))
             {
                 IntPtr pTU = IntPtr.Zero;
-                CXErrorCode errorCode = (CXErrorCode)clang.clang_indexSourceFile(this.Value,
+                CXErrorCode errorCode = (CXErrorCode)clang.clang_indexSourceFile(this.m_value,
                      IntPtr.Zero,
                      ptrIndexerCallbacks,
                      (uint)(ptrIndexerCallbacks.Size),
@@ -152,7 +154,7 @@ namespace LibClang
                      sourceFile,
                      cmdLineArgs,
                      cmdLineArgs.Length,
-                     unsavedFiles.Select(x => x.Value).ToArray(),
+                     unsavedFiles.Select(x => (CXUnsavedFile)x.Value).ToArray(),
                      (uint)unsavedFiles.Length,
                      out pTU,
                        (uint)translationUnit_Flags

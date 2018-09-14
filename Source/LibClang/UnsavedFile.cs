@@ -6,12 +6,12 @@ using LibClang.Intertop;
 
 namespace LibClang
 {
-    public class UnsavedFile : ClangObject<CXUnsavedFile>
+    public class UnsavedFile : ClangObject
     {
         public UnsavedFile(string fileName)
         {
             string contents = System.IO.File.ReadAllText(fileName);
-            this.Value = new CXUnsavedFile()
+            this.m_value = new CXUnsavedFile()
             {
                 Filename = Marshal.StringToHGlobalUni(fileName),
                 Contents = Marshal.StringToHGlobalUni(contents),
@@ -19,11 +19,16 @@ namespace LibClang
             };
         }
 
+        private CXUnsavedFile m_value;
+
         protected override void Dispose()
         {
-            Marshal.FreeHGlobal(this.Value.Filename);
-            Marshal.FreeHGlobal(this.Value.Contents);
+            Marshal.FreeHGlobal(this.m_value.Filename);
+            Marshal.FreeHGlobal(this.m_value.Contents);
         }
+
+        protected internal override ValueType Value { get { return this.m_value; } }
+
 
     }
 }

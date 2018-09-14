@@ -5,12 +5,14 @@ using LibClang.Intertop;
 
 namespace LibClang
 {
-    public  class File : ClangObject<IntPtr>
+    public  class File : ClangObject
     {
         internal File(IntPtr file)
         {
-            this.Value = file;
+            this.m_value = file;
         }
+
+        private IntPtr m_value;
 
         private string _fileName;
         public string FileName
@@ -19,7 +21,7 @@ namespace LibClang
             {
                 if (this._fileName == null)
                 {
-                    this._fileName = clang.clang_getFileName(this.Value).ToStringAndDispose();
+                    this._fileName = clang.clang_getFileName(this.m_value).ToStringAndDispose();
                 }
                 return this._fileName;
             }
@@ -32,7 +34,7 @@ namespace LibClang
             {
                 if (this.realPathName==null)
                 {
-                    this.realPathName = clang.clang_File_tryGetRealPathName(this.Value).ToStringAndDispose();
+                    this.realPathName = clang.clang_File_tryGetRealPathName(this.m_value).ToStringAndDispose();
                 }
                 return this.realPathName;
             }
@@ -51,9 +53,14 @@ namespace LibClang
             }
         }
 
-        protected override bool EqualsCore(ClangObject<IntPtr> clangObject)
+        protected internal override ValueType Value
         {
-            return clang.clang_File_isEqual(this.Value, clangObject.Value) > 0;
+            get { return this.m_value; }
+        }
+
+        protected override bool EqualsCore(ClangObject clangObject)
+        {
+            return clang.clang_File_isEqual(this.m_value, (IntPtr)clangObject.Value) > 0;
         }
 
 

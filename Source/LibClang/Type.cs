@@ -5,19 +5,24 @@ using System.Text;
 
 namespace LibClang
 {
-    public class Type : ClangObject<CXType>
+    public class Type : ClangObject
     {
+        protected internal override ValueType Value { get { return this.m_value; } }
+
+
         internal Type(CXType type)
         {
-            this.Value = type;
+            this.m_value = type;
         }
+
+        private CXType m_value;
 
         private uint _addressSpace;
         public uint AddressSpace
         {
             get
             {
-                this._addressSpace = clang.clang_getAddressSpace(this.Value);
+                this._addressSpace = clang.clang_getAddressSpace(this.m_value);
                 return this._addressSpace;
             }
         }
@@ -30,7 +35,7 @@ namespace LibClang
             {
                 if (!this.exceptionSpecificationType.HasValue)
                 {
-                    int type = clang.clang_getExceptionSpecificationType(this.Value);
+                    int type = clang.clang_getExceptionSpecificationType(this.m_value);
                     if (type == -1)
                     {
                         this.exceptionSpecificationType = (CXCursor_ExceptionSpecificationKind)CXCursor_ExceptionSpecificationKind.CXCursor_ExceptionSpecificationKind_None;
@@ -49,7 +54,7 @@ namespace LibClang
         {
             get
             {
-                this.callingConv = clang.clang_getFunctionTypeCallingConv(this.Value);
+                this.callingConv = clang.clang_getFunctionTypeCallingConv(this.m_value);
                 return this.callingConv;
             }
         }
@@ -63,7 +68,7 @@ namespace LibClang
             {
                 if (this._arrayElementType == null)
                 {
-                    this._arrayElementType = new Type(clang.clang_getArrayElementType(this.Value));
+                    this._arrayElementType = new Type(clang.clang_getArrayElementType(this.m_value));
                 }
                 return this._arrayElementType;
             }
@@ -74,7 +79,7 @@ namespace LibClang
         {
             get
             {
-                this.arraySize = clang.clang_getArraySize(this.Value);
+                this.arraySize = clang.clang_getArraySize(this.m_value);
                 return this.arraySize;
             }
         }
@@ -87,11 +92,11 @@ namespace LibClang
             {
                 if (this._arguments == null)
                 {
-                    uint argumentCount = (uint)clang.clang_getNumArgTypes(this.Value);
+                    uint argumentCount = (uint)clang.clang_getNumArgTypes(this.m_value);
                     this._arguments = new Type[argumentCount];
                     for (uint i = 0; i < argumentCount; i++)
                     {
-                        this._arguments[i] = new Type(clang.clang_getArgType(this.Value, i));
+                        this._arguments[i] = new Type(clang.clang_getArgType(this.m_value, i));
                     }
                 }
                 return this.Arguments;
@@ -105,7 +110,7 @@ namespace LibClang
             {
                 if (this._canonicalType == null)
                 {
-                    this._canonicalType = new Type(clang.clang_getCanonicalType(this.Value));
+                    this._canonicalType = new Type(clang.clang_getCanonicalType(this.m_value));
                 }
                 return this._canonicalType;
             }
@@ -118,7 +123,7 @@ namespace LibClang
             {
                 if (this._classType == null)
                 {
-                    this._classType = new Type(clang.clang_Type_getClassType(this.Value));
+                    this._classType = new Type(clang.clang_Type_getClassType(this.m_value));
                 }
                 return this._canonicalType;
             }
@@ -131,7 +136,7 @@ namespace LibClang
             {
                 if (this.typeDeclaration == null)
                 {
-                    this.typeDeclaration = new Cursor(clang.clang_getTypeDeclaration(this.Value));
+                    this.typeDeclaration = new Cursor(clang.clang_getTypeDeclaration(this.m_value));
                 }
                 return this.typeDeclaration;
             }
@@ -145,7 +150,7 @@ namespace LibClang
             {
                 if (this._typedefName == null)
                 {
-                    this._typedefName = clang.clang_getTypedefName(this.Value).ToStringAndDispose();
+                    this._typedefName = clang.clang_getTypedefName(this.m_value).ToStringAndDispose();
                 }
                 
                 return this._typedefName;
@@ -159,7 +164,7 @@ namespace LibClang
             {
                 if (this._spelling == null)
                 {
-                    this._spelling = clang.clang_getTypeSpelling(this.Value).ToStringAndDispose();
+                    this._spelling = clang.clang_getTypeSpelling(this.m_value).ToStringAndDispose();
                 }
                 return this._spelling;
             }
@@ -172,7 +177,7 @@ namespace LibClang
             {
                 if (this.resultType == null)
                 {
-                    CXType cxResultType = clang.clang_getResultType(this.Value);
+                    CXType cxResultType = clang.clang_getResultType(this.m_value);
                     this.resultType = new Type(cxResultType);
                 }
                 return this.resultType;
@@ -186,7 +191,7 @@ namespace LibClang
             {
                 if (this.pointeeType == null)
                 {
-                    CXType cxPointeeType = clang.clang_getPointeeType(this.Value);
+                    CXType cxPointeeType = clang.clang_getPointeeType(this.m_value);
                     this.pointeeType = new Type(cxPointeeType);
                 }
                 return this.pointeeType;
@@ -198,9 +203,9 @@ namespace LibClang
             return clang.clang_getTypeKindSpelling(typeKind).ToStringAndDispose();
         }
 
-        protected override bool EqualsCore(ClangObject<CXType> clangObject)
+        protected override bool EqualsCore(ClangObject clangObject)
         {
-            return clang.clang_equalTypes(this.Value, clangObject.Value) > 0;
+            return clang.clang_equalTypes(this.m_value, (CXType)clangObject.Value) > 0;
         }
 
 
@@ -208,7 +213,7 @@ namespace LibClang
         {
             get
             {
-                return clang.clang_Type_getSizeOf(this.Value);
+                return clang.clang_Type_getSizeOf(this.m_value);
             }
         }
 
@@ -216,13 +221,13 @@ namespace LibClang
         {
             get
             {
-                return clang.clang_Type_getAlignOf(this.Value);
+                return clang.clang_Type_getAlignOf(this.m_value);
             }
         }
 
         public long OffsetOf(string fieldName)
         {
-            return clang.clang_Type_getOffsetOf(this.Value, fieldName);
+            return clang.clang_Type_getOffsetOf(this.m_value, fieldName);
         }
 
 

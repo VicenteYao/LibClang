@@ -6,12 +6,11 @@ namespace LibClang.Intertop
 {
 
 
-    public struct CXIdxCXXClassDeclInfo
+    public unsafe struct CXIdxCXXClassDeclInfo
     {
-        /* CXIdxDeclInfo*/
-        IntPtr declInfo;
-        /*CXIdxBaseClassInfo*/
-        IntPtr bases;
-        uint numBases;
+       public CXIdxDeclInfo* declInfo;
+
+        public CXIdxDeclInfo* bases;
+        public uint numBases;
     }
 }

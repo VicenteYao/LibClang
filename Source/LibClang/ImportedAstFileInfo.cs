@@ -5,16 +5,19 @@ using LibClang.Intertop;
 
 namespace LibClang
 {
-    public class ImportedAstFileInfo:ClangObject<CXIdxImportedASTFileInfo>
+    public class ImportedAstFileInfo:ClangObject
     {
 
-        internal ImportedAstFileInfo(CXIdxImportedASTFileInfo cXIdxImportedASTFileInfo)
+        internal ImportedAstFileInfo(CXIdxImportedASTFileInfo importedASTFileInfo)
         {
-            this.File = new File(cXIdxImportedASTFileInfo.file);
-            this.Module = new Module(cXIdxImportedASTFileInfo.module);
-            this.IndexLocation = new IndexLocation(cXIdxImportedASTFileInfo.loc);
-            this.IsImplicit = cXIdxImportedASTFileInfo.isImplicit > 0;
+            this.m_value = importedASTFileInfo;
+            this.File = new File(importedASTFileInfo.file);
+            this.Module = new Module(importedASTFileInfo.module);
+            this.IndexLocation = new IndexLocation(importedASTFileInfo.loc);
+            this.IsImplicit = importedASTFileInfo.isImplicit > 0;
         }
+
+        private CXIdxImportedASTFileInfo m_value;
 
         public File File { get; private set; }
 
@@ -25,5 +28,6 @@ namespace LibClang
 
         public bool IsImplicit { get; private set; }
 
+        protected internal override ValueType Value { get { return this.m_value; } }
     }
 }

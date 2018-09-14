@@ -5,14 +5,15 @@ using LibClang.Intertop;
 
 namespace LibClang
 {
-    public class IndexContainerInfo:ClangObject<IntPtr>
+    public class IndexContainerInfo:ClangObject
     {
         internal IndexContainerInfo(IntPtr pIndexContainerInfo)
         {
-            this.Value = pIndexContainerInfo;
+            this.m_value = pIndexContainerInfo;
         }
 
         private Cursor cursor;
+        private IntPtr m_value;
 
         public unsafe Cursor Cursor
         {
@@ -20,12 +21,13 @@ namespace LibClang
             {
                 if (this.cursor == null)
                 {
-                    CXIdxContainerInfo* pIndexContainerInfo = (CXIdxContainerInfo*)this.Value;
+                    CXIdxContainerInfo* pIndexContainerInfo = (CXIdxContainerInfo*)this.m_value;
                     this.cursor = new Cursor(pIndexContainerInfo->cursor);
                 }
                 return this.cursor;
             }
         }
 
+        protected internal override ValueType Value { get { return this.Value; } }
     }
 }

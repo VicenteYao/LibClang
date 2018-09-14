@@ -5,11 +5,11 @@ using LibClang.Intertop;
 
 namespace LibClang
 {
-    public class IndexDeclInfo : ClangObject<CXIdxDeclInfo>
+    public class IndexDeclInfo : ClangObject
     {
         internal IndexDeclInfo(CXIdxDeclInfo cXIdxDeclInfo)
         {
-            this.Value = cXIdxDeclInfo;
+            this.m_value = cXIdxDeclInfo;
         }
 
         private IndexEntityInfo entityInfo;
@@ -19,7 +19,7 @@ namespace LibClang
             {
                 if (this.entityInfo == null)
                 {
-                    this.entityInfo = new IndexEntityInfo((IntPtr)this.Value.entityInfo);
+                    this.entityInfo = new IndexEntityInfo((IntPtr)this.m_value.entityInfo);
                 }
                 return this.entityInfo;
             }
@@ -32,7 +32,7 @@ namespace LibClang
             {
                 if (this.cursor==null)
                 {
-                    this.cursor = new Cursor(this.Value.cursor);
+                    this.cursor = new Cursor(this.m_value.cursor);
                 }
                 return this.cursor;
             }
@@ -45,7 +45,7 @@ namespace LibClang
             {
                 if (this.indexLocation==null)
                 {
-                    this.indexLocation = new IndexLocation(this.Value.loc);
+                    this.indexLocation = new IndexLocation(this.m_value.loc);
                 }
                 return this.indexLocation;
             }
@@ -53,7 +53,7 @@ namespace LibClang
 
         public bool IsRedeclaration
         {
-            get { return this.Value.isRedeclaration > 0; }
+            get { return this.m_value.isRedeclaration > 0; }
 
         }
 
@@ -61,7 +61,7 @@ namespace LibClang
         {
             get
             {
-                return this.Value.isDefinition > 0;
+                return this.m_value.isDefinition > 0;
             }
         }
 
@@ -69,7 +69,7 @@ namespace LibClang
         {
             get
             {
-                return this.Value.isContainer > 0;
+                return this.m_value.isContainer > 0;
             }
         }
 
@@ -77,7 +77,7 @@ namespace LibClang
         {
             get
             {
-                return this.Value.isImplicit > 0;
+                return this.m_value.isImplicit > 0;
             }
         }
 
@@ -85,12 +85,14 @@ namespace LibClang
         {
             get
             {
-                return (CXIdxDeclInfoFlags)this.Value.flags;
+                return (CXIdxDeclInfoFlags)this.m_value.flags;
             }
         }
 
 
         private IndexAttributeInfoList attributes;
+        private CXIdxDeclInfo m_value;
+
         public unsafe IndexAttributeInfoList Attributes
         {
             get
@@ -98,11 +100,13 @@ namespace LibClang
                 if (this.attributes == null)
                 {
 
-                    this.attributes = new IndexAttributeInfoList(this.Value.attributes, (int)this.Value.numAttributes);
+                    this.attributes = new IndexAttributeInfoList(this.m_value.attributes, (int)this.m_value.numAttributes);
                 }
                 return this.attributes;
             }
         }
+
+        protected internal override ValueType Value { get { return this.m_value; } }
 
         public override string ToString()
         {

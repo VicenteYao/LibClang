@@ -6,18 +6,18 @@ using LibClang.Intertop;
 
 namespace LibClang
 {
-    public unsafe class IndexEntityInfo : ClangObject<IntPtr>
+    public unsafe class IndexEntityInfo : ClangObject
     {
         internal IndexEntityInfo(IntPtr entityInfo)
         {
-            this.Value = entityInfo;
+            this.m_value = entityInfo;
         }
 
         public CXIdxEntityKind Kind
         {
             get
             {
-                CXIdxEntityInfo* pIndexEntityInfo = (CXIdxEntityInfo*)this.Value;
+                CXIdxEntityInfo* pIndexEntityInfo = (CXIdxEntityInfo*)this.m_value;
                 return pIndexEntityInfo->kind;
             }
         }
@@ -26,7 +26,7 @@ namespace LibClang
         {
             get
             {
-                CXIdxEntityInfo* pIndexEntityInfo = (CXIdxEntityInfo*)this.Value;
+                CXIdxEntityInfo* pIndexEntityInfo = (CXIdxEntityInfo*)this.m_value;
                 return pIndexEntityInfo->templateKind;
             }
         }
@@ -35,7 +35,7 @@ namespace LibClang
         {
             get
             {
-                CXIdxEntityInfo* pIndexEntityInfo = (CXIdxEntityInfo*)this.Value;
+                CXIdxEntityInfo* pIndexEntityInfo = (CXIdxEntityInfo*)this.m_value;
                 return pIndexEntityInfo->lang;
             }
         }
@@ -47,7 +47,7 @@ namespace LibClang
             {
                 if (this.name == null)
                 {
-                    CXIdxEntityInfo* pIndexEntityInfo = (CXIdxEntityInfo*)this.Value;
+                    CXIdxEntityInfo* pIndexEntityInfo = (CXIdxEntityInfo*)this.m_value;
                     if (pIndexEntityInfo!=(CXIdxEntityInfo*)0)
                     {
                         this.name = Marshal.PtrToStringAnsi(pIndexEntityInfo->name);
@@ -64,7 +64,7 @@ namespace LibClang
             {
                 if (this.usr == null)
                 {
-                    CXIdxEntityInfo* pIndexEntityInfo = (CXIdxEntityInfo*)this.Value;
+                    CXIdxEntityInfo* pIndexEntityInfo = (CXIdxEntityInfo*)this.m_value;
                     if (pIndexEntityInfo != (CXIdxEntityInfo*)0)
                     {
                         this.usr = Marshal.PtrToStringAuto(pIndexEntityInfo->USR);
@@ -83,7 +83,7 @@ namespace LibClang
 
                 if (this.cursor == null)
                 {
-                    CXIdxEntityInfo* pIndexEntityInfo = (CXIdxEntityInfo*)this.Value;
+                    CXIdxEntityInfo* pIndexEntityInfo = (CXIdxEntityInfo*)this.m_value;
                     this.cursor = new Cursor(pIndexEntityInfo->cursor);
                 }
                 return this.cursor;
@@ -91,18 +91,22 @@ namespace LibClang
         }
 
         private IndexAttributeInfoList attributeInfoList;
+        private IntPtr m_value;
+
         public IndexAttributeInfoList Attributes
         {
             get
             {
                 if (this.attributeInfoList == null)
                 {
-                    CXIdxEntityInfo* pIndexEntityInfo = (CXIdxEntityInfo*)this.Value;
+                    CXIdxEntityInfo* pIndexEntityInfo = (CXIdxEntityInfo*)this.m_value;
                     this.attributeInfoList = new IndexAttributeInfoList(pIndexEntityInfo->attributes, (int)pIndexEntityInfo->numAttributes);
                 }
                 return this.attributeInfoList;
             }
         }
+
+        protected internal override ValueType Value { get { return this.m_value; } }
 
         public override string ToString()
         {

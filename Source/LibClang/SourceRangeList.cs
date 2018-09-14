@@ -6,26 +6,33 @@ using LibClang.Intertop;
 
 namespace LibClang
 {
-    public class SourceRangeList : ClangObjectList<SourceRange, CXSourceRangeList>
+    public class SourceRangeList : ClangObjectList<SourceRange>
     {
+        private CXSourceRangeList m_value;
+
         internal SourceRangeList(CXSourceRangeList sourceRangeList)
         {
-            this.Value = sourceRangeList;
+            this.m_value = sourceRangeList;
+        }
+
+        protected internal override ValueType Value
+        {
+            get { return this.m_value; }
         }
 
         protected unsafe override void Dispose()
         {
-            clang.clang_disposeSourceRangeList((IntPtr)this.Value.ranges);
+            clang.clang_disposeSourceRangeList((IntPtr)this.m_value.ranges);
         }
 
         protected unsafe override SourceRange EnsureItemAt(int index)
         {
-            return new SourceRange(this.Value.ranges[index]);
+            return new SourceRange(this.m_value.ranges[index]);
         }
 
         protected override int GetCountCore()
         {
-            return (int)this.Value.count;
+            return (int)this.m_value.count;
         }
     }
 }
