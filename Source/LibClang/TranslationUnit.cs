@@ -272,19 +272,13 @@ namespace LibClang
 
         public unsafe SourceRangeList GetSkippedRanges(File file)
         {
-           IntPtr pRangeList=  clang.clang_getSkippedRanges(this.Value, file.Value);
-            if (pRangeList==IntPtr.Zero)
+            IntPtr pRangeList = clang.clang_getSkippedRanges(this.Value, file.Value);
+            if (pRangeList == IntPtr.Zero)
             {
                 return null;
             }
-
-            SourceRangeListObject sourceRangeListObject = new SourceRangeListObject();
-            Pointer<SourceRangeListObject>.FromPointer(pRangeList, sourceRangeListObject);
-            return new SourceRangeList(new CXSourceRangeList()
-            {
-                count = sourceRangeListObject.count,
-                ranges = sourceRangeListObject.ranges,
-            });
+            CXSourceRangeList* pCXSourceRangeList = (CXSourceRangeList*)pRangeList;
+            return new SourceRangeList(*pCXSourceRangeList);
         }
 
         public unsafe SourceRangeList GetAllSkippedRanges()
@@ -294,14 +288,8 @@ namespace LibClang
             {
                 return null;
             }
-
-            SourceRangeListObject sourceRangeListObject = new SourceRangeListObject();
-            Pointer<SourceRangeListObject>.FromPointer(pRangeList, sourceRangeListObject);
-            return new SourceRangeList(new CXSourceRangeList()
-            {
-                count = sourceRangeListObject.count,
-                ranges = sourceRangeListObject.ranges,
-            });
+            CXSourceRangeList* pCXSourceRangeList = (CXSourceRangeList*)pRangeList;
+            return new SourceRangeList(*pCXSourceRangeList);
         }
     }
 }

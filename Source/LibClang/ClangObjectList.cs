@@ -5,7 +5,7 @@ using System.Text;
 
 namespace LibClang
 {
-    public abstract class ClangObjectList<TItem,TValue> : ClangObject<TValue>, IReadOnlyList<TItem> where TValue:struct
+    public abstract class ClangObjectList<TItem,TValue> : ClangObject<TValue>, IReadOnlyList<TItem> where TValue:struct where TItem:class
     {
         protected ClangObjectList()
         {
@@ -19,6 +19,10 @@ namespace LibClang
         {
             get
             {
+                if (index < 0 || index >= this.Count)
+                {
+                    throw new IndexOutOfRangeException();
+                }
                 return GetItemAt(index);
             }
         }
@@ -26,12 +30,17 @@ namespace LibClang
         private TItem GetItemAt(int index)
         {
             this.EnsureItemDictionary();
+            TItem item = null;
             if (!this.itemsDict.ContainsKey(index))
             {
-                TItem item = this.EnsureItemAt(index);
+                item = this.EnsureItemAt(index);
                 this.itemsDict.Add(index, item);
             }
-            return this.itemsDict[index];
+            else
+            {
+                item = this.itemsDict[index];
+            }
+            return item;
         }
 
         private void EnsureItemDictionary()
@@ -98,5 +107,6 @@ namespace LibClang
                 this.index = -1;
             }
         }
+
     }
 }

@@ -20,43 +20,28 @@ namespace LibClang
         public FixIt[] FixIts { get; private set; }
 
 
-        private CompletionChunk[] _completionChunk;
-        public unsafe CompletionChunk[] CompletionChunks
+        private CompletionChunkList _completionChunk;
+        public unsafe CompletionChunkList CompletionChunks
         {
             get
             {
                 if (this._completionChunk == null)
                 {
-                    uint chunks = clang.clang_getNumCompletionChunks(this.Value.CompletionString);
-                    uint annotationsCount = clang.clang_getCompletionNumAnnotations(this.Value.CompletionString);
-                    this._completionChunk = new CompletionChunk[chunks];
-                    for (uint i = 0; i < chunks; i++)
-                    {
-                        CXCompletionChunkKind chunkKind = clang.clang_getCompletionChunkKind(this.Value.CompletionString, i);
-                        IntPtr pCompletionString = clang.clang_getCompletionChunkCompletionString(this.Value.CompletionString, i);
-                        string text = clang.clang_getCompletionChunkText(this.Value.CompletionString, i).ToStringAndDispose();
-
-                        this._completionChunk[i] = new CompletionChunk(chunkKind, text);
-                    }
+                    this._completionChunk = new CompletionChunkList(this.Value);
                 }
                 return this._completionChunk;
             }
         }
 
-        private string[] _annotations;
+        private CompletionResultAnnotationList _annotations;
 
-        public string[] Annotations
+        public CompletionResultAnnotationList Annotations
         {
             get
             {
                 if (this._annotations == null)
                 {
-                    uint annotationsCount = clang.clang_getCompletionNumAnnotations(this.Value.CompletionString);
-                    this._annotations = new string[annotationsCount];
-                    for (uint i = 0; i < annotationsCount; i++)
-                    {
-                        this._annotations[i] = clang.clang_getCompletionAnnotation(this.Value.CompletionString, i).ToStringAndDispose();
-                    }
+                    this._annotations = new CompletionResultAnnotationList(this.Value);
                 }
                 return this._annotations;
             }

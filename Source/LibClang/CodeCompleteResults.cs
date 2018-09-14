@@ -13,46 +13,14 @@ namespace LibClang
             this.Value = completeResults;
         }
 
-
-
-        [StructLayout(LayoutKind.Sequential)]
-        private class CXCodeCompleteResultsObject
-        {
-            public CXCompletionResult* Results;
-
-            /**
-             * The number of code-completion results stored in the
-             * \c Results array.
-             */
-            public uint NumResults;
-        }
-
-        private CompletionResult[] completionResults = null;
-        public CompletionResult[] CompletionResults
+        private CompletionResultList completionResults;
+        public unsafe CompletionResultList CompletionResults
         {
             get
             {
                 if (this.completionResults == null)
                 {
-                    CXCodeCompleteResultsObject codeCompleteResults = new CXCodeCompleteResultsObject();
-                    Pointer<CXCodeCompleteResultsObject>.FromPointer(this.Value, codeCompleteResults);
-                    uint resultsCount = codeCompleteResults.NumResults;
-                    this.completionResults = new CompletionResult[resultsCount];
-                    var pCXCodeCompleteResults = (CXCodeCompleteResults*)this.Value;
-                    for (uint i = 0; i < resultsCount; i++)
-                    {
-                        CXCompletionResult completionResult = codeCompleteResults.Results[i];
-                        uint fixitCount = clang.clang_getCompletionNumFixIts(pCXCodeCompleteResults, i);
-                        FixIt[] fixIts = new FixIt[fixitCount];
-                        for (uint J = 0; J < fixitCount; J++)
-                        {
-                            CXSourceRange xSourceRange;
-                            string text = clang.clang_getCompletionFixIt(pCXCodeCompleteResults, i, J, out xSourceRange).ToStringAndDispose();
-                            SourceRange sourceRange = new SourceRange(xSourceRange);
-                            fixIts[i] = new FixIt(text, sourceRange);
-                        }
-                        this.completionResults[i] = new CompletionResult(completionResult, fixIts);
-                    }
+                    this.completionResults = new CompletionResultList((CXCodeCompleteResults*)this.Value);
                 }
                 return this.completionResults;
             }

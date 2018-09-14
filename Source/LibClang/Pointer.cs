@@ -18,11 +18,6 @@ namespace LibClang
             }
         }
 
-        public static void FromPointer(IntPtr ptr, T result)
-        {
-            Marshal.PtrToStructure(ptr, result);
-        }
-
         public int Size { get; private set; }
 
         private T[] m_arrayValue;
