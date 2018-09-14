@@ -9,10 +9,11 @@ using System.Windows.Input;
 using System.Windows.Media;
 using LibClang;
 using System.Threading;
+using System.Windows.Documents;
 
 namespace CodeCompleteApp
 {
-    public class CodeEditor :RichTextBox
+    public class CodeEditor :UserControl
     {
         public CodeEditor()
         {
@@ -24,16 +25,23 @@ namespace CodeCompleteApp
 
         public void SetFileName(string fileName)
         {
+            
             this.line = 1;
             this.fileName = fileName;
             this.index = new Index(false, false);
             this.translationUnit = this.index.CreateTranslationUnit(this.fileName, null, null);
+
+            foreach (var item in this.translationUnit.DiagnosticSet)
+            {
+                Console.WriteLine(item.CategoryText);
+            }
             this.sourceCode = System.IO.File.ReadAllText(fileName);
             this.file = this.translationUnit.GetFile(fileName);
-            this.tokens= this.translationUnit.Tokenize(this.translationUnit.GetSourceRange(this.file));
-            this.AppendText(this.sourceCode);
+            this.tokens = this.translationUnit.Tokenize(this.translationUnit.GetSourceRange(this.file));
             this.InvalidateVisual();
         }
+
+
 
         private string sourceCode;
 

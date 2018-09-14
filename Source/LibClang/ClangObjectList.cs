@@ -7,6 +7,11 @@ namespace LibClang
 {
     public abstract class ClangObjectList<TItem,TValue> : ClangObject<TValue>, IReadOnlyList<TItem> where TValue:struct
     {
+        protected ClangObjectList()
+        {
+
+        }
+
 
         private Dictionary<int, TItem> itemsDict;
 
@@ -31,17 +36,17 @@ namespace LibClang
 
         private void EnsureItemDictionary()
         {
-            if (this.itemsDict == null)
+            if (this.Count > 0 && this.itemsDict == null)
             {
-                this.Count = this.GetCountCore();
                 this.itemsDict = new Dictionary<int, TItem>(this.Count);
             }
         }
 
         public int Count
         {
-            get;
-            private set;
+            get {
+                return this.GetCountCore();
+            }
         }
 
         protected abstract int GetCountCore();
@@ -63,13 +68,13 @@ namespace LibClang
             internal Enumerable(ClangObjectList<TItem, TValue> clangObjectList)
             {
                 this.clangObjectList = clangObjectList;
-                this.index = 0;
+                this.index = -1;
             }
 
             private ClangObjectList<TItem, TValue> clangObjectList;
             private int index;
 
-            public TItem Current { get { return this.clangObjectList[index]; } }
+            public TItem Current { get { return this.clangObjectList[this.index]; } }
 
             object IEnumerator.Current { get { return this.Current; } }
 
@@ -80,7 +85,7 @@ namespace LibClang
 
             public bool MoveNext()
             {
-                if (this.index > this.clangObjectList.Count)
+                if (this.index + 1 > this.clangObjectList.Count - 1)
                 {
                     return false;
                 }
@@ -90,7 +95,7 @@ namespace LibClang
 
             public void Reset()
             {
-                this.index = 0;
+                this.index = -1;
             }
         }
     }

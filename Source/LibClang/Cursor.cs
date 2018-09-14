@@ -10,7 +10,6 @@ namespace LibClang
     {
         static Cursor()
         {
-            
             Cursor.Null = new Cursor(clang.clang_getNullCursor());
         }
 
@@ -84,6 +83,16 @@ namespace LibClang
             }
         }
 
+        private CXCursorKind cursorKind;
+        public CXCursorKind CursorKind
+        {
+            get
+            {
+                this.cursorKind = clang.clang_getCursorKind(this.Value);
+                return this.cursorKind;
+            }
+        }
+
         private Cursor[] _arguments;
         public Cursor[] Arguments
         {
@@ -127,10 +136,30 @@ namespace LibClang
             }
         }
 
-        public Type[] TemplateArguments
+        private CursorTemplateArguments templateArguments;
+        public CursorTemplateArguments TemplateArguments
         {
-            get;
-            private set;
+            get
+            {
+                if (this.templateArguments==null)
+                {
+                    this.templateArguments = new CursorTemplateArguments(this.Value);
+                }
+                return this.templateArguments;
+            }
+        }
+
+        private Type reciever;
+        public Type Reciever
+        {
+            get
+            {
+                if (this.reciever == null)
+                {
+                    this.reciever = new Type(clang.clang_Cursor_getReceiverType(this.Value));
+                }
+                return this.reciever;
+            }
         }
 
 
@@ -270,69 +299,54 @@ namespace LibClang
         }
 
 
-        private CX_StorageClass? _storageClass;
+        private CX_StorageClass _storageClass;
         public CX_StorageClass StorageClass
         {
             get
             {
-                if (!this._storageClass.HasValue)
-                {
-                    this._storageClass = clang.clang_Cursor_getStorageClass(this.Value);
-                }
-                return this._storageClass.Value;
+                this._storageClass = clang.clang_Cursor_getStorageClass(this.Value);
+                return this._storageClass;
             }
         }
 
-        private CXLanguageKind? _languageKind;
+        private CXLanguageKind _languageKind;
 
         public CXLanguageKind LanguageKind
         {
             get
             {
-                if (!this._languageKind.HasValue)
-                {
-                    this._languageKind = clang.clang_getCursorLanguage(this.Value);
-                }
-                return this._languageKind.Value;
+                this._languageKind = clang.clang_getCursorLanguage(this.Value);
+                return this._languageKind;
             }
         }
 
-        private CXVisibilityKind? _visibility;
+        private CXVisibilityKind _visibility;
         public CXVisibilityKind Visibility
         {
             get
             {
-                if (!this._visibility.HasValue)
-                {
-                    this._visibility = clang.clang_getCursorVisibility(this.Value);
-                }
-                return this._visibility.Value;
+                this._visibility = clang.clang_getCursorVisibility(this.Value);
+                return this._visibility;
             }
         }
 
-        private CXAvailabilityKind? _availability;
+        private CXAvailabilityKind _availability;
         public CXAvailabilityKind Availability
         {
             get
             {
-                if (!this._availability.HasValue)
-                {
-                    this._availability = clang.clang_getCursorAvailability(this.Value);
-                }
-                return this._availability.Value;
+                this._availability = clang.clang_getCursorAvailability(this.Value);
+                return this._availability;
             }
         }
 
-        private CXLinkageKind? _linkage;
+        private CXLinkageKind _linkage;
         public CXLinkageKind  Linkage
         {
             get
             {
-                if (!this._linkage.HasValue)
-                {
-                    this._linkage = clang.clang_getCursorLinkage(this.Value);
-                }
-                return this._linkage.Value;
+                this._linkage = clang.clang_getCursorLinkage(this.Value);
+                return this._linkage;
             }
         }
 

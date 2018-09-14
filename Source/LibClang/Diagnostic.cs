@@ -149,5 +149,10 @@ namespace LibClang
                 return this._fixIts;
             }
         }
+
+        public override string ToString()
+        {
+            return string.Format("{0}:{1}", this.CategoryText, this.Spelling);
+        }
     }
 }

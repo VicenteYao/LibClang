@@ -27,18 +27,22 @@ namespace TestApp
             return indexIncludedFileInfo.File;
         }
 
+        private List<IndexDeclInfo> indexDeclInfos = new List<IndexDeclInfo>();
+
         public void OnIndexDeclaration(IndexDeclInfo indexDeclInfo)
         {
-            Console.WriteLine(indexDeclInfo.IndexLocation);
-            Console.WriteLine(indexDeclInfo.EntityInfo);
-            Console.WriteLine(indexDeclInfo.Flags);
+
         }
 
         public void OnIndexEntityRefInfo(IndexEntityRefInfo indexEntityRefInfo)
         {
-            Console.WriteLine(indexEntityRefInfo.IndexLocation);
-            Console.WriteLine(indexEntityRefInfo.EntityRefKind);
-            Console.WriteLine(indexEntityRefInfo.ReferencedEntity);
+            if (indexEntityRefInfo.Cursor.CursorKind == LibClang.Intertop.CXCursorKind.CXCursor_FunctionDecl)
+            {
+                foreach (var item in indexEntityRefInfo.Cursor.TemplateArguments)
+                {
+
+                }
+            }
         }
 
         public bool OnQueryAbort()

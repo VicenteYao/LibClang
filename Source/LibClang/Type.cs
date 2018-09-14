@@ -69,7 +69,7 @@ namespace LibClang
             }
         }
 
-        public long arraySize;
+        private long arraySize;
         public long ArraySize
         {
             get
@@ -137,7 +137,7 @@ namespace LibClang
             }
         }
 
-        public string _typedefName;
+        private string _typedefName;
 
         public string TypedefName
         {

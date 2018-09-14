@@ -89,12 +89,25 @@ namespace LibClang
             }
         }
 
-        public IndexAttributeInfo[] Attributes
+
+        private IndexAttributeInfoList attributes;
+        public unsafe IndexAttributeInfoList Attributes
         {
-            get;
+            get
+            {
+                if (this.attributes == null)
+                {
+
+                    this.attributes = new IndexAttributeInfoList(this.Value.attributes, (int)this.Value.numAttributes);
+                }
+                return this.attributes;
+            }
         }
 
-
+        public override string ToString()
+        {
+            return string.Format("{0}{1}", this.IndexLocation, this.EntityInfo);
+        }
 
 
     }
