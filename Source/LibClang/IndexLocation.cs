@@ -57,24 +57,24 @@
                 clang.clang_indexLoc_getFileLocation(this.m_value, out pIndexFile, out pfilePtr, out line, out column, out offset);
                 File file = new File(pfilePtr);
                 File indexFile = new File(pIndexFile);
-                this.expansionLocation = new ExpansionLocation(indexFile, file, line, column, offset);
+                this.expansionLocation = new FileLocation(indexFile, file, line, column, offset);
             }
         }
 
         /// <summary>
-        /// Defines the <see cref="ExpansionLocation" />
+        /// Defines the <see cref="FileLocation" />
         /// </summary>
-        private class ExpansionLocation
+        private class FileLocation
         {
             /// <summary>
-            /// Initializes a new instance of the <see cref="ExpansionLocation"/> class.
+            /// Initializes a new instance of the <see cref="FileLocation"/> class.
             /// </summary>
             /// <param name="indexFile">The indexFile<see cref="File"/></param>
             /// <param name="file">The file<see cref="File"/></param>
             /// <param name="line">The line<see cref="uint"/></param>
             /// <param name="column">The column<see cref="uint"/></param>
             /// <param name="offset">The offset<see cref="uint"/></param>
-            internal ExpansionLocation(File indexFile, File file, uint line, uint column, uint offset)
+            internal FileLocation(File indexFile, File file, uint line, uint column, uint offset)
             {
                 this.IndexFile = indexFile;
                 this.File = file;
@@ -112,7 +112,7 @@
         /// <summary>
         /// Defines the expansionLocation
         /// </summary>
-        private ExpansionLocation expansionLocation;
+        private FileLocation expansionLocation;
 
         /// <summary>
         /// Gets the File

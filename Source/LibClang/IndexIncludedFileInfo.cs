@@ -11,13 +11,14 @@
         /// Initializes a new instance of the <see cref="IndexIncludedFileInfo"/> class.
         /// </summary>
         /// <param name="cXIdxIncludedFileInfo">The cXIdxIncludedFileInfo<see cref="CXIdxIncludedFileInfo*"/></param>
-        internal unsafe IndexIncludedFileInfo(CXIdxIncludedFileInfo* cXIdxIncludedFileInfo)
+        internal unsafe IndexIncludedFileInfo(CXIdxIncludedFileInfo cXIdxIncludedFileInfo)
         {
-            this.HashLocation = new IndexLocation(cXIdxIncludedFileInfo->hashLoc);
-            this.IsAngled = cXIdxIncludedFileInfo->isAngled > 0;
-            this.IsImport = cXIdxIncludedFileInfo->isImport > 0;
-            this.IsModuleImport = cXIdxIncludedFileInfo->isModuleImport > 0;
-            this.FileName = new string(cXIdxIncludedFileInfo->filename);
+            this.HashLocation = new IndexLocation(cXIdxIncludedFileInfo.hashLoc);
+            this.IsAngled = cXIdxIncludedFileInfo.isAngled > 0;
+            this.IsImport = cXIdxIncludedFileInfo.isImport > 0;
+            this.IsModuleImport = cXIdxIncludedFileInfo.isModuleImport > 0;
+            this.File = new File(cXIdxIncludedFileInfo.file);
+            this.FileName = new string(cXIdxIncludedFileInfo.filename);
         }
 
         /// <summary>

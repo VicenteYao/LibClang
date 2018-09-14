@@ -13,7 +13,7 @@
         /// Initializes a new instance of the <see cref="IndexEntityInfo"/> class.
         /// </summary>
         /// <param name="entityInfo">The entityInfo<see cref="IntPtr"/></param>
-        internal IndexEntityInfo(IntPtr entityInfo)
+        internal IndexEntityInfo(CXIdxEntityInfo entityInfo)
         {
             this.m_value = entityInfo;
         }
@@ -25,8 +25,7 @@
         {
             get
             {
-                CXIdxEntityInfo* pIndexEntityInfo = (CXIdxEntityInfo*)this.m_value;
-                return pIndexEntityInfo->kind;
+                return this.m_value.kind;
             }
         }
 
@@ -37,8 +36,7 @@
         {
             get
             {
-                CXIdxEntityInfo* pIndexEntityInfo = (CXIdxEntityInfo*)this.m_value;
-                return pIndexEntityInfo->templateKind;
+                return this.m_value.templateKind;
             }
         }
 
@@ -49,8 +47,7 @@
         {
             get
             {
-                CXIdxEntityInfo* pIndexEntityInfo = (CXIdxEntityInfo*)this.m_value;
-                return pIndexEntityInfo->lang;
+                return this.m_value.lang;
             }
         }
 
@@ -68,11 +65,7 @@
             {
                 if (this.name == null)
                 {
-                    CXIdxEntityInfo* pIndexEntityInfo = (CXIdxEntityInfo*)this.m_value;
-                    if (pIndexEntityInfo != (CXIdxEntityInfo*)0)
-                    {
-                        this.name = Marshal.PtrToStringAnsi(pIndexEntityInfo->name);
-                    }
+                    this.name = Marshal.PtrToStringAnsi(this.m_value.name);
                 }
                 return this.name;
             }
@@ -92,11 +85,7 @@
             {
                 if (this.usr == null)
                 {
-                    CXIdxEntityInfo* pIndexEntityInfo = (CXIdxEntityInfo*)this.m_value;
-                    if (pIndexEntityInfo != (CXIdxEntityInfo*)0)
-                    {
-                        this.usr = Marshal.PtrToStringAuto(pIndexEntityInfo->USR);
-                    }
+                    this.usr = Marshal.PtrToStringAuto(this.m_value.USR);
                 }
                 return this.usr;
             }
@@ -117,8 +106,7 @@
 
                 if (this.cursor == null)
                 {
-                    CXIdxEntityInfo* pIndexEntityInfo = (CXIdxEntityInfo*)this.m_value;
-                    this.cursor = new Cursor(pIndexEntityInfo->cursor);
+                    this.cursor = new Cursor(this.m_value.cursor);
                 }
                 return this.cursor;
             }
@@ -132,7 +120,7 @@
         /// <summary>
         /// Defines the m_value
         /// </summary>
-        private IntPtr m_value;
+        private CXIdxEntityInfo m_value;
 
         /// <summary>
         /// Gets the Attributes
@@ -143,8 +131,7 @@
             {
                 if (this.attributeInfoList == null)
                 {
-                    CXIdxEntityInfo* pIndexEntityInfo = (CXIdxEntityInfo*)this.m_value;
-                    this.attributeInfoList = new IndexAttributeInfoList(pIndexEntityInfo->attributes, (int)pIndexEntityInfo->numAttributes);
+                    this.attributeInfoList = new IndexAttributeInfoList(this.m_value.attributes, (int)this.m_value.numAttributes);
                 }
                 return this.attributeInfoList;
             }

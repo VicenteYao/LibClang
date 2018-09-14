@@ -16,10 +16,10 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="TranslationUnitResourceUsages"/> class.
         /// </summary>
-        /// <param name="cXTUResourceUsage">The cXTUResourceUsage<see cref="CXTUResourceUsage"/></param>
-        internal TranslationUnitResourceUsages(CXTUResourceUsage cXTUResourceUsage)
+        /// <param name="tuResourceUsage">The cXTUResourceUsage<see cref="CXTUResourceUsage"/></param>
+        internal TranslationUnitResourceUsages(CXTUResourceUsage tuResourceUsage)
         {
-            this.m_value = cXTUResourceUsage;
+            this.m_value = tuResourceUsage;
         }
 
         /// <summary>

@@ -55,7 +55,7 @@
                 {
                     if (this.m_value.referencedEntity != (CXIdxEntityInfo*)0)
                     {
-                        this.parentEntiry = new IndexEntityInfo((IntPtr)this.m_value.parentEntity);
+                        this.parentEntiry = new IndexEntityInfo(*this.m_value.parentEntity);
                     }
                 }
                 return this.parentEntiry;
@@ -78,7 +78,7 @@
                 {
                     if (this.m_value.referencedEntity != (CXIdxEntityInfo*)0)
                     {
-                        this.referencedEntity = new IndexEntityInfo((IntPtr)this.m_value.referencedEntity);
+                        this.referencedEntity = new IndexEntityInfo(*this.m_value.referencedEntity);
                     }
                 }
                 return this.referencedEntity;

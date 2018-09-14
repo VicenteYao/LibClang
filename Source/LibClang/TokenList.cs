@@ -17,7 +17,7 @@
         internal unsafe TokenList(TranslationUnit translationUnit, CXToken* pTokens, int tokensCount)
         {
             this._translationUnit = translationUnit;
-            this.m_value = (IntPtr)pTokens;
+            this.m_value = pTokens;
             this._tokensCount = tokensCount;
         }
 
@@ -29,7 +29,7 @@
         /// <summary>
         /// Defines the m_value
         /// </summary>
-        private IntPtr m_value;
+        private unsafe CXToken* m_value;
 
         /// <summary>
         /// Defines the _tokensCount
@@ -39,9 +39,9 @@
         /// <summary>
         /// Gets the Value
         /// </summary>
-        protected internal override ValueType Value
+        protected unsafe internal override ValueType Value
         {
-            get { return this.m_value; }
+            get { return (IntPtr)this.m_value; }
         }
 
         /// <summary>
@@ -60,8 +60,7 @@
         /// <returns>The <see cref="Token"/></returns>
         protected unsafe override Token EnsureItemAt(int index)
         {
-            CXToken* pTokens = (CXToken*)this.m_value;
-            return new Token(this._translationUnit, pTokens[index]);
+            return new Token(this._translationUnit, this.m_value[index]);
         }
     }
 }

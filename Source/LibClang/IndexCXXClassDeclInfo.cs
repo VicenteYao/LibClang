@@ -45,21 +45,21 @@
         /// <summary>
         /// Defines the bases
         /// </summary>
-        private IndexDeclInfo[] bases;
+        private IndexBaseClassInfo[] bases;
 
         /// <summary>
         /// Gets the Bases
         /// </summary>
-        public unsafe IndexDeclInfo[] Bases
+        public unsafe IndexBaseClassInfo[] Bases
         {
             get
             {
                 if (this.bases == null)
                 {
-                    this.bases = new IndexDeclInfo[this.m_value.numBases];
+                    this.bases = new IndexBaseClassInfo[this.m_value.numBases];
                     for (uint i = 0; i < this.m_value.numBases; i++)
                     {
-                        this.bases[i] = new IndexDeclInfo(this.m_value.bases[i]);
+                        this.bases[i] = new IndexBaseClassInfo(this.m_value.bases[i]);
                     }
                 }
                 return this.bases;

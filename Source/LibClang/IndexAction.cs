@@ -157,7 +157,7 @@
         private unsafe IntPtr HandlePPIncludedFile(IntPtr client_data, IntPtr fileInfo)
         {
             CXIdxIncludedFileInfo* cXIdxIncludedFileInfo = (CXIdxIncludedFileInfo*)fileInfo;
-            IndexIncludedFileInfo indexIncludedFileInfo = new IndexIncludedFileInfo(cXIdxIncludedFileInfo);
+            IndexIncludedFileInfo indexIncludedFileInfo = new IndexIncludedFileInfo(*cXIdxIncludedFileInfo);
             File result = this._indexActionEventHandler?.OnIncludeFile(indexIncludedFileInfo);
             return result == null ? IntPtr.Zero : (IntPtr)result.Value;
         }

@@ -79,7 +79,7 @@
                 int type = clang.clang_getExceptionSpecificationType(this.m_value);
                 if (type == -1)
                 {
-                    this.exceptionSpecificationType = (CXCursor_ExceptionSpecificationKind)CXCursor_ExceptionSpecificationKind.CXCursor_ExceptionSpecificationKind_None;
+                    this.exceptionSpecificationType = CXCursor_ExceptionSpecificationKind.CXCursor_ExceptionSpecificationKind_None;
                 }
                 else
                 {
@@ -157,7 +157,7 @@
             {
                 if (this._arguments == null)
                 {
-                    uint argumentCount = (uint)clang.clang_getNumArgTypes(this.m_value);
+                    int argumentCount = clang.clang_getNumArgTypes(this.m_value);
                     this._arguments = new Type[argumentCount];
                     for (uint i = 0; i < argumentCount; i++)
                     {
@@ -225,6 +225,26 @@
                     this.typeDeclaration = new Cursor(clang.clang_getTypeDeclaration(this.m_value));
                 }
                 return this.typeDeclaration;
+            }
+        }
+
+        /// <summary>
+        /// Defines the templateArguments
+        /// </summary>
+        private TypeTemplateArguments templateArguments;
+
+        /// <summary>
+        /// Gets the TemplateArguments
+        /// </summary>
+        public TypeTemplateArguments TemplateArguments
+        {
+            get
+            {
+                if (this.templateArguments == null)
+                {
+                    this.templateArguments = new TypeTemplateArguments(this.m_value);
+                }
+                return this.templateArguments;
             }
         }
 

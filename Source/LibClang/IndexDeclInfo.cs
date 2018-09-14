@@ -31,7 +31,7 @@
             {
                 if (this.entityInfo == null)
                 {
-                    this.entityInfo = new IndexEntityInfo((IntPtr)this.m_value.entityInfo);
+                    this.entityInfo = new IndexEntityInfo(*this.m_value.entityInfo);
                 }
                 return this.entityInfo;
             }

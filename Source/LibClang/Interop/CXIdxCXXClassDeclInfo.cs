@@ -13,7 +13,7 @@
         /// <summary>
         /// Defines the bases
         /// </summary>
-        public CXIdxDeclInfo* bases;
+        public CXIdxBaseClassInfo* bases;
 
         /// <summary>
         /// Defines the numBases

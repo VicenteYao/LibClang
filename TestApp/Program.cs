@@ -8,9 +8,13 @@ namespace TestApp
         static void Main(string[] args)
         {
             Index index = new Index(true, true);
-            LibClang.TranslationUnit translationUnit = index.CreateTranslationUnit(@"D:\clang.ast");
+            string sourceFileName = null;
+            string[] cmdArgs = new string[0];
+            LibClang.TranslationUnit translationUnit = index.Parse("")
 
             var indexAction = index.CreateIndexAction(new IndexActionEventHandler());
+
+            
 
             foreach (var item in translationUnit.ResourceUsages)
             {

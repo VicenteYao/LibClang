@@ -20,7 +20,7 @@
         /// <summary>
         /// Defines the file
         /// </summary>
-        internal CXFile file;
+        public CXFile file;
 
         /// <summary>
         /// Defines the isImport
