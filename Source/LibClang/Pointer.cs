@@ -5,7 +5,7 @@ using System.Text;
 
 namespace LibClang
 {
-    public class Pointer<T> : IDisposable
+    internal class Pointer<T> : IDisposable
     {
         internal Pointer(T[] array)
         {

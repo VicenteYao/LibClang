@@ -127,10 +127,7 @@ namespace LibClang
             {
                 if (this.overridesCursors == null)
                 {
-                    CXCursor* pCursors = (CXCursor*)0;
-                    uint cursorsCount = 0;
-                    clang.clang_getOverriddenCursors(this.Value, out pCursors, out cursorsCount);
-                    this.overridesCursors = new OverriddenCursors(pCursors, (int)cursorsCount);
+                    this.overridesCursors = new OverriddenCursors(this.Value);
                 }
                 return overridesCursors;
             }

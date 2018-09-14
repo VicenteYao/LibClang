@@ -6,7 +6,7 @@ using LibClang.Intertop;
 
 namespace LibClang
 {
-    public class SourceRangeList:ClangObjectList<SourceRange, CXSourceRangeList>, IReadOnlyList<SourceRange>
+    public class SourceRangeList : ClangObjectList<SourceRange, CXSourceRangeList>
     {
         internal SourceRangeList(CXSourceRangeList sourceRangeList)
         {

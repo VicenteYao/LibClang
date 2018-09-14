@@ -102,7 +102,7 @@ namespace CodeCompleteApp
                 uint lineColumn = 0;
                 foreach (var item in tokens)
                 {
-                    if (item.SourceLocation.InstantiationLocation.Line < this.line)
+                    if (item.SourceLocation.Line < this.line)
                     {
                         continue;
                     }
@@ -134,8 +134,7 @@ namespace CodeCompleteApp
         this.typeface,
         this.FontSize,
         brush);
-                    Location instantiationLocation = item.SourceLocation.InstantiationLocation;
-                    if (instantiationLocation.Line != lastLine)
+                    if (item.SourceLocation.Line != lastLine)
                     {
                         y += formattedText.Height;
                         if (y > this.ActualHeight)
@@ -146,18 +145,18 @@ namespace CodeCompleteApp
                         {
 
                         }
-                        lastLine = instantiationLocation.Line;
-                        lineColumn = instantiationLocation.Column;
+                        lastLine = item.SourceLocation.Line;
+                        lineColumn = item.SourceLocation.Column;
                         x = 0;
                     }
                     StringBuilder stringBuilder = new StringBuilder();
-                    if (instantiationLocation.Column > 1)
+                    if (item.SourceLocation.Column > 1)
                     {
                         uint offset = 0;
                         while (true)
                         {
                             offset++;
-                            char ch = this.sourceCode.ElementAtOrDefault((int)(instantiationLocation.Offset - offset));
+                            char ch = this.sourceCode.ElementAtOrDefault((int)(item.SourceLocation.Offset - offset));
                             if (ch == '\t' ||
                             ch == ' ')
                             {

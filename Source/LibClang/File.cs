@@ -57,5 +57,10 @@ namespace LibClang
         }
 
 
+        public override string ToString()
+        {
+            return this.FileName;
+        }
+
     }
 }

@@ -7,7 +7,7 @@ using LibClang.Intertop;
 
 namespace LibClang
 {
-    public class TokenList : ClangObjectList<Token,IntPtr>, IReadOnlyList<Token>
+    public class TokenList : ClangObjectList<Token,IntPtr>
     {
         internal unsafe TokenList(TranslationUnit translationUnit, CXToken* pTokens, int tokensCount)
         {

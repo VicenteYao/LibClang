@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace LibClang
 {
-    public class TranslationUnit : ClangObject<IntPtr>, IDisposable
+    public class TranslationUnit : ClangObject<IntPtr>
     {
         internal TranslationUnit(IntPtr pTranlationUnit)
         {

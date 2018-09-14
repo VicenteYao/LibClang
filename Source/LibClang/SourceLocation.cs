@@ -20,17 +20,17 @@ namespace LibClang
             this.Value = sourceLocation;
         }
 
-        private void EnsurenInstantiationLocationInfo()
+        private void EnsurenExpansionLocation()
         {
-            if (this.instantiationLocation == null)
+            if (this.expansionLocation == null)
             {
                 IntPtr filePtr = IntPtr.Zero;
                 uint line;
                 uint column;
                 uint offset;
-                clang.clang_getInstantiationLocation(this.Value, out filePtr, out line, out column, out offset);
+                clang.clang_getExpansionLocation(this.Value, out filePtr, out line, out column, out offset);
                 File file = new File(filePtr);
-                this.instantiationLocation = new Location(file, line, column, offset);
+                this.expansionLocation = new ExpansionLocation(file, line, column, offset);
             }
         }
 
@@ -39,19 +39,58 @@ namespace LibClang
             return clang.clang_equalLocations(this.Value, clangObject.Value) > 0;
         }
 
-        private Location instantiationLocation;
+        private class ExpansionLocation
+        {
+            internal ExpansionLocation(File file, uint line, uint column, uint offset)
+            {
+                this.File = file;
+                this.Line = line;
+                this.Column = column;
+                this.Offset = offset;
+            }
 
-        public Location InstantiationLocation
+            public File File;
+            public uint Line;
+            public uint Column;
+            public uint Offset;
+        }
+
+        private ExpansionLocation expansionLocation;
+
+        public File File
         {
             get
             {
-                if (this.instantiationLocation==null)
-                {
-                    this.EnsurenInstantiationLocationInfo();
-                }
-                return this.instantiationLocation;
+                this.EnsurenExpansionLocation();
+                return this.expansionLocation.File;
             }
         }
+        public uint Column
+        {
+            get
+            {
+                this.EnsurenExpansionLocation();
+                return this.expansionLocation.Column;
+            }
+        }
+        public uint Line
+        {
+            get
+            {
+                this.EnsurenExpansionLocation();
+                return this.expansionLocation.Line;
+            }
+        }
+        public uint Offset
+        {
+            get
+            {
+                this.EnsurenExpansionLocation();
+                return this.expansionLocation.Offset;
+            }
+        }
+
+
 
         private PresumedLocation presumedLocation;
 
@@ -75,7 +114,7 @@ namespace LibClang
                 uint column;
                 uint line;
                 clang.clang_getPresumedLocation(this.Value, out ptrFileName, out line, out column);
-                this.presumedLocation = new PresumedLocation(ptrFileName.ToStringAndDispose(), line, column);
+                this.presumedLocation = new  PresumedLocation(ptrFileName.ToStringAndDispose(), line, column);
             }
         }
 
@@ -110,7 +149,7 @@ namespace LibClang
 
         public override string ToString()
         {
-            return string.Format("{0}:{1},{2}", this.InstantiationLocation.File.FileName,this.PresumedLocation.Line,this.PresumedLocation.Column);
+            return string.Format("{0}:{1},{2}", this.File, this.Line, this.Column);
         }
 
     }
