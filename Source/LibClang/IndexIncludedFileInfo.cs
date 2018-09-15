@@ -1,6 +1,7 @@
 ﻿namespace LibClang
 {
     using LibClang.Intertop;
+    using System.Runtime.InteropServices;
 
     /// <summary>
     /// Defines the <see cref="IndexIncludedFileInfo" />
@@ -18,7 +19,7 @@
             this.IsImport = cXIdxIncludedFileInfo.isImport > 0;
             this.IsModuleImport = cXIdxIncludedFileInfo.isModuleImport > 0;
             this.File = new File(cXIdxIncludedFileInfo.file);
-            this.FileName = new string(cXIdxIncludedFileInfo.filename);
+            this.FileName = Marshal.PtrToStringAnsi(cXIdxIncludedFileInfo.filename);
         }
 
         /// <summary>

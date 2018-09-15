@@ -6,7 +6,7 @@
     /// <summary>
     /// Defines the <see cref="CompletionResultList" />
     /// </summary>
-    public class CompletionResultList : ClangObjectList<CompletionResult>
+    public class CompletionResultList : ClangList<CompletionResult>
     {
         /// <summary>
         /// Defines the m_value

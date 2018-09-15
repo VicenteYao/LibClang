@@ -6,7 +6,7 @@
     /// <summary>
     /// Defines the <see cref="TranslationUnitResourceUsages" />
     /// </summary>
-    public class TranslationUnitResourceUsages : ClangObjectList<TranslationUnitResourceUsageEntry>
+    public class TranslationUnitResourceUsages : ClangList<TranslationUnitResourceUsageEntry>
     {
         /// <summary>
         /// Defines the m_value

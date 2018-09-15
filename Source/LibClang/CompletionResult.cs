@@ -37,7 +37,7 @@
         /// <summary>
         /// Defines the _completionChunk
         /// </summary>
-        private CompletionChunkList _completionChunk;
+        private CompletionChunkList _completionChunkList;
 
         /// <summary>
         /// Gets the CompletionChunks
@@ -46,11 +46,11 @@
         {
             get
             {
-                if (this._completionChunk == null)
+                if (this._completionChunkList == null)
                 {
-                    this._completionChunk = new CompletionChunkList(this.m_value);
+                    this._completionChunkList = new CompletionChunkList(this.m_value);
                 }
-                return this._completionChunk;
+                return this._completionChunkList;
             }
         }
 

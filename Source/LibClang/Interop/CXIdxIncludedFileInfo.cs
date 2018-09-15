@@ -1,5 +1,6 @@
 ﻿namespace LibClang.Intertop
 {
+    using System;
     using CXFile = System.IntPtr;
 
     /// <summary>
@@ -15,7 +16,7 @@
         /// <summary>
         /// Defines the filename
         /// </summary>
-        public sbyte* filename;
+        public IntPtr filename;
 
         /// <summary>
         /// Defines the file

@@ -5,15 +5,15 @@
     using System.Collections.Generic;
 
     /// <summary>
-    /// Defines the <see cref="ClangObjectList{TItem}" />
+    /// Defines the <see cref="ClangList{TItem}" />
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
-    public abstract class ClangObjectList<TItem> : ClangObject, IReadOnlyList<TItem> where TItem : class
+    public abstract class ClangList<TItem> : ClangObject, IReadOnlyList<TItem> where TItem : class
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ClangObjectList{TItem}"/> class.
+        /// Initializes a new instance of the <see cref="ClangList{TItem}"/> class.
         /// </summary>
-        protected ClangObjectList()
+        protected ClangList()
         {
         }
 
@@ -119,8 +119,8 @@
             /// <summary>
             /// Initializes a new instance of the <see cref=""/> class.
             /// </summary>
-            /// <param name="clangObjectList">The clangObjectList<see cref="ClangObjectList{TItem}"/></param>
-            internal Enumerable(ClangObjectList<TItem> clangObjectList)
+            /// <param name="clangObjectList">The clangObjectList<see cref="ClangList{TItem}"/></param>
+            internal Enumerable(ClangList<TItem> clangObjectList)
             {
                 this.clangObjectList = clangObjectList;
                 this.index = -1;
@@ -129,7 +129,7 @@
             /// <summary>
             /// Defines the clangObjectList
             /// </summary>
-            private ClangObjectList<TItem> clangObjectList;
+            private ClangList<TItem> clangObjectList;
 
             /// <summary>
             /// Defines the index

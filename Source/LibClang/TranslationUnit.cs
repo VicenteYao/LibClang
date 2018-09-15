@@ -389,7 +389,7 @@
         public unsafe string GetFileContents(File file)
         {
             uint size = 0;
-            string contents = new string(clang.clang_getFileContents(this.m_value, (IntPtr)file.Value, out size), 0, (int)size);
+            string contents = new string((sbyte*)clang.clang_getFileContents(this.m_value, (IntPtr)file.Value, out size), 0, (int)size);
             return contents;
         }
 

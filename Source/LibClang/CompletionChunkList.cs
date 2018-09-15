@@ -6,7 +6,7 @@
     /// <summary>
     /// Defines the <see cref="CompletionChunkList" />
     /// </summary>
-    public class CompletionChunkList : ClangObjectList<CompletionChunk>
+    public class CompletionChunkList : ClangList<CompletionChunk>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="CompletionChunkList"/> class.

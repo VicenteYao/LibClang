@@ -6,7 +6,7 @@
     /// <summary>
     /// Defines the <see cref="IndexAttributeInfoList" />
     /// </summary>
-    public class IndexAttributeInfoList : ClangObjectList<IndexAttributeInfo>
+    public class IndexAttributeInfoList : ClangList<IndexAttributeInfo>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="IndexAttributeInfoList"/> class.

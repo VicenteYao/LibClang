@@ -6,7 +6,7 @@
     /// <summary>
     /// Defines the <see cref="TokenList" />
     /// </summary>
-    public class TokenList : ClangObjectList<Token>
+    public class TokenList : ClangList<Token>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TokenList"/> class.

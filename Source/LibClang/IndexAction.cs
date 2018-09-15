@@ -255,30 +255,32 @@
         /// <param name="indexOptFlags">The indexOptFlags<see cref="CXIndexOptFlags"/></param>
         /// <param name="translationUnit_Flags">The translationUnit_Flags<see cref="CXTranslationUnit_Flags"/></param>
         /// <returns>The <see cref="CXErrorCode"/></returns>
-        public CXErrorCode IndexSourceFile(string sourceFile, out TranslationUnit translationUnit, string[] cmdLineArgs, UnsavedFile[] unsavedFiles, CXIndexOptFlags indexOptFlags, CXTranslationUnit_Flags translationUnit_Flags)
+        public TranslationUnit IndexSourceFile(string sourceFile, string[] commandLineArgs, UnsavedFile[] unsavedFiles, CXIndexOptFlags indexOptFlags, CXTranslationUnit_Flags translationUnit_Flags, out CXErrorCode errorCode)
         {
-            translationUnit = null;
-            if (cmdLineArgs == null)
+            TranslationUnit translationUnit = null;
+            string[] commandLineArgsArray = commandLineArgs;
+            UnsavedFile[] unsavedFilesArray = unsavedFiles;
+            if (commandLineArgsArray == null)
             {
-                cmdLineArgs = new string[0];
+                commandLineArgsArray = new string[0];
             }
-            if (unsavedFiles == null)
+            if (unsavedFilesArray == null)
             {
-                unsavedFiles = new UnsavedFile[0];
+                unsavedFilesArray = new UnsavedFile[0];
             }
             using (Pointer<IndexerCallbacks> ptrIndexerCallbacks = new Pointer<IndexerCallbacks>(this._indexerCallbacks))
             {
                 IntPtr pTU = IntPtr.Zero;
-                CXErrorCode errorCode = (CXErrorCode)clang.clang_indexSourceFile(this.m_value,
+                errorCode = (CXErrorCode)clang.clang_indexSourceFile(this.m_value,
                      IntPtr.Zero,
                      ptrIndexerCallbacks,
                      (uint)(ptrIndexerCallbacks.Size),
                      (uint)indexOptFlags,
                      sourceFile,
-                     cmdLineArgs,
-                     cmdLineArgs.Length,
-                     unsavedFiles.Select(x => (CXUnsavedFile)x.Value).ToArray(),
-                     (uint)unsavedFiles.Length,
+                     commandLineArgsArray,
+                     commandLineArgsArray.Length,
+                     unsavedFilesArray.Select(x => (CXUnsavedFile)x.Value).ToArray(),
+                     (uint)unsavedFilesArray.Length,
                      out pTU,
                        (uint)translationUnit_Flags
                      );
@@ -286,8 +288,9 @@
                 {
                     translationUnit = new TranslationUnit(pTU);
                 }
-                return errorCode;
+                return translationUnit;
             }
         }
+
     }
 }

@@ -4,15 +4,15 @@
     using System;
 
     /// <summary>
-    /// Defines the <see cref="OverriddenCursors" />
+    /// Defines the <see cref="OverriddenCursorList" />
     /// </summary>
-    public unsafe class OverriddenCursors : ClangObjectList<Cursor>
+    public unsafe class OverriddenCursorList : ClangList<Cursor>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="OverriddenCursors"/> class.
+        /// Initializes a new instance of the <see cref="OverriddenCursorList"/> class.
         /// </summary>
         /// <param name="cursor">The cursor<see cref="CXCursor"/></param>
-        internal OverriddenCursors(CXCursor cursor)
+        internal OverriddenCursorList(CXCursor cursor)
         {
             this.m_value = cursor;
             uint cursorsCount = 0;

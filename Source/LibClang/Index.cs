@@ -46,7 +46,10 @@
         /// <summary>
         /// Gets the Value
         /// </summary>
-        protected internal override ValueType Value => throw new NotImplementedException();
+        protected internal override ValueType Value
+        {
+            get { return this.m_value; }
+        }
 
         /// <summary>
         /// The CreateTranslationUnit
@@ -84,21 +87,28 @@
         /// The CreateTranslationUnit
         /// </summary>
         /// <param name="sourceFileName">The sourceFileName<see cref="string"/></param>
-        /// <param name="cmdArgs">The cmdArgs<see cref="string[]"/></param>
+        /// <param name="commandLineArgs">The cmdArgs<see cref="string[]"/></param>
         /// <param name="unsavedFiles">The unsavedFiles<see cref="UnsavedFile[]"/></param>
         /// <returns>The <see cref="TranslationUnit"/></returns>
-        public TranslationUnit CreateTranslationUnit(string sourceFileName, string[] cmdArgs, UnsavedFile[] unsavedFiles)
+        public TranslationUnit CreateTranslationUnit(string sourceFileName, string[] commandLineArgs, UnsavedFile[] unsavedFiles)
         {
             IntPtr pTranslationUnit = IntPtr.Zero;
-            if (cmdArgs == null)
+            string[] commandLineArgsArray = commandLineArgs;
+            UnsavedFile[] unsavedFilesArray = unsavedFiles;
+            if (commandLineArgsArray == null)
             {
-                cmdArgs = new string[0];
+                commandLineArgsArray = new string[0];
             }
-            if (unsavedFiles == null)
+            if (unsavedFilesArray == null)
             {
-                unsavedFiles = new UnsavedFile[0];
+                unsavedFilesArray = new UnsavedFile[0];
             }
-            pTranslationUnit = clang.clang_createTranslationUnitFromSourceFile(this.m_value, sourceFileName, cmdArgs.Length, cmdArgs, (uint)unsavedFiles.Length, unsavedFiles.Select(x => (CXUnsavedFile)x.Value).ToArray());
+            pTranslationUnit = clang.clang_createTranslationUnitFromSourceFile(this.m_value,
+                sourceFileName,
+                commandLineArgsArray.Length,
+                commandLineArgsArray,
+                (uint)unsavedFilesArray.Length,
+                unsavedFilesArray.Select(x => (CXUnsavedFile)x.Value).ToArray());
             if (pTranslationUnit == IntPtr.Zero)
             {
                 return null;
@@ -111,21 +121,23 @@
         /// </summary>
         /// <param name="sourceFileName">The sourceFileName<see cref="string"/></param>
         /// <param name="globalOptFlags">The globalOptFlags<see cref="CXGlobalOptFlags"/></param>
-        /// <param name="cmdLineArgs">The cmdLineArgs<see cref="string[]"/></param>
+        /// <param name="commandLineArgs">The commandLineArgs<see cref="string[]"/></param>
         /// <param name="unsavedFiles">The unsavedFiles<see cref="UnsavedFile[]"/></param>
         /// <returns>The <see cref="TranslationUnit"/></returns>
-        public TranslationUnit Parse(string sourceFileName, CXGlobalOptFlags globalOptFlags, string[] cmdLineArgs, UnsavedFile[] unsavedFiles)
+        public TranslationUnit Parse(string sourceFileName, CXGlobalOptFlags globalOptFlags, string[] commandLineArgs, UnsavedFile[] unsavedFiles)
         {
             IntPtr pTranslationUnit = IntPtr.Zero;
-            if (cmdLineArgs == null)
+            string[] commandLineArgsArray = commandLineArgs;
+            UnsavedFile[] unsavedFilesArray = unsavedFiles;
+            if (commandLineArgsArray == null)
             {
-                cmdLineArgs = new string[0];
+                commandLineArgsArray = new string[0];
             }
-            if (unsavedFiles == null)
+            if (unsavedFilesArray == null)
             {
-                unsavedFiles = new UnsavedFile[0];
+                unsavedFilesArray = new UnsavedFile[0];
             }
-            pTranslationUnit = clang.clang_parseTranslationUnit(this.m_value, sourceFileName, cmdLineArgs, cmdLineArgs.Length, unsavedFiles.Select(x => (CXUnsavedFile)x.Value).ToArray(), (uint)unsavedFiles.Length, (uint)globalOptFlags);
+            pTranslationUnit = clang.clang_parseTranslationUnit(this.m_value, sourceFileName, commandLineArgsArray, commandLineArgsArray.Length, unsavedFilesArray.Select(x => (CXUnsavedFile)x.Value).ToArray(), (uint)unsavedFilesArray.Length, (uint)globalOptFlags);
             if (pTranslationUnit == IntPtr.Zero)
             {
                 return null;
@@ -138,22 +150,31 @@
         /// </summary>
         /// <param name="sourceFileName">The sourceFileName<see cref="string"/></param>
         /// <param name="globalOptFlags">The globalOptFlags<see cref="CXGlobalOptFlags"/></param>
-        /// <param name="cmdLineArgs">The cmdLineArgs<see cref="string[]"/></param>
+        /// <param name="commandLineArgs">The commandLineArgs<see cref="string[]"/></param>
         /// <param name="unsavedFiles">The unsavedFiles<see cref="UnsavedFile[]"/></param>
         /// <param name="errorCode">The errorCode<see cref="CXErrorCode"/></param>
         /// <returns>The <see cref="TranslationUnit"/></returns>
-        public TranslationUnit Parse(string sourceFileName, CXGlobalOptFlags globalOptFlags, string[] cmdLineArgs, UnsavedFile[] unsavedFiles, out CXErrorCode errorCode)
+        public TranslationUnit Parse(string sourceFileName, CXGlobalOptFlags globalOptFlags, string[] commandLineArgs, UnsavedFile[] unsavedFiles, out CXErrorCode errorCode)
         {
             IntPtr pTranslationUnit = IntPtr.Zero;
-            if (cmdLineArgs == null)
+            string[] commandLineArgsArray = commandLineArgs;
+            UnsavedFile[] unsavedFilesArray = unsavedFiles;
+            if (commandLineArgsArray == null)
             {
-                cmdLineArgs = new string[0];
+                commandLineArgsArray = new string[0];
             }
-            if (unsavedFiles == null)
+            if (unsavedFilesArray == null)
             {
-                unsavedFiles = new UnsavedFile[0];
+                unsavedFilesArray = new UnsavedFile[0];
             }
-            errorCode = clang.clang_parseTranslationUnit2(this.m_value, sourceFileName, cmdLineArgs, cmdLineArgs.Length, unsavedFiles.Select(x => (CXUnsavedFile)x.Value).ToArray(), (uint)unsavedFiles.Length, (uint)globalOptFlags, out pTranslationUnit);
+            errorCode = clang.clang_parseTranslationUnit2(this.m_value,
+                sourceFileName,
+                commandLineArgsArray,
+                commandLineArgsArray.Length,
+                unsavedFiles.Select(x => (CXUnsavedFile)x.Value).ToArray(),
+                (uint)unsavedFiles.Length,
+                (uint)globalOptFlags,
+                out pTranslationUnit);
             if (pTranslationUnit == IntPtr.Zero)
             {
                 return null;
@@ -166,22 +187,31 @@
         /// </summary>
         /// <param name="sourceFileName">The sourceFileName<see cref="string"/></param>
         /// <param name="globalOptFlags">The globalOptFlags<see cref="CXGlobalOptFlags"/></param>
-        /// <param name="cmdLineArgs">The cmdLineArgs<see cref="string[]"/></param>
+        /// <param name="commandLineArgs">The commandLineArgs<see cref="string[]"/></param>
         /// <param name="unsavedFiles">The unsavedFiles<see cref="UnsavedFile[]"/></param>
         /// <param name="errorCode">The errorCode<see cref="CXErrorCode"/></param>
         /// <returns>The <see cref="TranslationUnit"/></returns>
-        public TranslationUnit ParseWithFullArguments(string sourceFileName, CXGlobalOptFlags globalOptFlags, string[] cmdLineArgs, UnsavedFile[] unsavedFiles, out CXErrorCode errorCode)
+        public TranslationUnit ParseWithFullArguments(string sourceFileName, CXGlobalOptFlags globalOptFlags, string[] commandLineArgs, UnsavedFile[] unsavedFiles, out CXErrorCode errorCode)
         {
             IntPtr pTranslationUnit = IntPtr.Zero;
-            if (cmdLineArgs == null)
+            string[] commandLineArgsArray = commandLineArgs;
+            UnsavedFile[] unsavedFilesArray = unsavedFiles;
+            if (commandLineArgsArray == null)
             {
-                cmdLineArgs = new string[0];
+                commandLineArgsArray = new string[0];
             }
-            if (unsavedFiles == null)
+            if (unsavedFilesArray == null)
             {
-                unsavedFiles = new UnsavedFile[0];
+                unsavedFilesArray = new UnsavedFile[0];
             }
-            errorCode = clang.clang_parseTranslationUnit2FullArgv(this.m_value, sourceFileName, cmdLineArgs, cmdLineArgs.Length, unsavedFiles.Select(x => (CXUnsavedFile)x.Value).ToArray(), (uint)unsavedFiles.Length, (uint)globalOptFlags, out pTranslationUnit);
+            errorCode = clang.clang_parseTranslationUnit2FullArgv(this.m_value,
+                sourceFileName,
+                commandLineArgsArray,
+                commandLineArgsArray.Length,
+                unsavedFiles.Select(x => (CXUnsavedFile)x.Value).ToArray(),
+                (uint)unsavedFiles.Length,
+                (uint)globalOptFlags,
+                out pTranslationUnit);
             if (pTranslationUnit == IntPtr.Zero)
             {
                 return null;

@@ -6,7 +6,7 @@
     /// <summary>
     /// Defines the <see cref="DiagnosticSet" />
     /// </summary>
-    public class DiagnosticSet : ClangObjectList<Diagnostic>
+    public class DiagnosticSet : ClangList<Diagnostic>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DiagnosticSet"/> class.

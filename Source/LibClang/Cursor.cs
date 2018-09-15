@@ -207,18 +207,18 @@
         /// <summary>
         /// Defines the overridesCursors
         /// </summary>
-        private OverriddenCursors overridesCursors;
+        private OverriddenCursorList overridesCursors;
 
         /// <summary>
         /// Gets the OverridesCursors
         /// </summary>
-        public unsafe OverriddenCursors OverridesCursors
+        public unsafe OverriddenCursorList OverridesCursors
         {
             get
             {
                 if (this.overridesCursors == null)
                 {
-                    this.overridesCursors = new OverriddenCursors(this.m_value);
+                    this.overridesCursors = new OverriddenCursorList(this.m_value);
                 }
                 return overridesCursors;
             }
@@ -227,18 +227,18 @@
         /// <summary>
         /// Defines the templateArguments
         /// </summary>
-        private CursorTemplateArguments templateArguments;
+        private CursorTemplateArgumentList templateArguments;
 
         /// <summary>
         /// Gets the TemplateArguments
         /// </summary>
-        public CursorTemplateArguments TemplateArguments
+        public CursorTemplateArgumentList TemplateArguments
         {
             get
             {
                 if (this.templateArguments == null)
                 {
-                    this.templateArguments = new CursorTemplateArguments(this.m_value);
+                    this.templateArguments = new CursorTemplateArgumentList(this.m_value);
                 }
                 return this.templateArguments;
             }

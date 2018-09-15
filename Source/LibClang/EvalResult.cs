@@ -2,6 +2,7 @@
 {
     using LibClang.Intertop;
     using System;
+    using System.Runtime.InteropServices;
 
     /// <summary>
     /// Defines the <see cref="EvalResult" />
@@ -85,7 +86,7 @@
         {
             get
             {
-                this._stringValue = new string(clang.clang_EvalResult_getAsStr(this.m_value));
+                this._stringValue = Marshal.PtrToStringAnsi(clang.clang_EvalResult_getAsStr(this.m_value));
                 return this._stringValue;
             }
         }

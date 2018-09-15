@@ -34,8 +34,8 @@
         /// The clang_getCString
         /// </summary>
         /// <param name="cxString">The cxString<see cref="CXString"/></param>
-        /// <returns>The <see cref="sbyte*"/></returns>
-        [DllImport(Lib)] internal static unsafe extern sbyte* clang_getCString(CXString cxString);
+        /// <returns>The <see cref="IntPtr"/></returns>
+        [DllImport(Lib)] internal static unsafe extern IntPtr clang_getCString(CXString cxString);
 
         /// <summary>
         /// The clang_disposeString
@@ -131,9 +131,9 @@
         /// <param name="tu">The tu<see cref="CXTranslationUnit"/></param>
         /// <param name="file">The file<see cref="CXFile"/></param>
         /// <param name="size">The size<see cref="uint"/></param>
-        /// <returns>The <see cref="sbyte*"/></returns>
+        /// <returns>The <see cref="IntPtr"/></returns>
         [DllImport(Lib)]
-        internal static extern sbyte* clang_getFileContents(CXTranslationUnit tu, CXFile file, out uint size);
+        internal static extern IntPtr clang_getFileContents(CXTranslationUnit tu, CXFile file, out uint size);
 
         /// <summary>
         /// The clang_File_isEqual
@@ -2411,8 +2411,8 @@
         /// The clang_EvalResult_getAsStr
         /// </summary>
         /// <param name="E">The E<see cref="CXEvalResult"/></param>
-        /// <returns>The <see cref="sbyte*"/></returns>
-        [DllImport(Lib)] internal static extern sbyte* clang_EvalResult_getAsStr(CXEvalResult E);
+        /// <returns>The <see cref="IntPtr"/></returns>
+        [DllImport(Lib)] internal static extern IntPtr clang_EvalResult_getAsStr(CXEvalResult E);
 
         /// <summary>
         /// The clang_EvalResult_dispose

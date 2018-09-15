@@ -1,6 +1,7 @@
 ﻿namespace LibClang
 {
     using LibClang.Intertop;
+    using System.Runtime.InteropServices;
 
     /// <summary>
     /// Defines the <see cref="NativeMethodsHelper" />
@@ -15,7 +16,7 @@
         internal static string ToStringAndDispose(this CXString cxString)
         {
             var pString = clang.clang_getCString(cxString);
-            string result = new string(pString);
+            string result = Marshal.PtrToStringAnsi(pString);
             clang.clang_disposeString(cxString);
             return result;
         }

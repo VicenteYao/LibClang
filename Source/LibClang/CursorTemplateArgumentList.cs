@@ -4,9 +4,9 @@
     using System;
 
     /// <summary>
-    /// Defines the <see cref="CursorTemplateArguments" />
+    /// Defines the <see cref="CursorTemplateArgumentList" />
     /// </summary>
-    public class CursorTemplateArguments : ClangObjectList<TemplateArgument>
+    public class CursorTemplateArgumentList : ClangList<TemplateArgument>
     {
         /// <summary>
         /// Defines the m_value
@@ -14,10 +14,10 @@
         private CXCursor m_value;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CursorTemplateArguments"/> class.
+        /// Initializes a new instance of the <see cref="CursorTemplateArgumentList"/> class.
         /// </summary>
         /// <param name="cursor">The cursor<see cref="CXCursor"/></param>
-        internal CursorTemplateArguments(CXCursor cursor)
+        internal CursorTemplateArgumentList(CXCursor cursor)
         {
             this.m_value = cursor;
         }
@@ -53,7 +53,8 @@
         /// <returns>The <see cref="int"/></returns>
         protected override int GetCountCore()
         {
-            return clang.clang_Cursor_getNumTemplateArguments(this.m_value);
+            int count = clang.clang_Cursor_getNumTemplateArguments(this.m_value);
+            return count == -1 ? 0 : count;
         }
     }
 }

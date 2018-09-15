@@ -6,7 +6,7 @@
     /// <summary>
     /// Defines the <see cref="SourceRangeList" />
     /// </summary>
-    public class SourceRangeList : ClangObjectList<SourceRange>
+    public class SourceRangeList : ClangList<SourceRange>
     {
         /// <summary>
         /// Defines the m_value

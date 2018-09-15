@@ -231,18 +231,18 @@
         /// <summary>
         /// Defines the templateArguments
         /// </summary>
-        private TypeTemplateArguments templateArguments;
+        private TypeTemplateArgumentList templateArguments;
 
         /// <summary>
         /// Gets the TemplateArguments
         /// </summary>
-        public TypeTemplateArguments TemplateArguments
+        public TypeTemplateArgumentList TemplateArguments
         {
             get
             {
                 if (this.templateArguments == null)
                 {
-                    this.templateArguments = new TypeTemplateArguments(this.m_value);
+                    this.templateArguments = new TypeTemplateArgumentList(this.m_value);
                 }
                 return this.templateArguments;
             }

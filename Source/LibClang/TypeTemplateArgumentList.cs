@@ -4,9 +4,9 @@
     using System;
 
     /// <summary>
-    /// Defines the <see cref="TypeTemplateArguments" />
+    /// Defines the <see cref="TypeTemplateArgumentList" />
     /// </summary>
-    public class TypeTemplateArguments : ClangObjectList<Type>
+    public class TypeTemplateArgumentList : ClangList<Type>
     {
         /// <summary>
         /// Defines the m_value
@@ -14,10 +14,10 @@
         private CXType m_value;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TypeTemplateArguments"/> class.
+        /// Initializes a new instance of the <see cref="TypeTemplateArgumentList"/> class.
         /// </summary>
         /// <param name="type">The type<see cref="CXType"/></param>
-        internal TypeTemplateArguments(CXType type)
+        internal TypeTemplateArgumentList(CXType type)
         {
             this.m_value = type;
         }
