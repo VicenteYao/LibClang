@@ -898,7 +898,7 @@
                                            out CXString deprecated_message,
                                            out int always_unavailable,
                                            out CXString unavailable_message,
-                                           out CXPlatformAvailability[] availability,
+                                           out CXPlatformAvailability* availability,
                                            int availability_size);
 
         /// <summary>

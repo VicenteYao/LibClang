@@ -54,13 +54,63 @@
         /// <summary>
         /// Defines the platformAvailibility
         /// </summary>
-        private PlatformAvailibility[] platformAvailibility;
+        private PlatformAvailibilityList platformAvailibility;
+
+        public PlatformAvailibilityList PlatformAvailibility
+        {
+            get
+            {
+                if (this.platformAvailibility==null)
+                {
+
+                    this.platformAvailibility = this.GetPlatformAvailibility();
+                }
+                return this.platformAvailibility;
+            }
+        }
 
         /// <summary>
         /// The GetPlatformAvailibility
         /// </summary>
-        /// <returns>The <see cref="PlatformAvailibility[]"/></returns>
-        public PlatformAvailibility[] GetPlatformAvailibility()
+        /// <returns>The <see cref="PlatformAvailibilityList[]"/></returns>
+        public unsafe PlatformAvailibilityList GetPlatformAvailibility(out bool alwaysDeprecated,
+            out string deprecatedMessage, out bool alwaysUnavailable, out string unavailableMessage)
+        {
+            alwaysDeprecated = false;
+            deprecatedMessage = null;
+            alwaysUnavailable = false;
+            unavailableMessage = null;
+            if (this.platformAvailibility == null)
+            {
+                int always_deprecated;
+                CXString deprecated_message;
+                int always_unavailable;
+                CXString unavailable_message;
+                CXPlatformAvailability* pAvailability;
+                int availability_size = clang.clang_getCursorPlatformAvailability(this.m_value,
+                    out always_deprecated,
+                    out deprecated_message,
+                    out always_unavailable,
+                    out unavailable_message,
+                    out pAvailability,
+                    0);
+                int length = clang.clang_getCursorPlatformAvailability(this.m_value,
+                     out always_deprecated,
+                     out deprecated_message,
+                     out always_unavailable,
+                     out unavailable_message,
+                     out pAvailability,
+                     availability_size);
+                alwaysDeprecated = always_deprecated > 0;
+                deprecatedMessage = deprecated_message.ToStringAndDispose();
+                alwaysUnavailable = always_unavailable > 0;
+                unavailableMessage = unavailable_message.ToStringAndDispose();
+                this.platformAvailibility = new PlatformAvailibilityList(pAvailability,  length);
+            }
+            return this.platformAvailibility;
+        }
+
+        public unsafe PlatformAvailibilityList GetPlatformAvailibility()
         {
             if (this.platformAvailibility == null)
             {
@@ -68,15 +118,22 @@
                 CXString deprecated_message;
                 int always_unavailable;
                 CXString unavailable_message;
-                CXPlatformAvailability[] availability;
-                int availability_size = 0;
-                clang.clang_getCursorPlatformAvailability(this.m_value,
+                CXPlatformAvailability* pAvailability;
+                int availability_size = clang.clang_getCursorPlatformAvailability(this.m_value,
                     out always_deprecated,
                     out deprecated_message,
                     out always_unavailable,
                     out unavailable_message,
-                    out availability,
-                    availability_size);
+                    out pAvailability,
+                    0);
+                int length = clang.clang_getCursorPlatformAvailability(this.m_value,
+                     out always_deprecated,
+                     out deprecated_message,
+                     out always_unavailable,
+                     out unavailable_message,
+                     out pAvailability,
+                     availability_size);
+                this.platformAvailibility = new PlatformAvailibilityList(pAvailability, length);
             }
             return this.platformAvailibility;
         }
@@ -535,6 +592,10 @@
         {
             get
             {
+                if (this.IsNull || this.CursorKind != CXCursorKind.CXCursor_VarDecl)
+                {
+                    return CXTLSKind.CXTLS_None;
+                }
                 this.tlsKind = clang.clang_getCursorTLSKind(this.m_value);
                 return this.tlsKind;
             }
