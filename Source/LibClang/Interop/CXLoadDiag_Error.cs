@@ -7,8 +7,8 @@
     public enum CXLoadDiag_Error
     {
         /**
-                         * Indicates that no error occurred.
-                         */
+                                 * Indicates that no error occurred.
+                                 */
         CXLoadDiag_None = 0,
         /**
          * Indicates that an unknown error occurred while attempting to

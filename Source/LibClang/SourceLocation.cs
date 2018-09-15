@@ -235,7 +235,10 @@
         /// <summary>
         /// Gets the Value
         /// </summary>
-        protected internal override ValueType Value { get { return this.m_value; } }
+        protected internal override ValueType Value
+        {
+            get { return this.m_value; }
+        }
 
         /// <summary>
         /// The ToString

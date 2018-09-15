@@ -66,8 +66,6 @@
             }
         }
 
-
-
         /// <summary>
         /// Defines the _resourceUsages
         /// </summary>

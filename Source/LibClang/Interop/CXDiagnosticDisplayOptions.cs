@@ -9,18 +9,18 @@
     public enum CXDiagnosticDisplayOptions
     {
         /**
-                         * Display the source-location information where the
-                         * diagnostic was located.
-                         *
-                         * When set, diagnostics will be prefixed by the file, line, and
-                         * (optionally) column to which the diagnostic refers. For example,
-                         *
-                         * \code
-                         * test.c:28: warning: extra tokens at end of #endif directive
-                         * \endcode
-                         *
-                         * This option corresponds to the clang flag \c -fshow-source-location.
-                         */
+                                 * Display the source-location information where the
+                                 * diagnostic was located.
+                                 *
+                                 * When set, diagnostics will be prefixed by the file, line, and
+                                 * (optionally) column to which the diagnostic refers. For example,
+                                 *
+                                 * \code
+                                 * test.c:28: warning: extra tokens at end of #endif directive
+                                 * \endcode
+                                 *
+                                 * This option corresponds to the clang flag \c -fshow-source-location.
+                                 */
         CXDiagnostic_DisplaySourceLocation = 0x01,
         /**
          * If displaying the source-location information of the

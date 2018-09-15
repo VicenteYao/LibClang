@@ -7,8 +7,8 @@
     enum CXSaveError
     {
         /**
-                         * Indicates that no error occurred while saving a translation unit.
-                         */
+                                 * Indicates that no error occurred while saving a translation unit.
+                                 */
         CXSaveError_None = 0,
         /**
          * Indicates that an unknown error occurred while attempting to save

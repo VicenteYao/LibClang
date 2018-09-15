@@ -8,8 +8,8 @@
     public enum CXCursor_ExceptionSpecificationKind
     {
         /**
-                         * The cursor has no exception specification.
-                         */
+                                 * The cursor has no exception specification.
+                                 */
         CXCursor_ExceptionSpecificationKind_None,
         /**
          * The cursor has exception specification throw()

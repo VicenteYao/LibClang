@@ -9,8 +9,8 @@
     public enum CXErrorCode
     {
         /**
-                         * No error.
-                         */
+                                 * No error.
+                                 */
         CXError_Success = 0,
         /**
          * A generic error code, no further details are available.

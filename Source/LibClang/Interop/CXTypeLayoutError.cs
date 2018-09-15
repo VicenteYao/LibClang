@@ -11,8 +11,8 @@
     public enum CXTypeLayoutError
     {
         /**
-                         * Type is of kind CXType_Invalid.
-                         */
+                                 * Type is of kind CXType_Invalid.
+                                 */
         CXTypeLayoutError_Invalid = -1,
         /**
          * The type is an incomplete Type.

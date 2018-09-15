@@ -9,9 +9,9 @@
     public enum CXCompletionContext
     {
         /**
-                         * The context for completions is unexposed, as only Clang results
-                         * should be included. (This is equivalent to having no context bits set.)
-                         */
+                                 * The context for completions is unexposed, as only Clang results
+                                 * should be included. (This is equivalent to having no context bits set.)
+                                 */
         CXCompletionContext_Unexposed = 0,
         /**
          * Completions for any possible type should be included in the results.

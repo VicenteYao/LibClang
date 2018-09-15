@@ -249,11 +249,11 @@
         /// The IndexSourceFile
         /// </summary>
         /// <param name="sourceFile">The sourceFile<see cref="string"/></param>
-        /// <param name="translationUnit">The translationUnit<see cref="TranslationUnit"/></param>
-        /// <param name="cmdLineArgs">The cmdLineArgs<see cref="string[]"/></param>
+        /// <param name="commandLineArgs">The commandLineArgs<see cref="string[]"/></param>
         /// <param name="unsavedFiles">The unsavedFiles<see cref="UnsavedFile[]"/></param>
         /// <param name="indexOptFlags">The indexOptFlags<see cref="CXIndexOptFlags"/></param>
         /// <param name="translationUnit_Flags">The translationUnit_Flags<see cref="CXTranslationUnit_Flags"/></param>
+        /// <param name="errorCode">The errorCode<see cref="CXErrorCode"/></param>
         /// <returns>The <see cref="CXErrorCode"/></returns>
         public TranslationUnit IndexSourceFile(string sourceFile, string[] commandLineArgs, UnsavedFile[] unsavedFiles, CXIndexOptFlags indexOptFlags, CXTranslationUnit_Flags translationUnit_Flags, out CXErrorCode errorCode)
         {
@@ -291,6 +291,5 @@
                 return translationUnit;
             }
         }
-
     }
 }

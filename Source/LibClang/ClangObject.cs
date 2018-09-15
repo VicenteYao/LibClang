@@ -45,6 +45,7 @@
 
 
 
+
         public static bool operator ==(ClangObject left, ClangObject right)
         {
             if ((object.ReferenceEquals(left, null) || object.ReferenceEquals(right, null)) && object.ReferenceEquals(left, right))

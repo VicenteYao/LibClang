@@ -16,8 +16,8 @@
     public enum CXTypeKind
     {
         /**
-                         * Represents an invalid type (e.g., where no type is available).
-                         */
+                                 * Represents an invalid type (e.g., where no type is available).
+                                 */
         CXType_Invalid = 0,
         /**
          * A type whose specific kind is not exposed via this

@@ -35,7 +35,7 @@
         public FixIt[] FixIts { get; private set; }
 
         /// <summary>
-        /// Defines the _completionChunk
+        /// Defines the _completionChunkList
         /// </summary>
         private CompletionChunkList _completionChunkList;
 

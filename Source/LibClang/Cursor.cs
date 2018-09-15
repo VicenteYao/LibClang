@@ -56,11 +56,14 @@
         /// </summary>
         private PlatformAvailibilityList platformAvailibility;
 
+        /// <summary>
+        /// Gets the PlatformAvailibility
+        /// </summary>
         public PlatformAvailibilityList PlatformAvailibility
         {
             get
             {
-                if (this.platformAvailibility==null)
+                if (this.platformAvailibility == null)
                 {
 
                     this.platformAvailibility = this.GetPlatformAvailibility();
@@ -72,6 +75,10 @@
         /// <summary>
         /// The GetPlatformAvailibility
         /// </summary>
+        /// <param name="alwaysDeprecated">The alwaysDeprecated<see cref="bool"/></param>
+        /// <param name="deprecatedMessage">The deprecatedMessage<see cref="string"/></param>
+        /// <param name="alwaysUnavailable">The alwaysUnavailable<see cref="bool"/></param>
+        /// <param name="unavailableMessage">The unavailableMessage<see cref="string"/></param>
         /// <returns>The <see cref="PlatformAvailibilityList[]"/></returns>
         public unsafe PlatformAvailibilityList GetPlatformAvailibility(out bool alwaysDeprecated,
             out string deprecatedMessage, out bool alwaysUnavailable, out string unavailableMessage)
@@ -105,11 +112,15 @@
                 deprecatedMessage = deprecated_message.ToStringAndDispose();
                 alwaysUnavailable = always_unavailable > 0;
                 unavailableMessage = unavailable_message.ToStringAndDispose();
-                this.platformAvailibility = new PlatformAvailibilityList(pAvailability,  length);
+                this.platformAvailibility = new PlatformAvailibilityList(pAvailability, length);
             }
             return this.platformAvailibility;
         }
 
+        /// <summary>
+        /// The GetPlatformAvailibility
+        /// </summary>
+        /// <returns>The <see cref="PlatformAvailibilityList"/></returns>
         public unsafe PlatformAvailibilityList GetPlatformAvailibility()
         {
             if (this.platformAvailibility == null)

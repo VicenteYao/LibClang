@@ -23,8 +23,8 @@
     public enum CXChildVisitResult
     {
         /**
-                         * Terminates the cursor traversal.
-                         */
+                                 * Terminates the cursor traversal.
+                                 */
         CXChildVisit_Break,
         /**
          * Continues the cursor traversal with the next sibling of

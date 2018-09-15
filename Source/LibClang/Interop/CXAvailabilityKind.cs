@@ -8,8 +8,8 @@
     public enum CXAvailabilityKind
     {
         /**
-                         * The entity is available.
-                         */
+                                 * The entity is available.
+                                 */
         CXAvailability_Available,
         /**
          * The entity is available, but has been deprecated (and its use is

@@ -16,9 +16,9 @@
     enum CXDiagnosticSeverity
     {
         /**
-                         * A diagnostic that has been suppressed, e.g., by a command-line
-                         * option.
-                         */
+                                 * A diagnostic that has been suppressed, e.g., by a command-line
+                                 * option.
+                                 */
         CXDiagnostic_Ignored = 0,
         /**
          * This diagnostic is a note that should be attached to the

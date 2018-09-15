@@ -10,9 +10,9 @@
     public enum CXTranslationUnit_Flags
     {
         /**
-                         * Used to indicate that no special translation-unit options are
-                         * needed.
-                         */
+                                 * Used to indicate that no special translation-unit options are
+                                 * needed.
+                                 */
         CXTranslationUnit_None = 0x0,
         /**
          * Used to indicate that the parser should construct a "detailed"

@@ -6,7 +6,7 @@
     public enum CXLinkageKind
     {
         /** This value indicates that no linkage information is available
-                         * for a provided CXCursor. */
+                                 * for a provided CXCursor. */
         CXLinkage_Invalid,
         /**
          * This is the linkage for variables, parameters, and so on that

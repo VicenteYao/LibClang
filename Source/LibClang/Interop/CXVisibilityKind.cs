@@ -6,7 +6,7 @@
     public enum CXVisibilityKind
     {
         /** This value indicates that no visibility information is available
-                         * for a provided CXCursor. */
+                                 * for a provided CXCursor. */
         CXVisibility_Invalid,
         /** Symbol not seen by the linker. */
         CXVisibility_Hidden,

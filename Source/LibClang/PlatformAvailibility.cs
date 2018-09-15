@@ -1,28 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using LibClang.Intertop;
-
-namespace LibClang
+﻿namespace LibClang
 {
+    using LibClang.Intertop;
+    using System;
+
+    /// <summary>
+    /// Defines the <see cref="PlatformAvailibility" />
+    /// </summary>
     public class PlatformAvailibility : ClangObject
     {
-        internal PlatformAvailibility(CXPlatformAvailability platformAvailability )
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PlatformAvailibility"/> class.
+        /// </summary>
+        /// <param name="platformAvailability">The platformAvailability<see cref="CXPlatformAvailability"/></param>
+        internal PlatformAvailibility(CXPlatformAvailability platformAvailability)
         {
             this.m_value = platformAvailability;
         }
 
+        /// <summary>
+        /// Defines the m_value
+        /// </summary>
         private CXPlatformAvailability m_value;
 
-        private string platform;
         /// <summary>
+        /// Defines the platform
+        /// </summary>
+        private string platform;
+
+        /// <summary>
+        /// Gets the Platform
         /// Defines the Platform
         /// </summary>
         public string Platform
         {
             get
             {
-                if (this.platform==null)
+                if (this.platform == null)
                 {
                     this.platform = this.m_value.Platform.ToStringAndDispose();
                 }
@@ -30,15 +43,20 @@ namespace LibClang
             }
         }
 
+        /// <summary>
+        /// Defines the introduced
+        /// </summary>
         private Version introduced;
 
         /// <summary>
+        /// Gets the Introduced
         /// Defines the Introduced
         /// </summary>
-        public Version Introduced {
+        public Version Introduced
+        {
             get
             {
-                if (this.introduced==null)
+                if (this.introduced == null)
                 {
                     this.introduced = new Version(this.m_value.Introduced.Major, this.m_value.Introduced.Minor);
                 }
@@ -46,8 +64,13 @@ namespace LibClang
             }
         }
 
-        private Version deprecated;
         /// <summary>
+        /// Defines the deprecated
+        /// </summary>
+        private Version deprecated;
+
+        /// <summary>
+        /// Gets the Deprecated
         /// Defines the Deprecated
         /// </summary>
         public Version Deprecated
@@ -62,8 +85,13 @@ namespace LibClang
             }
         }
 
-        private Version obsoleted;
         /// <summary>
+        /// Defines the obsoleted
+        /// </summary>
+        private Version obsoleted;
+
+        /// <summary>
+        /// Gets the Obsoleted
         /// Defines the Obsoleted
         /// </summary>
         public Version Obsoleted
@@ -80,6 +108,7 @@ namespace LibClang
         }
 
         /// <summary>
+        /// Gets a value indicating whether Unavailable
         /// Defines the Unavailable
         /// </summary>
         public bool Unavailable
@@ -90,8 +119,13 @@ namespace LibClang
             }
         }
 
-        private string message;
         /// <summary>
+        /// Defines the message
+        /// </summary>
+        private string message;
+
+        /// <summary>
+        /// Gets the Message
         /// Defines the Message
         /// </summary>
         public string Message
@@ -106,6 +140,12 @@ namespace LibClang
             }
         }
 
-        protected internal override ValueType Value { get { return this.m_value; } }
+        /// <summary>
+        /// Gets the Value
+        /// </summary>
+        protected internal override ValueType Value
+        {
+            get { return this.m_value; }
+        }
     }
 }

@@ -6,8 +6,8 @@
     public enum CXIndexOptFlags
     {
         /**
-                         * Used to indicate that no special indexing options are needed.
-                         */
+                                 * Used to indicate that no special indexing options are needed.
+                                 */
         CXIndexOpt_None = 0x0,
         /**
          * Used to indicate that IndexerCallbacks#indexEntityReference should

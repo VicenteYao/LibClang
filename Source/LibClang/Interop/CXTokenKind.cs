@@ -20,8 +20,8 @@
     public enum CXTokenKind
     {
         /**
-                         * A token that contains some kind of punctuation.
-                         */
+                                 * A token that contains some kind of punctuation.
+                                 */
         CXToken_Punctuation,
         /**
          * A language keyword.

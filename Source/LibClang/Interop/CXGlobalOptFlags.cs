@@ -6,8 +6,8 @@
     public enum CXGlobalOptFlags
     {
         /**
-                         * Used to indicate that no special CXIndex options are needed.
-                         */
+                                 * Used to indicate that no special CXIndex options are needed.
+                                 */
         CXGlobalOpt_None = 0x0,
         /**
          * Used to indicate that threads that libclang creates for indexing

@@ -6,8 +6,8 @@
     public enum CXResult
     {
         /**
-                         * Function returned successfully.
-                         */
+                                 * Function returned successfully.
+                                 */
         CXResult_Success = 0,
         /**
          * One of the parameters was invalid for the function.

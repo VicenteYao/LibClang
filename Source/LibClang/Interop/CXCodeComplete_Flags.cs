@@ -10,9 +10,9 @@
     public enum CXCodeComplete_Flags
     {
         /**
-                         * Whether to include macros within the set of code
-                         * completions returned.
-                         */
+                                 * Whether to include macros within the set of code
+                                 * completions returned.
+                                 */
         CXCodeComplete_IncludeMacros = 0x01,
         /**
          * Whether to include code patterns for language constructs

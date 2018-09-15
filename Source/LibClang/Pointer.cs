@@ -66,6 +66,7 @@
 
 
 
+
         public static implicit operator IntPtr(Pointer<T> pointer)
         {
             return pointer.m_ptr;

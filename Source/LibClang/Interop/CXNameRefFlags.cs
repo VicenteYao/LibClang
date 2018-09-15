@@ -6,9 +6,9 @@
     public enum CXNameRefFlags
     {
         /**
-                         * Include the nested-name-specifier, e.g. Foo:: in x.Foo::y, in the
-                         * range.
-                         */
+                                 * Include the nested-name-specifier, e.g. Foo:: in x.Foo::y, in the
+                                 * range.
+                                 */
         CXNameRange_WantQualifier = 0x1,
         /**
          * Include the explicit template arguments, e.g. \<int> in x.f<int>,
