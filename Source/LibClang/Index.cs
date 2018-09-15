@@ -3,6 +3,7 @@
     using LibClang.Intertop;
     using System;
     using System.Linq;
+    using System.Runtime.InteropServices;
 
     /// <summary>
     /// Defines the <see cref="Index" />
@@ -124,7 +125,7 @@
         /// <param name="commandLineArgs">The commandLineArgs<see cref="string[]"/></param>
         /// <param name="unsavedFiles">The unsavedFiles<see cref="UnsavedFile[]"/></param>
         /// <returns>The <see cref="TranslationUnit"/></returns>
-        public TranslationUnit Parse(string sourceFileName, CXGlobalOptFlags globalOptFlags, string[] commandLineArgs, UnsavedFile[] unsavedFiles)
+        public unsafe TranslationUnit Parse(string sourceFileName, CXGlobalOptFlags globalOptFlags, string[] commandLineArgs, UnsavedFile[] unsavedFiles)
         {
             IntPtr pTranslationUnit = IntPtr.Zero;
             string[] commandLineArgsArray = commandLineArgs;
@@ -137,7 +138,13 @@
             {
                 unsavedFilesArray = new UnsavedFile[0];
             }
-            pTranslationUnit = clang.clang_parseTranslationUnit(this.m_value, sourceFileName, commandLineArgsArray, commandLineArgsArray.Length, unsavedFilesArray.Select(x => (CXUnsavedFile)x.Value).ToArray(), (uint)unsavedFilesArray.Length, (uint)globalOptFlags);
+            pTranslationUnit = clang.clang_parseTranslationUnit(this.m_value,
+                sourceFileName,
+                commandLineArgsArray,
+                commandLineArgsArray.Length,
+                unsavedFilesArray.Select(x => (CXUnsavedFile)x.Value).ToArray(),
+                (uint)unsavedFilesArray.Length,
+                (uint)globalOptFlags);
             if (pTranslationUnit == IntPtr.Zero)
             {
                 return null;

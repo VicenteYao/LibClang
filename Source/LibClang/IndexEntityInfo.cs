@@ -85,7 +85,7 @@
             {
                 if (this.usr == null)
                 {
-                    this.usr = Marshal.PtrToStringAuto(this.m_value.USR);
+                    this.usr = Marshal.PtrToStringAnsi(this.m_value.USR);
                 }
                 return this.usr;
             }
