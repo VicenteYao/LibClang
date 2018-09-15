@@ -131,9 +131,18 @@
         /// </summary>
         /// <param name="unsavedFiles">The unsavedFiles<see cref="UnsavedFile[]"/></param>
         /// <param name="reparseFlags">The reparseFlags<see cref="CXReparse_Flags"/></param>
-        public void Reparse(UnsavedFile[] unsavedFiles, CXReparse_Flags reparseFlags)
+        public CXErrorCode Reparse(UnsavedFile[] unsavedFiles, CXReparse_Flags reparseFlags)
         {
-            clang.clang_reparseTranslationUnit(this.m_value, (uint)unsavedFiles.Length, unsavedFiles.Select(x => (CXUnsavedFile)x.Value).ToArray(), (uint)reparseFlags);
+            UnsavedFile[] unsavedFilesArray = unsavedFiles;
+            if (unsavedFilesArray == null)
+            {
+                unsavedFilesArray = new UnsavedFile[0];
+            }
+            CXErrorCode errorCode = (CXErrorCode)clang.clang_reparseTranslationUnit(this.m_value,
+                (uint)unsavedFilesArray.Length,
+                unsavedFilesArray.Select(x => (CXUnsavedFile)x.Value).ToArray(),
+                (uint)reparseFlags);
+            return errorCode;
         }
 
         /// <summary>
@@ -141,9 +150,10 @@
         /// </summary>
         /// <param name="fileName">The fileName<see cref="string"/></param>
         /// <param name="saveTranslationUnit_Flags">The saveTranslationUnit_Flags<see cref="CXSaveTranslationUnit_Flags"/></param>
-        public void Save(string fileName, CXSaveTranslationUnit_Flags saveTranslationUnit_Flags)
+        public CXErrorCode Save(string fileName, CXSaveTranslationUnit_Flags saveTranslationUnit_Flags)
         {
-            clang.clang_saveTranslationUnit(this.m_value, fileName, (uint)saveTranslationUnit_Flags);
+            CXErrorCode errorCode = (CXErrorCode)clang.clang_saveTranslationUnit(this.m_value, fileName, (uint)saveTranslationUnit_Flags);
+            return errorCode;
         }
 
         /// <summary>
@@ -295,7 +305,7 @@
         /// <param name="cursors">The cursors<see cref="Cursor[]"/></param>
         public void AnnotateTokens(Token[] tokens, Cursor[] cursors)
         {
-            if (tokens == null || tokens.Length == 0 || cursors.Length == 0)
+            if (tokens == null || cursors==null || tokens.Length == 0 || cursors.Length == 0)
             {
                 return;
             }
@@ -387,7 +397,7 @@
         public unsafe string GetFileContents(File file)
         {
             uint size = 0;
-            string contents = new string((sbyte*)clang.clang_getFileContents(this.m_value, (IntPtr)file.Value, out size), 0, (int)size);
+            string contents = Marshal.PtrToStringAnsi(clang.clang_getFileContents(this.m_value, (IntPtr)file.Value, out size));
             return contents;
         }
 
@@ -423,22 +433,6 @@
             return topleverHeaders;
         }
 
-        /// <summary>
-        /// Defines the <see cref="SourceRangeListObject" />
-        /// </summary>
-        [StructLayout(LayoutKind.Sequential)]
-        private unsafe class SourceRangeListObject
-        {
-            /// <summary>
-            /// Defines the count
-            /// </summary>
-            public uint count;
-
-            /// <summary>
-            /// Defines the ranges
-            /// </summary>
-            public CXSourceRange* ranges;
-        }
 
         /// <summary>
         /// The GetSkippedRanges

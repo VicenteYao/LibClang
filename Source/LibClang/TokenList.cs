@@ -21,6 +21,11 @@
             this._tokensCount = tokensCount;
         }
 
+        protected unsafe override void Dispose()
+        {
+            clang.clang_disposeTokens((IntPtr)this._translationUnit.Value, this.m_value, (uint)this._tokensCount);
+        }
+
         /// <summary>
         /// Defines the _translationUnit
         /// </summary>
