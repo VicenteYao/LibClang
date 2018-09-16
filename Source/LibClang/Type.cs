@@ -231,12 +231,12 @@
         /// <summary>
         /// Defines the templateArguments
         /// </summary>
-        private TypeTemplateArgumentList templateArguments;
+        private ClangList<Type> templateArguments;
 
         /// <summary>
         /// Gets the TemplateArguments
         /// </summary>
-        public TypeTemplateArgumentList TemplateArguments
+        public ClangList<Type> TemplateArguments
         {
             get
             {

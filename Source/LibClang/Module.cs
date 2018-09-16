@@ -137,7 +137,7 @@
         /// <summary>
         /// The Dispose
         /// </summary>
-        protected override void Dispose()
+        protected override void DisposeCore()
         {
         }
     }

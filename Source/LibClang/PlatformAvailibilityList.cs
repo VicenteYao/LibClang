@@ -6,19 +6,19 @@
     /// <summary>
     /// Defines the <see cref="PlatformAvailibilityList" />
     /// </summary>
-    public unsafe class PlatformAvailibilityList : ClangList<PlatformAvailibility>
+    internal  class PlatformAvailibilityList : ClangList<PlatformAvailibility>
     {
         /// <summary>
         /// Defines the m_value
         /// </summary>
-        private CXPlatformAvailability* m_value;
+        private unsafe CXPlatformAvailability* m_value;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PlatformAvailibilityList"/> class.
         /// </summary>
         /// <param name="platformAvailability">The platformAvailability<see cref="CXPlatformAvailability"/></param>
         /// <param name="length">The length<see cref="int"/></param>
-        internal PlatformAvailibilityList(CXPlatformAvailability* platformAvailability, int length)
+        internal unsafe PlatformAvailibilityList(CXPlatformAvailability* platformAvailability, int length)
         {
             this.m_value = platformAvailability;
             this._count = length;
@@ -32,7 +32,7 @@
         /// <summary>
         /// Gets the Value
         /// </summary>
-        protected internal override ValueType Value
+        protected unsafe internal override ValueType Value
         {
             get { return (IntPtr)this.m_value; }
         }
@@ -42,7 +42,7 @@
         /// </summary>
         /// <param name="index">The index<see cref="int"/></param>
         /// <returns>The <see cref="PlatformAvailibility"/></returns>
-        protected override PlatformAvailibility EnsureItemAt(int index)
+        protected unsafe override PlatformAvailibility EnsureItemAt(int index)
         {
             return new PlatformAvailibility(this.m_value[index]);
         }

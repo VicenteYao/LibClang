@@ -6,7 +6,7 @@
     /// <summary>
     /// Defines the <see cref="SourceRangeList" />
     /// </summary>
-    public class SourceRangeList : ClangList<SourceRange>
+    internal class SourceRangeList : ClangList<SourceRange>
     {
         /// <summary>
         /// Defines the m_value
@@ -33,7 +33,7 @@
         /// <summary>
         /// The Dispose
         /// </summary>
-        protected unsafe override void Dispose()
+        protected unsafe override void DisposeCore()
         {
             clang.clang_disposeSourceRangeList((IntPtr)this.m_value.ranges);
         }

@@ -2,11 +2,13 @@
 {
     using LibClang.Intertop;
     using System;
+    using System.IO;
+    using System.Runtime.InteropServices;
 
     /// <summary>
     /// Defines the <see cref="IndexAttributeInfoList" />
     /// </summary>
-    public class IndexAttributeInfoList : ClangList<IndexAttributeInfo>
+    internal class IndexAttributeInfoList : ClangList<IndexAttributeInfo>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="IndexAttributeInfoList"/> class.
@@ -15,14 +17,14 @@
         /// <param name="count">The count<see cref="int"/></param>
         internal unsafe IndexAttributeInfoList(CXIdxAttrInfo* pAttrInfo, int count)
         {
-            this.m_value = (IntPtr)pAttrInfo;
+            this.m_value = pAttrInfo;
             this._count = count;
         }
 
         /// <summary>
         /// Defines the m_value
         /// </summary>
-        private IntPtr m_value;
+        private unsafe CXIdxAttrInfo* m_value;
 
         /// <summary>
         /// Defines the _count
@@ -32,9 +34,9 @@
         /// <summary>
         /// Gets the Value
         /// </summary>
-        protected internal override ValueType Value
+        protected unsafe internal override ValueType Value
         {
-            get { return this.m_value; }
+            get { return (IntPtr)this.m_value; }
         }
 
         /// <summary>
@@ -44,8 +46,7 @@
         /// <returns>The <see cref="IndexAttributeInfo"/></returns>
         protected unsafe override IndexAttributeInfo EnsureItemAt(int index)
         {
-            CXIdxAttrInfo* pAttrInfo = (CXIdxAttrInfo*)this.m_value;
-            return new IndexAttributeInfo(pAttrInfo[index]);
+            return new IndexAttributeInfo(this.m_value[index]);
         }
 
         /// <summary>

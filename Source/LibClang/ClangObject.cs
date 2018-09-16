@@ -22,7 +22,7 @@
         /// <summary>
         /// The Dispose
         /// </summary>
-        protected virtual void Dispose()
+        protected virtual void DisposeCore()
         {
         }
 
@@ -87,7 +87,12 @@
         /// </summary>
         void IDisposable.Dispose()
         {
-            this.Dispose();
+            this.DisposeCore();
+        }
+
+        ~ClangObject()
+        {
+            this.DisposeCore();
         }
     }
 }

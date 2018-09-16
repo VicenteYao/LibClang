@@ -73,7 +73,7 @@
         /// <summary>
         /// The Dispose
         /// </summary>
-        protected override void Dispose()
+        protected override void DisposeCore()
         {
             clang.clang_remap_dispose(this.m_value);
         }

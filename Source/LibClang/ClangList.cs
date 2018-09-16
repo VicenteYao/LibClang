@@ -13,7 +13,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="ClangList{TItem}"/> class.
         /// </summary>
-        protected ClangList()
+        internal ClangList()
         {
         }
 

@@ -132,7 +132,7 @@
         /// <summary>
         /// Defines the attributes
         /// </summary>
-        private IndexAttributeInfoList attributes;
+        private ClangList<IndexAttributeInfo> attributes;
 
         /// <summary>
         /// Defines the m_value
@@ -142,7 +142,7 @@
         /// <summary>
         /// Gets the Attributes
         /// </summary>
-        public unsafe IndexAttributeInfoList Attributes
+        public unsafe ClangList<IndexAttributeInfo> Attributes
         {
             get
             {

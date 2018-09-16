@@ -25,18 +25,22 @@
         /// <summary>
         /// Defines the completionResults
         /// </summary>
-        private CompletionResultList completionResults;
+        private ClangList<CompletionResult> completionResults;
 
         /// <summary>
         /// Gets the CompletionResults
         /// </summary>
-        public unsafe CompletionResultList CompletionResults
+        public  ClangList<CompletionResult> CompletionResults
         {
             get
             {
                 if (this.completionResults == null)
                 {
-                    this.completionResults = new CompletionResultList(this.m_value);
+                    unsafe
+                    {
+                        this.completionResults = new CompletionResultList(this.m_value);
+                    }
+
                 }
                 return this.completionResults;
             }
@@ -45,7 +49,7 @@
         /// <summary>
         /// The Dispose
         /// </summary>
-        protected override void Dispose()
+        protected override void DisposeCore()
         {
             clang.clang_disposeCodeCompleteResults((CXCodeCompleteResults*)(IntPtr)this.m_value);
         }

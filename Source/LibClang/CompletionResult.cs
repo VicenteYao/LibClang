@@ -37,12 +37,12 @@
         /// <summary>
         /// Defines the _completionChunkList
         /// </summary>
-        private CompletionChunkList _completionChunkList;
+        private ClangList<CompletionChunk> _completionChunkList;
 
         /// <summary>
         /// Gets the CompletionChunks
         /// </summary>
-        public unsafe CompletionChunkList CompletionChunks
+        public unsafe ClangList<CompletionChunk> CompletionChunks
         {
             get
             {
@@ -57,12 +57,12 @@
         /// <summary>
         /// Defines the _annotations
         /// </summary>
-        private CompletionResultAnnotationList _annotations;
+        private ClangList<string> _annotations;
 
         /// <summary>
         /// Gets the Annotations
         /// </summary>
-        public CompletionResultAnnotationList Annotations
+        public ClangList<string> Annotations
         {
             get
             {

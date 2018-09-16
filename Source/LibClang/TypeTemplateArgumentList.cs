@@ -6,7 +6,7 @@
     /// <summary>
     /// Defines the <see cref="TypeTemplateArgumentList" />
     /// </summary>
-    public class TypeTemplateArgumentList : ClangList<Type>
+    internal class TypeTemplateArgumentList : ClangList<Type>
     {
         /// <summary>
         /// Defines the m_value

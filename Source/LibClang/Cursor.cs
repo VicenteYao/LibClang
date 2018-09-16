@@ -54,12 +54,12 @@
         /// <summary>
         /// Defines the platformAvailibility
         /// </summary>
-        private PlatformAvailibilityList platformAvailibility;
+        private ClangList<PlatformAvailibility> platformAvailibility;
 
         /// <summary>
         /// Gets the PlatformAvailibility
         /// </summary>
-        public PlatformAvailibilityList PlatformAvailibility
+        public ClangList<PlatformAvailibility> PlatformAvailibility
         {
             get
             {
@@ -80,7 +80,7 @@
         /// <param name="alwaysUnavailable">The alwaysUnavailable<see cref="bool"/></param>
         /// <param name="unavailableMessage">The unavailableMessage<see cref="string"/></param>
         /// <returns>The <see cref="PlatformAvailibilityList[]"/></returns>
-        public unsafe PlatformAvailibilityList GetPlatformAvailibility(out bool alwaysDeprecated,
+        public unsafe ClangList<PlatformAvailibility> GetPlatformAvailibility(out bool alwaysDeprecated,
             out string deprecatedMessage, out bool alwaysUnavailable, out string unavailableMessage)
         {
             alwaysDeprecated = false;
@@ -121,7 +121,7 @@
         /// The GetPlatformAvailibility
         /// </summary>
         /// <returns>The <see cref="PlatformAvailibilityList"/></returns>
-        public unsafe PlatformAvailibilityList GetPlatformAvailibility()
+        public unsafe ClangList<PlatformAvailibility> GetPlatformAvailibility()
         {
             if (this.platformAvailibility == null)
             {
@@ -275,12 +275,12 @@
         /// <summary>
         /// Defines the overridesCursors
         /// </summary>
-        private OverriddenCursorList overridesCursors;
+        private ClangList<Cursor> overridesCursors;
 
         /// <summary>
         /// Gets the OverridesCursors
         /// </summary>
-        public unsafe OverriddenCursorList OverridesCursors
+        public unsafe ClangList<Cursor> OverridesCursors
         {
             get
             {
@@ -295,12 +295,12 @@
         /// <summary>
         /// Defines the templateArguments
         /// </summary>
-        private CursorTemplateArgumentList templateArguments;
+        private ClangList<TemplateArgument> templateArguments;
 
         /// <summary>
         /// Gets the TemplateArguments
         /// </summary>
-        public CursorTemplateArgumentList TemplateArguments
+        public ClangList<TemplateArgument> TemplateArguments
         {
             get
             {
@@ -738,7 +738,7 @@
         /// <summary>
         /// The Dispose
         /// </summary>
-        protected override void Dispose()
+        protected override void DisposeCore()
         {
             clang.clang_Cursor_Evaluate(this.m_value);
         }

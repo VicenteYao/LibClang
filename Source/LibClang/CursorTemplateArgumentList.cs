@@ -6,7 +6,7 @@
     /// <summary>
     /// Defines the <see cref="CursorTemplateArgumentList" />
     /// </summary>
-    public class CursorTemplateArgumentList : ClangList<TemplateArgument>
+    internal class CursorTemplateArgumentList : ClangList<TemplateArgument>
     {
         /// <summary>
         /// Defines the m_value

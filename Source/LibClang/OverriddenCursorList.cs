@@ -6,7 +6,7 @@
     /// <summary>
     /// Defines the <see cref="OverriddenCursorList" />
     /// </summary>
-    public unsafe class OverriddenCursorList : ClangList<Cursor>
+    internal unsafe class OverriddenCursorList : ClangList<Cursor>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="OverriddenCursorList"/> class.
@@ -46,7 +46,7 @@
         /// <summary>
         /// The Dispose
         /// </summary>
-        protected unsafe override void Dispose()
+        protected unsafe override void DisposeCore()
         {
             clang.clang_disposeOverriddenCursors(this.pCursors);
         }

@@ -6,7 +6,7 @@
     /// <summary>
     /// Defines the <see cref="TokenList" />
     /// </summary>
-    public class TokenList : ClangList<Token>
+    internal class TokenList : ClangList<Token>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TokenList"/> class.
@@ -21,7 +21,7 @@
             this._tokensCount = tokensCount;
         }
 
-        protected unsafe override void Dispose()
+        protected unsafe override void DisposeCore()
         {
             clang.clang_disposeTokens((IntPtr)this._translationUnit.Value, this.m_value, (uint)this._tokensCount);
         }

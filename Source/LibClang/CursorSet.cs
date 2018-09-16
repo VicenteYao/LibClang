@@ -49,7 +49,7 @@
         /// <summary>
         /// The Dispose
         /// </summary>
-        protected override void Dispose()
+        protected override void DisposeCore()
         {
             clang.clang_disposeCXCursorSet(this.m_value);
         }

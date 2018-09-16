@@ -69,12 +69,12 @@
         /// <summary>
         /// Defines the _resourceUsages
         /// </summary>
-        private TranslationUnitResourceUsages _resourceUsages;
+        private ClangList<TranslationUnitResourceUsageEntry> _resourceUsages;
 
         /// <summary>
         /// Gets the ResourceUsages
         /// </summary>
-        public TranslationUnitResourceUsages ResourceUsages
+        public ClangList<TranslationUnitResourceUsageEntry> ResourceUsages
         {
             get
             {
@@ -246,7 +246,7 @@
         /// <summary>
         /// Defines the _diagnosticSet
         /// </summary>
-        private DiagnosticSet _diagnosticSet;
+        private ClangList<Diagnostic> _diagnosticSet;
 
         /// <summary>
         /// Defines the m_value
@@ -256,7 +256,7 @@
         /// <summary>
         /// Gets the DiagnosticSet
         /// </summary>
-        public DiagnosticSet DiagnosticSet
+        public ClangList<Diagnostic> DiagnosticSet
         {
             get
             {
@@ -280,7 +280,7 @@
         /// <summary>
         /// The Dispose
         /// </summary>
-        protected override void Dispose()
+        protected override void DisposeCore()
         {
             clang.clang_disposeTranslationUnit(this.m_value);
         }
@@ -290,7 +290,7 @@
         /// </summary>
         /// <param name="sourceRange">The sourceRange<see cref="SourceRange"/></param>
         /// <returns>The <see cref="TokenList"/></returns>
-        public unsafe TokenList Tokenize(SourceRange sourceRange)
+        public unsafe ClangList<Token> Tokenize(SourceRange sourceRange)
         {
             CXToken* pToken = null;
             uint tokenCount = 0;
@@ -439,7 +439,7 @@
         /// </summary>
         /// <param name="file">The file<see cref="File"/></param>
         /// <returns>The <see cref="SourceRangeList"/></returns>
-        public unsafe SourceRangeList GetSkippedRanges(File file)
+        public unsafe ClangList<SourceRange> GetSkippedRanges(File file)
         {
             IntPtr pRangeList = clang.clang_getSkippedRanges(this.m_value, (IntPtr)file.Value);
             if (pRangeList == IntPtr.Zero)
@@ -454,7 +454,7 @@
         /// The GetAllSkippedRanges
         /// </summary>
         /// <returns>The <see cref="SourceRangeList"/></returns>
-        public unsafe SourceRangeList GetAllSkippedRanges()
+        public unsafe ClangList<SourceRange> GetAllSkippedRanges()
         {
             IntPtr pRangeList = clang.clang_getAllSkippedRanges(this.m_value);
             if (pRangeList == IntPtr.Zero)

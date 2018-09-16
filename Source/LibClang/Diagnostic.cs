@@ -72,12 +72,12 @@
         /// <summary>
         /// Defines the _childDiagnostics
         /// </summary>
-        private DiagnosticSet _childDiagnostics;
+        private ClangList<Diagnostic> _childDiagnostics;
 
         /// <summary>
         /// Gets the ChildDiagnostics
         /// </summary>
-        public DiagnosticSet ChildDiagnostics
+        public ClangList<Diagnostic> ChildDiagnostics
         {
             get
             {
@@ -132,7 +132,7 @@
         /// <summary>
         /// The Dispose
         /// </summary>
-        protected override void Dispose()
+        protected override void DisposeCore()
         {
             clang.clang_disposeDiagnostic(this.m_value);
         }

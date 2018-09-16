@@ -6,7 +6,7 @@
     /// <summary>
     /// Defines the <see cref="DiagnosticSet" />
     /// </summary>
-    public class DiagnosticSet : ClangList<Diagnostic>
+    internal class DiagnosticSet : ClangList<Diagnostic>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DiagnosticSet"/> class.
@@ -60,7 +60,7 @@
         /// <summary>
         /// The Dispose
         /// </summary>
-        protected override void Dispose()
+        protected override void DisposeCore()
         {
             clang.clang_disposeDiagnosticSet(this.m_value);
         }

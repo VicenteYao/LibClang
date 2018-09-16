@@ -115,7 +115,7 @@
         /// <summary>
         /// Defines the attributeInfoList
         /// </summary>
-        private IndexAttributeInfoList attributeInfoList;
+        private ClangList<IndexAttributeInfo> attributeInfoList;
 
         /// <summary>
         /// Defines the m_value
@@ -125,7 +125,7 @@
         /// <summary>
         /// Gets the Attributes
         /// </summary>
-        public IndexAttributeInfoList Attributes
+        public ClangList<IndexAttributeInfo> Attributes
         {
             get
             {

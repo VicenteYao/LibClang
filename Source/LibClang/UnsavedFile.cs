@@ -31,7 +31,7 @@
         /// <summary>
         /// The Dispose
         /// </summary>
-        protected override void Dispose()
+        protected override void DisposeCore()
         {
             Marshal.FreeHGlobal(this.m_value.Filename);
             Marshal.FreeHGlobal(this.m_value.Contents);

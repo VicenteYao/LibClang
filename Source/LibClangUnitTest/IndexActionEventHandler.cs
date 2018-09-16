@@ -8,7 +8,7 @@ namespace LibClangUnitTest
 {
     public class IndexActionEventHandler : IIndexActionEventHandler
     {
-        public void OnDiagnostic(DiagnosticSet diagnostics)
+        public void OnDiagnostic(ClangList<Diagnostic> diagnostics)
         {
 
         }

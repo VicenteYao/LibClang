@@ -6,7 +6,7 @@
     /// <summary>
     /// Defines the <see cref="TranslationUnitResourceUsages" />
     /// </summary>
-    public class TranslationUnitResourceUsages : ClangList<TranslationUnitResourceUsageEntry>
+    internal class TranslationUnitResourceUsages : ClangList<TranslationUnitResourceUsageEntry>
     {
         /// <summary>
         /// Defines the m_value
@@ -33,7 +33,7 @@
         /// <summary>
         /// The Dispose
         /// </summary>
-        protected override void Dispose()
+        protected override void DisposeCore()
         {
             clang.clang_disposeCXTUResourceUsage(this.m_value);
         }

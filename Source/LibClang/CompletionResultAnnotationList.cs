@@ -6,7 +6,7 @@
     /// <summary>
     /// Defines the <see cref="CompletionResultAnnotationList" />
     /// </summary>
-    public class CompletionResultAnnotationList : ClangList<string>
+    internal class CompletionResultAnnotationList : ClangList<string>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="CompletionResultAnnotationList"/> class.

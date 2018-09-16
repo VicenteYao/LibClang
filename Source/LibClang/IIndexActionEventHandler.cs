@@ -15,7 +15,7 @@
         /// The OnDiagnostic
         /// </summary>
         /// <param name="diagnostics">The diagnostics<see cref="DiagnosticSet"/></param>
-        void OnDiagnostic(DiagnosticSet diagnostics);
+        void OnDiagnostic(ClangList<Diagnostic> diagnostics);
 
         /// <summary>
         /// The OnEnteredMainFile
