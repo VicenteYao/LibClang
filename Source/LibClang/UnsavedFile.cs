@@ -13,9 +13,8 @@
         /// Initializes a new instance of the <see cref="UnsavedFile"/> class.
         /// </summary>
         /// <param name="fileName">The fileName<see cref="string"/></param>
-        public UnsavedFile(string fileName)
+        public UnsavedFile(string fileName, string contents)
         {
-            string contents = System.IO.File.ReadAllText(fileName);
             this.m_value = new CXUnsavedFile()
             {
                 Filename = Marshal.StringToHGlobalUni(fileName),

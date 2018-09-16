@@ -326,7 +326,10 @@
             {
                 if (this._recieverType == null)
                 {
-                    if (this.m_value.kind == CXCursorKind.CXCursor_CXXMethod)
+                    CXCursorKind cursorKind = this.m_value.kind;
+                    if (cursorKind == CXCursorKind.CXCursor_CXXMethod ||
+                        cursorKind == CXCursorKind.CXCursor_ObjCMessageExpr ||
+                        cursorKind == CXCursorKind.CXCursor_ObjCProtocolRef)
                     {
                         CXType receiverType = clang.clang_Cursor_getReceiverType(this.m_value);
 
@@ -757,6 +760,6 @@
         public override string ToString()
         {
             return string.Format("{0}{1}", this.DisplayName, this.SourceLocation);
-        }
+        } 
     }
 }
