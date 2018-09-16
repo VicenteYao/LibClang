@@ -22,11 +22,6 @@
         /// </summary>
         private Dictionary<int, TItem> _items;
 
-
-
-
-
-
         public TItem this[int index]
         {
             get

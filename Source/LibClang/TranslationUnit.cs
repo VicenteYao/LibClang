@@ -35,7 +35,7 @@
                 unsavedFiles = new UnsavedFile[0];
             }
             CXCodeCompleteResults* pCodeComplete = clang.clang_codeCompleteAt(this.m_value, completeFileName, completeline, completeColumn, unsavedFiles.Select(x => (CXUnsavedFile)x.Value).ToArray(), (uint)unsavedFiles.Length, (uint)flags);
-            return new CodeCompleteResults((CXCodeCompleteResults*)pCodeComplete);
+            return new CodeCompleteResults(pCodeComplete);
         }
 
         /// <summary>
@@ -49,7 +49,7 @@
         /// <summary>
         /// Defines the _defaultSaveFlags
         /// </summary>
-        private CXSaveTranslationUnit_Flags? _defaultSaveFlags;
+        private CXSaveTranslationUnit_Flags _defaultSaveFlags;
 
         /// <summary>
         /// Gets the DefaultSaveFlags
@@ -58,11 +58,8 @@
         {
             get
             {
-                if (!this._defaultSaveFlags.HasValue)
-                {
-                    this._defaultSaveFlags = (CXSaveTranslationUnit_Flags)clang.clang_defaultSaveOptions(this.m_value);
-                }
-                return this._defaultSaveFlags.Value;
+                this._defaultSaveFlags = (CXSaveTranslationUnit_Flags)clang.clang_defaultSaveOptions(this.m_value);
+                return this._defaultSaveFlags;
             }
         }
 
@@ -94,18 +91,20 @@
         public CXResult FindIncludesInFile(File file, Func<Cursor, SourceRange, bool> searchFunc)
         {
             CXCursorAndRangeVisitor cursorAndRangeVisitor = default(CXCursorAndRangeVisitor);
-            cursorAndRangeVisitor.Visit = Marshal.GetFunctionPointerForDelegate(new visit((context, cxCursor, cxRange) =>
-            {
-                if (searchFunc != null)
-                {
-                    Cursor cursor = new Cursor(cxCursor);
-                    SourceRange sourceRange = new SourceRange(cxRange);
-                    bool result = searchFunc(cursor, sourceRange);
-                    return result ? CXVisitorResult.CXVisit_Continue : CXVisitorResult.CXVisit_Break;
-                }
-                return CXVisitorResult.CXVisit_Break;
-            }));
+            var visitor = new visit((context, cxCursor, cxRange) =>
+             {
+                 if (searchFunc != null)
+                 {
+                     Cursor cursor = new Cursor(cxCursor);
+                     SourceRange sourceRange = new SourceRange(cxRange);
+                     bool result = searchFunc(cursor, sourceRange);
+                     return result ? CXVisitorResult.CXVisit_Continue : CXVisitorResult.CXVisit_Break;
+                 }
+                 return CXVisitorResult.CXVisit_Break;
+             });
+            cursorAndRangeVisitor.Visit = Marshal.GetFunctionPointerForDelegate(visitor);
             return clang.clang_findIncludesInFile(this.m_value, (IntPtr)file.Value, cursorAndRangeVisitor);
+
         }
 
         /// <summary>
@@ -150,9 +149,9 @@
         /// </summary>
         /// <param name="fileName">The fileName<see cref="string"/></param>
         /// <param name="saveTranslationUnit_Flags">The saveTranslationUnit_Flags<see cref="CXSaveTranslationUnit_Flags"/></param>
-        public CXErrorCode Save(string fileName, CXSaveTranslationUnit_Flags saveTranslationUnit_Flags)
+        public CXSaveError Save(string fileName, CXSaveTranslationUnit_Flags saveTranslationUnit_Flags)
         {
-            CXErrorCode errorCode = (CXErrorCode)clang.clang_saveTranslationUnit(this.m_value, fileName, (uint)saveTranslationUnit_Flags);
+            CXSaveError errorCode = (CXSaveError)clang.clang_saveTranslationUnit(this.m_value, fileName, (uint)saveTranslationUnit_Flags);
             return errorCode;
         }
 
@@ -188,8 +187,11 @@
         {
             get
             {
-                CXCursor cursor = clang.clang_getTranslationUnitCursor(this.m_value);
-                this._cursor = new Cursor(cursor);
+                if (this._cursor==null)
+                {
+                    CXCursor cursor = clang.clang_getTranslationUnitCursor(this.m_value);
+                    this._cursor = new Cursor(cursor);
+                }
                 return this._cursor;
             }
         }

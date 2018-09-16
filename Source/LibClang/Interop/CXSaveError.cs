@@ -4,7 +4,7 @@
         * Describes the kind of error that occurred (if any) in a call to
         * \c clang_saveTranslationUnit().
         */
-    enum CXSaveError
+    public enum CXSaveError
     {
         /**
                                  * Indicates that no error occurred while saving a translation unit.
