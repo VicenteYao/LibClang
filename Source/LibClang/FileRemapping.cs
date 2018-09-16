@@ -39,7 +39,7 @@
         /// <summary>
         /// Gets the Mappings
         /// </summary>
-        public (string, string)[] Mappings
+        public (string Original, string Transformed)[] Mappings
         {
             get
             {
