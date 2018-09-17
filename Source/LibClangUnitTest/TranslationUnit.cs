@@ -23,14 +23,13 @@ namespace LibClangUnitTest
 
             string sourceFileName = @"D:\llvm\tools\clang\tools\driver\driver.cpp";
 
-            var tu = index.Parse(sourceFileName,
-               LibClang.Intertop.CXGlobalOptFlags.CXGlobalOpt_None, splitedStringArrays, null);
+            var tu = index.Parse(sourceFileName, splitedStringArrays, null, LibClang.Intertop.CXTranslationUnit_Flags.CXTranslationUnit_SingleFileParse);
             tu.Reparse(null, LibClang.Intertop.CXReparse_Flags.CXReparse_None);
 
             var result = tu.CodeCompleteAt(sourceFileName, 106, 5, null, LibClang.Intertop.CXCodeComplete_Flags.CXCodeComplete_IncludeCodePatterns);
             foreach (var completionResult in result.CompletionResults)
             {
-                foreach (var completionChunk in completionResult.CompletionChunks)
+                foreach (var completionChunk in completionResult.Chunks)
                 {
                     Console.WriteLine(completionChunk.Text);
                 }

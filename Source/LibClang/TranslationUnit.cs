@@ -63,16 +63,6 @@
             }
         }
 
-        private static CXTranslationUnit_Flags _defaultEditingTranslationUnitOptions;
-        public static CXTranslationUnit_Flags DefaultEditingTranslationUnitOptions
-        {
-            get
-            {
-                _defaultEditingTranslationUnitOptions = (CXTranslationUnit_Flags)clang.clang_defaultEditingTranslationUnitOptions();
-                return _defaultEditingTranslationUnitOptions;
-            }
-        }
-
         /// <summary>
         /// Defines the _resourceUsages
         /// </summary>

@@ -12,7 +12,7 @@
         /// Initializes a new instance of the <see cref="CompletionResultAnnotationList"/> class.
         /// </summary>
         /// <param name="completionResult">The completionResult<see cref="CXCompletionResult"/></param>
-        internal CompletionResultAnnotationList(CXCompletionResult completionResult)
+        internal CompletionResultAnnotationList(IntPtr completionResult)
         {
             this.m_value = completionResult;
         }
@@ -28,7 +28,7 @@
         /// <summary>
         /// Defines the m_value
         /// </summary>
-        private CXCompletionResult m_value;
+        private IntPtr m_value;
 
         /// <summary>
         /// The EnsureItemAt
@@ -37,7 +37,7 @@
         /// <returns>The <see cref="string"/></returns>
         protected override string EnsureItemAt(int index)
         {
-            return clang.clang_getCompletionAnnotation(this.m_value.CompletionString, (uint)index).ToStringAndDispose();
+            return clang.clang_getCompletionAnnotation(this.m_value, (uint)index).ToStringAndDispose();
         }
 
         /// <summary>
@@ -46,7 +46,7 @@
         /// <returns>The <see cref="int"/></returns>
         protected override int GetCountCore()
         {
-            return (int)clang.clang_getCompletionNumAnnotations(this.m_value.CompletionString);
+            return (int)clang.clang_getCompletionNumAnnotations(this.m_value);
         }
     }
 }
