@@ -7,11 +7,11 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
         <RichTextBox x:Name="CodeEditor" TextInput="CodeEditor_TextInput" TextChanged="CodeEditor_TextChanged"  />
-        <ListBox Grid.Row="1" x:Name="ListCodeCompletion"/>
+        <ListBox Grid.Column="1" x:Name="ListCodeCompletion"/>
     </Grid>
 </Window>

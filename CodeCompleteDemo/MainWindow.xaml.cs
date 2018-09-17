@@ -58,10 +58,6 @@ Clang.DefaultEditingTranslationUnitOptions
 
 ,
     out xErrorCode);
-                    foreach (var item in this.translationUnit.DiagnosticSet)
-                    {
-                        Console.WriteLine(item.CategoryText);
-                    }
 
                     this.translationUnit.Save(astFileName, CXSaveTranslationUnit_Flags.CXSaveTranslationUnit_None);
                 }
@@ -77,29 +73,30 @@ Clang.DefaultEditingTranslationUnitOptions
                          (uint)this.line,
                          (uint)this.column,
                     unsavedFile,
-                Clang.DefaultCodeCompleteFlags|
-  CXCodeComplete_Flags.CXCodeComplete_IncludeBriefComments
+                Clang.DefaultCodeCompleteFlags |
+  CXCodeComplete_Flags.CXCodeComplete_IncludeBriefComments |
+  CXCodeComplete_Flags.CXCodeComplete_IncludeCodePatterns |
+  CXCodeComplete_Flags.CXCodeComplete_IncludeCompletionsWithFixIts
                          );
                     this.autoResetEvent.Reset();
 
                     Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                     {
                         this.completions.Clear();
-
                         foreach (var item in codeCompleteResults.CompletionResults)
                         {
-                            foreach (var chunk in item.Chunks.Where(x=>x.CompletionChunkKind== CXCompletionChunkKind.CXCompletionChunk_TypedText))
+                            
+                            foreach (var chunk in item.Chunks)
                             {
-                                this.completions.Add(chunk.Text);
+                                this.completions.Add(chunk.CompletionChunkKind+":"+ chunk.Text);
                                 foreach (var cChunk in chunk.Chunks)
                                 {
                                     this.completions.Add(cChunk.Text);
                                 }
                             }
-
                         }
+                        
                     }));
-
                 }
 
             });
@@ -109,8 +106,6 @@ Clang.DefaultEditingTranslationUnitOptions
         private string code;
 
         Task task;
-
-        CodeCompleteResults codeCompleteResults;
 
         Index index = null;
 
@@ -129,7 +124,9 @@ Clang.DefaultEditingTranslationUnitOptions
            
         }
 
-       
+
+        private List<char> inputs = new List<char>();
+        private int removeOffset;
 
         private void CodeEditor_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -139,6 +136,21 @@ Clang.DefaultEditingTranslationUnitOptions
             {
                 return;
             }
+            var fullText = this.code;
+            if (e.Changes.Any())
+            {
+                
+                foreach (var item in e.Changes)
+                {
+
+
+                    var textRang1e = new TextRange(this.CodeEditor.Document.ContentStart.GetPositionAtOffset(item.Offset), this.CodeEditor.Document.ContentStart.GetPositionAtOffset(item.Offset + item.AddedLength));
+                    string ch = textRang1e.Text;
+                    Console.WriteLine("添加个数{0} 偏移{1} 移除{2} 字符{3}", item.AddedLength, item.Offset, item.RemovedLength, ch);
+                }
+                // TODO: Do stuff with the new pieces of text
+            }
+            Console.WriteLine(string.Join("", inputs));
 
             if (this.completions == null)
             {
@@ -150,8 +162,8 @@ Clang.DefaultEditingTranslationUnitOptions
             TextPointer caretLineStart = this.CodeEditor.CaretPosition.GetLineStartPosition(0);
             TextPointer p = this.CodeEditor.Document.ContentStart.GetLineStartPosition(0);
             int value = this.CodeEditor.CaretPosition.GetLineStartPosition(0).GetOffsetToPosition(this.CodeEditor.CaretPosition);
-            this.column = (uint)value;
-            this.line = 1;
+            this.column = (uint)value - 1;
+            this.line = 0;
 
             while (true)
             {
