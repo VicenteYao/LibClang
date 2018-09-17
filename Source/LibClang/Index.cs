@@ -121,11 +121,11 @@
         /// The Parse
         /// </summary>
         /// <param name="sourceFileName">The sourceFileName<see cref="string"/></param>
-        /// <param name="globalOptFlags">The globalOptFlags<see cref="CXGlobalOptFlags"/></param>
+        /// <param name="flags">The globalOptFlags<see cref="CXGlobalOptFlags"/></param>
         /// <param name="commandLineArgs">The commandLineArgs<see cref="string[]"/></param>
         /// <param name="unsavedFiles">The unsavedFiles<see cref="UnsavedFile[]"/></param>
         /// <returns>The <see cref="TranslationUnit"/></returns>
-        public unsafe TranslationUnit Parse(string sourceFileName, string[] commandLineArgs, UnsavedFile[] unsavedFiles, CXTranslationUnit_Flags globalOptFlags)
+        public unsafe TranslationUnit Parse(string sourceFileName, string[] commandLineArgs, UnsavedFile[] unsavedFiles, CXTranslationUnit_Flags flags)
         {
             IntPtr pTranslationUnit = IntPtr.Zero;
             string[] commandLineArgsArray = commandLineArgs;
@@ -144,7 +144,7 @@
                 commandLineArgsArray.Length,
                 unsavedFilesArray.Select(x => (CXUnsavedFile)x.Value).ToArray(),
                 (uint)unsavedFilesArray.Length,
-                (uint)globalOptFlags);
+                (uint)flags);
             if (pTranslationUnit == IntPtr.Zero)
             {
                 return null;
@@ -178,8 +178,8 @@
                 sourceFileName,
                 commandLineArgsArray,
                 commandLineArgsArray.Length,
-                unsavedFiles.Select(x => (CXUnsavedFile)x.Value).ToArray(),
-                (uint)unsavedFiles.Length,
+                unsavedFilesArray.Select(x => (CXUnsavedFile)x.Value).ToArray(),
+                (uint)unsavedFilesArray.Length,
                 (uint)globalOptFlags,
                 out pTranslationUnit);
             if (pTranslationUnit == IntPtr.Zero)

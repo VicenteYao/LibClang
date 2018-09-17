@@ -15,6 +15,7 @@
         /// <param name="fixIts">The fixIts<see cref="FixIt[]"/></param>
         internal CompletionResult(CXCompletionResult completionResult, FixIt[] fixIts)
         {
+            this.m_value = completionResult;
             this.FixIts = fixIts;
             this.CursorKind = completionResult.CursorKind;
         }

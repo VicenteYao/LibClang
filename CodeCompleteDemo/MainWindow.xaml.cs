@@ -15,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using LibClang.Intertop;
 
 namespace CodeCompleteDemo
 {
@@ -29,6 +30,7 @@ namespace CodeCompleteDemo
             this._sourceCodeName = @"D:\llvm\tools\clang\tools\driver\driver.cpp";
             this.code = System.IO.File.ReadAllText(this._sourceCodeName);
             this.CodeEditor.AppendText(code);
+
             //var indexAction = index.CreateIndexAction(new IndexActionEventHandler());
             string includes = @"-ID:\llvm\build\tools\clang\tools\driver -ID:\llvm\tools\clang\tools\driver -ID:\llvm\tools\clang\include -ID:\llvm\build\tools\clang\include -ID:\llvm\build\include -ID:\llvm\include";
             var splitedStringArrays = includes.Split(' ');
@@ -37,19 +39,39 @@ namespace CodeCompleteDemo
 
             this.task = new Task(() =>
             {
-                this.translationUnit = index.Parse(this._sourceCodeName, splitedStringArrays, null, LibClang.Intertop.CXGlobalOptFlags.CXGlobalOpt_ThreadBackgroundPriorityForEditing);
-          
+                this.index = new Index(true, true);
+                this.index.GlobalOptFlags = LibClang.Intertop.CXGlobalOptFlags.CXGlobalOpt_ThreadBackgroundPriorityForEditing;
+                CXErrorCode xErrorCode = CXErrorCode.CXError_Success;
+                this.translationUnit = index.Parse(this._sourceCodeName, splitedStringArrays, null, LibClang.Intertop.CXTranslationUnit_Flags.CXTranslationUnit_CacheCompletionResults|
+                    CXTranslationUnit_Flags.CXTranslationUnit_DetailedPreprocessingRecord| CXTranslationUnit_Flags.CXTranslationUnit_SingleFileParse, out xErrorCode);
+
                 while (true)
                 {
-                    this.autoResetEvent.WaitOne();
-                    this.translationUnit.Reparse(new UnsavedFile[] { new UnsavedFile(this._sourceCodeName, this.code) }, LibClang.Intertop.CXReparse_Flags.CXReparse_None);
 
-                   codeCompleteResults = this.translationUnit.CodeCompleteAt(this._sourceCodeName,
-                        (uint)this.line,
-                        (uint)this.column,
-                        null,
-                        LibClang.Intertop.CXCodeComplete_Flags.CXCodeComplete_IncludeCompletionsWithFixIts | LibClang.Intertop.CXCodeComplete_Flags.CXCodeComplete_IncludeCodePatterns);
+                    this.autoResetEvent.WaitOne();
+                    //this.translationUnit.Reparse(new UnsavedFile[] { new UnsavedFile(this._sourceCodeName, this.code) }, LibClang.Intertop.CXReparse_Flags.CXReparse_None);
+
+                    codeCompleteResults = this.translationUnit.CodeCompleteAt(this._sourceCodeName,
+                         (uint)this.line,
+                         (uint)this.column,
+                        new UnsavedFile[] { new UnsavedFile(this._sourceCodeName, this.code) },
+                         LibClang.Intertop.CXCodeComplete_Flags.CXCodeComplete_IncludeCodePatterns);
                     this.autoResetEvent.Reset();
+
+                    Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        this.completions.Clear();
+
+                        foreach (var item in codeCompleteResults.CompletionResults)
+                        {
+                            foreach (var chunk in item.CompletionChunks)
+                            {
+                                this.completions.Add(chunk.Text);
+                            }
+                        }
+                        this.CodeEditor.ContextMenu.IsOpen = true;
+                    }));
+
                 }
 
             });
@@ -62,7 +84,7 @@ namespace CodeCompleteDemo
 
         CodeCompleteResults codeCompleteResults;
 
-        Index index = new Index(true, true);
+        Index index = null;
 
         private TranslationUnit translationUnit;
 
@@ -97,8 +119,9 @@ namespace CodeCompleteDemo
             this.completions.Clear();
             TextPointer caretLineStart = this.CodeEditor.CaretPosition.GetLineStartPosition(0);
             TextPointer p = this.CodeEditor.Document.ContentStart.GetLineStartPosition(0);
-            int column = this.CodeEditor.CaretPosition.GetOffsetToPosition(this.CodeEditor.CaretPosition.GetLineStartPosition(0));
-            int caretLineNumber = 1;
+            int value = this.CodeEditor.CaretPosition.GetLineStartPosition(0).GetOffsetToPosition(this.CodeEditor.CaretPosition);
+            this.column = (uint)value;
+            this.line = 1;
 
             while (true)
             {
@@ -106,27 +129,17 @@ namespace CodeCompleteDemo
                 {
                     break;
                 }
-
                 int result;
                 p = p.GetLineStartPosition(1, out result);
-
                 if (result == 0)
                 {
                     break;
                 }
-
-                caretLineNumber++;
+                this.line++;
             }
             this.autoResetEvent.Set();
 
-            foreach (var item in codeCompleteResults.CompletionResults)
-            {
-                foreach (var chunk in item.CompletionChunks)
-                {
-                    this.completions.Add(chunk.Text);
-                }
-            }
-            this.CodeEditor.ContextMenu.IsOpen = true;
         }
+
     }
 }

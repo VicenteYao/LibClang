@@ -17,8 +17,8 @@
         {
             this.m_value = new CXUnsavedFile()
             {
-                Filename = Marshal.StringToHGlobalUni(fileName),
-                Contents = Marshal.StringToHGlobalUni(contents),
+                Filename = Marshal.StringToHGlobalAnsi(fileName),
+                Contents = Marshal.StringToHGlobalAnsi(contents),
                 Length = (uint)contents.Length,
             };
         }
