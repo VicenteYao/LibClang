@@ -58,6 +58,10 @@ Clang.DefaultEditingTranslationUnitOptions
 
 ,
     out xErrorCode);
+                    foreach (var item in this.translationUnit.DiagnosticSet)
+                    {
+                        Console.WriteLine(item.CategoryText);
+                    }
 
                     this.translationUnit.Save(astFileName, CXSaveTranslationUnit_Flags.CXSaveTranslationUnit_None);
                 }
@@ -84,7 +88,7 @@ Clang.DefaultEditingTranslationUnitOptions
 
                         foreach (var item in codeCompleteResults.CompletionResults)
                         {
-                            foreach (var chunk in item.Chunks)
+                            foreach (var chunk in item.Chunks.Where(x=>x.CompletionChunkKind== CXCompletionChunkKind.CXCompletionChunk_TypedText))
                             {
                                 this.completions.Add(chunk.Text);
                                 foreach (var cChunk in chunk.Chunks)

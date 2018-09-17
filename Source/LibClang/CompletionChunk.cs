@@ -17,11 +17,6 @@
         {
             this.m_value = pCompletionString;
             this._chunkNumber = chunkNumer;
-            this.m_CompletionString = clang.clang_getCompletionChunkCompletionString(pCompletionString, chunkNumer);
-            if (this.m_CompletionString!=IntPtr.Zero)
-            {
-
-            }
         }
 
 
@@ -43,6 +38,7 @@
             {
                 if (this._chunks == null)
                 {
+                    this.m_CompletionString = clang.clang_getCompletionChunkCompletionString(this.m_value, this._chunkNumber);
                     this._chunks = new CompletionChunkList(this.m_CompletionString);
                 }
                 return this._chunks;
