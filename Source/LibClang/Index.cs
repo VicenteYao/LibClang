@@ -125,7 +125,7 @@
         /// <param name="commandLineArgs">The commandLineArgs<see cref="string[]"/></param>
         /// <param name="unsavedFiles">The unsavedFiles<see cref="UnsavedFile[]"/></param>
         /// <returns>The <see cref="TranslationUnit"/></returns>
-        public unsafe TranslationUnit Parse(string sourceFileName, CXGlobalOptFlags globalOptFlags, string[] commandLineArgs, UnsavedFile[] unsavedFiles)
+        public unsafe TranslationUnit Parse(string sourceFileName, string[] commandLineArgs, UnsavedFile[] unsavedFiles, CXTranslationUnit_Flags globalOptFlags)
         {
             IntPtr pTranslationUnit = IntPtr.Zero;
             string[] commandLineArgsArray = commandLineArgs;
@@ -161,7 +161,7 @@
         /// <param name="unsavedFiles">The unsavedFiles<see cref="UnsavedFile[]"/></param>
         /// <param name="errorCode">The errorCode<see cref="CXErrorCode"/></param>
         /// <returns>The <see cref="TranslationUnit"/></returns>
-        public TranslationUnit Parse(string sourceFileName, CXGlobalOptFlags globalOptFlags, string[] commandLineArgs, UnsavedFile[] unsavedFiles, out CXErrorCode errorCode)
+        public TranslationUnit Parse(string sourceFileName, string[] commandLineArgs, UnsavedFile[] unsavedFiles, CXTranslationUnit_Flags globalOptFlags, out CXErrorCode errorCode)
         {
             IntPtr pTranslationUnit = IntPtr.Zero;
             string[] commandLineArgsArray = commandLineArgs;
@@ -198,14 +198,27 @@
         /// <param name="unsavedFiles">The unsavedFiles<see cref="UnsavedFile[]"/></param>
         /// <param name="errorCode">The errorCode<see cref="CXErrorCode"/></param>
         /// <returns>The <see cref="TranslationUnit"/></returns>
-        public TranslationUnit ParseWithFullArguments(string sourceFileName, CXGlobalOptFlags globalOptFlags, string[] commandLineArgs, UnsavedFile[] unsavedFiles, out CXErrorCode errorCode)
+        public TranslationUnit Parse(string sourceFileName,string clangExecutablePath, string[] commandLineArgs, UnsavedFile[] unsavedFiles, CXTranslationUnit_Flags globalOptFlags, out CXErrorCode errorCode)
         {
             IntPtr pTranslationUnit = IntPtr.Zero;
             string[] commandLineArgsArray = commandLineArgs;
             UnsavedFile[] unsavedFilesArray = unsavedFiles;
-            if (commandLineArgsArray == null)
+            if (string.IsNullOrEmpty(clangExecutablePath) || string.IsNullOrWhiteSpace(clangExecutablePath))
             {
-                commandLineArgsArray = new string[0];
+                errorCode = CXErrorCode.CXError_InvalidArguments;
+                return null;
+            }
+            if (commandLineArgsArray == null || commandLineArgsArray.Length == 0)
+            {
+                commandLineArgsArray = new string[1] {
+                    clangExecutablePath
+                };
+            }
+            else
+            {
+                commandLineArgsArray = Array.CreateInstance(typeof(string), 1 + commandLineArgs.Length) as string[];
+                commandLineArgsArray[0] = clangExecutablePath;
+                Array.Copy(commandLineArgs, 0, commandLineArgsArray, 1, commandLineArgs.Length);
             }
             if (unsavedFilesArray == null)
             {
