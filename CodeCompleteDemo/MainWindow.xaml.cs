@@ -77,6 +77,7 @@ Clang.DefaultEditingTranslationUnitOptions
                       CXCodeComplete_Flags.CXCodeComplete_IncludeCodePatterns |
                       CXCodeComplete_Flags.CXCodeComplete_IncludeCompletionsWithFixIts
                                              );
+                    codeCompleteResults.Sort();
                     this.autoResetEvent.Reset();
 
                     Application.Current.Dispatcher.BeginInvoke(new Action(() =>
@@ -93,6 +94,8 @@ Clang.DefaultEditingTranslationUnitOptions
                                     this.completions.Add(cChunk.Text);
                                 }
                             }
+                            this.completions.Add("-------------------------------------------------------------------------");
+
                         }
                     }));
                 }
@@ -117,48 +120,20 @@ Clang.DefaultEditingTranslationUnitOptions
 
         private ObservableCollection<string> completions;
 
-        private void CodeEditor_TextInput(object sender, TextCompositionEventArgs e)
+
+        protected override void OnPreviewTextInput(TextCompositionEventArgs e)
         {
-           
-        }
-
-
-        private List<char> inputs = new List<char>();
-        private int removeOffset;
-
-        private void CodeEditor_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            TextRange textRange = new TextRange(this.CodeEditor.Document.ContentStart, this.CodeEditor.Document.ContentEnd);
-            this.code = textRange.Text;
-            if (this.translationUnit == null)
-            {
-                return;
-            }
-            var fullText = this.code;
-            if (e.Changes.Any())
-            {
-                
-                foreach (var item in e.Changes)
-                {
-                    var textRang1e = new TextRange(this.CodeEditor.Document.ContentStart.GetPositionAtOffset(item.Offset), this.CodeEditor.Document.ContentStart.GetPositionAtOffset(item.Offset + item.AddedLength));
-                    string ch = textRang1e.Text;
-                    Console.WriteLine("添加个数{0} 偏移{1} 移除{2} 字符{3}", item.AddedLength, item.Offset, item.RemovedLength, ch);
-                }
-                // TODO: Do stuff with the new pieces of text
-            }
-            Console.WriteLine(string.Join("", inputs));
-
             if (this.completions == null)
             {
                 this.completions = new ObservableCollection<string>();
                 this.ListCodeCompletion.ItemsSource = this.completions;
             }
-
-            this.completions.Clear();
+            var textRange = new TextRange(this.CodeEditor.Document.ContentStart, this.CodeEditor.Document.ContentEnd);
+            this.code = textRange.Text;
             TextPointer caretLineStart = this.CodeEditor.CaretPosition.GetLineStartPosition(0);
             TextPointer p = this.CodeEditor.Document.ContentStart.GetLineStartPosition(0);
             int value = this.CodeEditor.CaretPosition.GetLineStartPosition(0).GetOffsetToPosition(this.CodeEditor.CaretPosition);
-            this.column = (uint)value - 1;
+            this.column = (uint)value;
             this.line = 0;
 
             while (true)
@@ -175,9 +150,11 @@ Clang.DefaultEditingTranslationUnitOptions
                 }
                 this.line++;
             }
+            Console.WriteLine("行{0}:列{1}", this.line, this.column);
             this.autoResetEvent.Set();
-
+            base.OnPreviewTextInput(e);
         }
+
 
     }
 }
