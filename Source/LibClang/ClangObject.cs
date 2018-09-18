@@ -5,7 +5,7 @@
     /// <summary>
     /// Defines the <see cref="ClangObject" />
     /// </summary>
-    public abstract class ClangObject : IDisposable
+    public abstract class ClangObject 
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ClangObject"/> class.
@@ -80,14 +80,6 @@
         public override int GetHashCode()
         {
             return base.GetHashCode();
-        }
-
-        /// <summary>
-        /// The Dispose
-        /// </summary>
-        void IDisposable.Dispose()
-        {
-            this.DisposeCore();
         }
 
         ~ClangObject()

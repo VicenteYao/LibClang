@@ -130,10 +130,8 @@
         private unsafe void HandleEntityReference(IntPtr client_data, IntPtr refInfo)
         {
             CXIdxEntityRefInfo* pIndexEntityRefInfo = (CXIdxEntityRefInfo*)refInfo;
-            using (IndexEntityRefInfo indexEntityRefInfo = new IndexEntityRefInfo(*pIndexEntityRefInfo))
-            {
-                this._indexActionEventHandler?.OnIndexEntityRefInfo(indexEntityRefInfo);
-            }
+            IndexEntityRefInfo indexEntityRefInfo = new IndexEntityRefInfo(*pIndexEntityRefInfo);
+            this._indexActionEventHandler?.OnIndexEntityRefInfo(indexEntityRefInfo);
         }
 
         /// <summary>
@@ -182,11 +180,9 @@
         /// <returns>The <see cref="IntPtr"/></returns>
         private IntPtr HandleEnteredMainFile(IntPtr client_data, IntPtr mainFile, IntPtr reserved)
         {
-            using (File file = new File(mainFile))
-            {
-                File result = this._indexActionEventHandler?.OnEnteredMainFile(file);
-                return result == null ? IntPtr.Zero : (IntPtr)result.Value;
-            }
+            File file = new File(mainFile);
+            File result = this._indexActionEventHandler?.OnEnteredMainFile(file);
+            return result == null ? IntPtr.Zero : (IntPtr)result.Value;
         }
 
         /// <summary>
@@ -197,10 +193,8 @@
         /// <param name="reserved">The reserved<see cref="IntPtr"/></param>
         private void HandleDiagnostic(IntPtr client_data, IntPtr set, IntPtr reserved)
         {
-            using (DiagnosticSet diagnostics = new DiagnosticSet(set))
-            {
-                this._indexActionEventHandler?.OnDiagnostic(diagnostics);
-            }
+            DiagnosticSet diagnostics = new DiagnosticSet(set);
+            this._indexActionEventHandler?.OnDiagnostic(diagnostics);
         }
 
         /// <summary>

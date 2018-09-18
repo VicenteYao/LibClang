@@ -51,7 +51,7 @@
         /// </summary>
         protected override void DisposeCore()
         {
-            clang.clang_disposeCodeCompleteResults((CXCodeCompleteResults*)(IntPtr)this.m_value);
+            clang.clang_disposeCodeCompleteResults(this.m_value);
         }
 
         /// <summary>

@@ -68,16 +68,15 @@ Clang.DefaultEditingTranslationUnitOptions
                     this.autoResetEvent.WaitOne();
                     var unsavedFile = new UnsavedFile[] { new UnsavedFile(this._sourceCodeName, this.code) };
                     this.translationUnit.Reparse(unsavedFile, LibClang.Intertop.CXReparse_Flags.CXReparse_None);
-
-                    codeCompleteResults = this.translationUnit.CodeCompleteAt(this._sourceCodeName,
-                         (uint)this.line,
-                         (uint)this.column,
-                    unsavedFile,
-                Clang.DefaultCodeCompleteFlags |
-  CXCodeComplete_Flags.CXCodeComplete_IncludeBriefComments |
-  CXCodeComplete_Flags.CXCodeComplete_IncludeCodePatterns |
-  CXCodeComplete_Flags.CXCodeComplete_IncludeCompletionsWithFixIts
-                         );
+                    CodeCompleteResults codeCompleteResults = this.translationUnit.CodeCompleteAt(this._sourceCodeName,
+                                             (uint)this.line,
+                                             (uint)this.column,
+                                        unsavedFile,
+                                    Clang.DefaultCodeCompleteFlags |
+                      CXCodeComplete_Flags.CXCodeComplete_IncludeBriefComments |
+                      CXCodeComplete_Flags.CXCodeComplete_IncludeCodePatterns |
+                      CXCodeComplete_Flags.CXCodeComplete_IncludeCompletionsWithFixIts
+                                             );
                     this.autoResetEvent.Reset();
 
                     Application.Current.Dispatcher.BeginInvoke(new Action(() =>
@@ -95,7 +94,6 @@ Clang.DefaultEditingTranslationUnitOptions
                                 }
                             }
                         }
-                        
                     }));
                 }
 
@@ -142,8 +140,6 @@ Clang.DefaultEditingTranslationUnitOptions
                 
                 foreach (var item in e.Changes)
                 {
-
-
                     var textRang1e = new TextRange(this.CodeEditor.Document.ContentStart.GetPositionAtOffset(item.Offset), this.CodeEditor.Document.ContentStart.GetPositionAtOffset(item.Offset + item.AddedLength));
                     string ch = textRang1e.Text;
                     Console.WriteLine("添加个数{0} 偏移{1} 移除{2} 字符{3}", item.AddedLength, item.Offset, item.RemovedLength, ch);
