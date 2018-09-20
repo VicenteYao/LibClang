@@ -40,7 +40,7 @@
         /// <returns>The <see cref="TItem"/></returns>
         private TItem GetItemAt(int index)
         {
-            this.EnsureItemDictionary();
+            this.EnsureItemsContainer();
             TItem item = null;
             if (!this._items.ContainsKey(index))
             {
@@ -57,7 +57,7 @@
         /// <summary>
         /// The EnsureItemDictionary
         /// </summary>
-        private void EnsureItemDictionary()
+        private void EnsureItemsContainer()
         {
             if (this.Count > 0 && this._items == null)
             {
@@ -110,15 +110,15 @@
         /// <summary>
         /// Defines the <see cref="Enumerable" />
         /// </summary>
-        public struct Enumerable : IEnumerator<TItem>
+        private struct Enumerable : IEnumerator<TItem>
         {
             /// <summary>
             /// Initializes a new instance of the <see cref=""/> class.
             /// </summary>
-            /// <param name="clangObjectList">The clangObjectList<see cref="ClangList{TItem}"/></param>
-            internal Enumerable(ClangList<TItem> clangObjectList)
+            /// <param name="clangList">The clangObjectList<see cref="ClangList{TItem}"/></param>
+            internal Enumerable(ClangList<TItem> clangList)
             {
-                this.clangObjectList = clangObjectList;
+                this.clangObjectList = clangList;
                 this.index = -1;
             }
 

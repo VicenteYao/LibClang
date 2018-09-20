@@ -11,7 +11,11 @@
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <RichTextBox x:Name="CodeEditor"/>
+        <Grid>
+            <local:CodeEditor x:Name="CodeEditor"/>
+            <TextBlock x:Name="TxtCaretInfo"/>
+        </Grid>
+
         <ListBox Grid.Column="1" x:Name="ListCodeCompletion"/>
     </Grid>
 </Window>

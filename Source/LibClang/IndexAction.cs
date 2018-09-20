@@ -118,7 +118,9 @@
         /// <returns>The <see cref="IntPtr"/></returns>
         private IntPtr HandleStartedTranslationUnit(IntPtr client_data, IntPtr reserved)
         {
-            this._indexActionEventHandler?.OnStartTranslationUnit();
+            GCHandle paramGCHandle = GCHandle.FromIntPtr(client_data);
+            object param = paramGCHandle.Target;
+            this._indexActionEventHandler?.OnStartTranslationUnit(param);
             return IntPtr.Zero;
         }
 
@@ -129,9 +131,11 @@
         /// <param name="refInfo">The refInfo<see cref="IntPtr"/></param>
         private unsafe void HandleEntityReference(IntPtr client_data, IntPtr refInfo)
         {
+            GCHandle paramGCHandle = GCHandle.FromIntPtr(client_data);
+            object param = paramGCHandle.Target;
             CXIdxEntityRefInfo* pIndexEntityRefInfo = (CXIdxEntityRefInfo*)refInfo;
             IndexEntityRefInfo indexEntityRefInfo = new IndexEntityRefInfo(*pIndexEntityRefInfo);
-            this._indexActionEventHandler?.OnIndexEntityRefInfo(indexEntityRefInfo);
+            this._indexActionEventHandler?.OnIndexEntityRefInfo(indexEntityRefInfo, param);
         }
 
         /// <summary>
@@ -141,9 +145,11 @@
         /// <param name="declInfo">The declInfo<see cref="IntPtr"/></param>
         private unsafe void HandleIndexDeclaration(IntPtr client_data, IntPtr declInfo)
         {
+            GCHandle paramGCHandle = GCHandle.FromIntPtr(client_data);
+            object param = paramGCHandle.Target;
             CXIdxDeclInfo* pIndexDeclInfo = (CXIdxDeclInfo*)declInfo;
             IndexDeclInfo indexDeclInfo = new IndexDeclInfo(*pIndexDeclInfo);
-            this._indexActionEventHandler?.OnIndexDeclaration(indexDeclInfo);
+            this._indexActionEventHandler?.OnIndexDeclaration(indexDeclInfo, param);
         }
 
         /// <summary>
@@ -154,9 +160,11 @@
         /// <returns>The <see cref="IntPtr"/></returns>
         private unsafe IntPtr HandlePPIncludedFile(IntPtr client_data, IntPtr fileInfo)
         {
+            GCHandle paramGCHandle = GCHandle.FromIntPtr(client_data);
+            object param = paramGCHandle.Target;
             CXIdxIncludedFileInfo* cXIdxIncludedFileInfo = (CXIdxIncludedFileInfo*)fileInfo;
             IndexIncludedFileInfo indexIncludedFileInfo = new IndexIncludedFileInfo(*cXIdxIncludedFileInfo);
-            File result = this._indexActionEventHandler?.OnIncludeFile(indexIncludedFileInfo);
+            File result = this._indexActionEventHandler?.OnIncludeFile(indexIncludedFileInfo, param);
             return result == null ? IntPtr.Zero : (IntPtr)result.Value;
         }
 
@@ -166,8 +174,13 @@
         /// <param name="client_data">The client_data<see cref="IntPtr"/></param>
         /// <param name="fileInfo">The fileInfo<see cref="IntPtr"/></param>
         /// <returns>The <see cref="IntPtr"/></returns>
-        private IntPtr HandleImportedASTFile(IntPtr client_data, IntPtr fileInfo)
+        private unsafe IntPtr HandleImportedASTFile(IntPtr client_data, IntPtr fileInfo)
         {
+            GCHandle paramGCHandle = GCHandle.FromIntPtr(client_data);
+            object param = paramGCHandle.Target;
+            CXIdxImportedASTFileInfo* pImportedASTFileInfo = (CXIdxImportedASTFileInfo*)fileInfo;
+            ImportedAstFileInfo importedAstFileInfo = new ImportedAstFileInfo(*pImportedASTFileInfo);
+            this._indexActionEventHandler?.OnImportedASTFileInfo(importedAstFileInfo, param);
             return IntPtr.Zero;
         }
 
@@ -181,20 +194,24 @@
         private IntPtr HandleEnteredMainFile(IntPtr client_data, IntPtr mainFile, IntPtr reserved)
         {
             File file = new File(mainFile);
-            File result = this._indexActionEventHandler?.OnEnteredMainFile(file);
-            return result == null ? IntPtr.Zero : (IntPtr)result.Value;
+            GCHandle paramGCHandle = GCHandle.FromIntPtr(client_data);
+            object param = paramGCHandle.Target;
+            File result = this._indexActionEventHandler?.OnEnteredMainFile(file, param);
+            return result == null ? (IntPtr)file.Value : (IntPtr)result.Value;
         }
 
         /// <summary>
         /// The HandleDiagnostic
         /// </summary>
         /// <param name="client_data">The client_data<see cref="IntPtr"/></param>
-        /// <param name="set">The set<see cref="IntPtr"/></param>
+        /// <param name="diagnosticSet">The set<see cref="IntPtr"/></param>
         /// <param name="reserved">The reserved<see cref="IntPtr"/></param>
-        private void HandleDiagnostic(IntPtr client_data, IntPtr set, IntPtr reserved)
+        private void HandleDiagnostic(IntPtr client_data, IntPtr diagnosticSet, IntPtr reserved)
         {
-            DiagnosticSet diagnostics = new DiagnosticSet(set);
-            this._indexActionEventHandler?.OnDiagnostic(diagnostics);
+            GCHandle paramGCHandle = GCHandle.FromIntPtr(client_data);
+            object param = paramGCHandle.Target;
+            DiagnosticSet diagnostics = new DiagnosticSet(diagnosticSet);
+            this._indexActionEventHandler?.OnDiagnostic(diagnostics, param);
         }
 
         /// <summary>
@@ -205,9 +222,11 @@
         /// <returns>The <see cref="int"/></returns>
         private int HandleAbortQuery(IntPtr client_data, IntPtr reserved)
         {
+            GCHandle paramGCHandle = GCHandle.FromIntPtr(client_data);
+            object param = paramGCHandle.Target;
             if (this._indexActionEventHandler != null)
             {
-                return this._indexActionEventHandler.OnQueryAbort() ? 1 : 0;
+                return this._indexActionEventHandler.OnQueryAbort(param) ? 1 : 0;
             }
             return 1;
         }
@@ -226,15 +245,21 @@
         /// <param name="translationUnit">The translationUnit<see cref="TranslationUnit"/></param>
         /// <param name="indexOptFlags">The indexOptFlags<see cref="CXIndexOptFlags"/></param>
         /// <returns>The <see cref="CXErrorCode"/></returns>
-        public unsafe CXErrorCode Index(TranslationUnit translationUnit, CXIndexOptFlags indexOptFlags)
+        public unsafe CXErrorCode Index(TranslationUnit translationUnit, object param, CXIndexOptFlags indexOptFlags)
         {
+            if (param == null)
+            {
+                throw new ArgumentNullException("param");
+            }
+            GCHandle paramGCHandle = GCHandle.Alloc(param, GCHandleType.Weak);
             using (Pointer<IndexerCallbacks> ptrIndexerCallbacks = new Pointer<IndexerCallbacks>(this._indexerCallbacks))
             {
                 CXErrorCode errorCode = (CXErrorCode)clang.clang_indexTranslationUnit(this.m_value,
-                    IntPtr.Zero,
+                   GCHandle.ToIntPtr(paramGCHandle),
                     ptrIndexerCallbacks,
                     (uint)(ptrIndexerCallbacks.Size),
                     (uint)indexOptFlags, (IntPtr)translationUnit.Value);
+                paramGCHandle.Free();
                 return errorCode;
             }
         }

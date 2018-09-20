@@ -8,38 +8,43 @@ namespace LibClangUnitTest
 {
     public class IndexActionEventHandler : IIndexActionEventHandler
     {
-        public void OnDiagnostic(ClangList<Diagnostic> diagnostics)
+        public void OnDiagnostic(ClangList<Diagnostic> diagnostics, object param)
         {
 
         }
 
-        public File OnEnteredMainFile(File file)
+        public File OnEnteredMainFile(File file, object param)
         {
             return file;
         }
 
-        public File OnIncludeFile(IndexIncludedFileInfo indexIncludedFileInfo)
+        public void OnImportedASTFileInfo(ImportedAstFileInfo astFileInfo, object param)
+        {
+
+        }
+
+        public File OnIncludeFile(IndexIncludedFileInfo indexIncludedFileInfo, object param)
         {
             return indexIncludedFileInfo.File;
         }
 
-        public void OnIndexDeclaration(IndexDeclInfo indexDeclInfo)
+        public void OnIndexDeclaration(IndexDeclInfo indexDeclInfo, object param)
         {
 
         }
 
-        public void OnIndexEntityRefInfo(IndexEntityRefInfo indexEntityRefInfo)
+        public void OnIndexEntityRefInfo(IndexEntityRefInfo indexEntityRefInfo, object param)
         {
 
         }
 
-        public bool OnQueryAbort()
+        public bool OnQueryAbort(object param)
         {
             return false;
         }
 
 
-        public void OnStartTranslationUnit()
+        public void OnStartTranslationUnit(object param)
         {
 
         }

@@ -17,7 +17,7 @@ namespace LibClangUnitTest
             var splitedStringArrays = includes.Split(' ');
             var tu = index.Parse(@"D:\llvm\tools\clang\tools\driver\driver.cpp",
        splitedStringArrays, null, LibClang.Intertop.CXTranslationUnit_Flags.CXTranslationUnit_SingleFileParse);
-            indexAction.Index(tu, LibClang.Intertop.CXIndexOptFlags.CXIndexOpt_IndexFunctionLocalSymbols);
+            indexAction.Index(tu, indexAction, LibClang.Intertop.CXIndexOptFlags.CXIndexOpt_IndexFunctionLocalSymbols);
         }
     }
 }
