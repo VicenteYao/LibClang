@@ -11,7 +11,7 @@
         /// <summary>
         /// Defines the m_value
         /// </summary>
-        private IntPtr m_value;
+        private unsafe CXCodeCompleteResults* m_value;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CompletionResultList"/> class.
@@ -19,15 +19,15 @@
         /// <param name="pCompleteResults">The pCompleteResults<see cref="CXCodeCompleteResults*"/></param>
         internal unsafe CompletionResultList(CXCodeCompleteResults* pCompleteResults)
         {
-            this.m_value = (IntPtr)pCompleteResults;
+            this.m_value = pCompleteResults;
         }
 
         /// <summary>
         /// Gets the Value
         /// </summary>
-        protected internal override ValueType Value
+        protected unsafe internal override ValueType Value
         {
-            get { return this.m_value; }
+            get { return (IntPtr)this.m_value; }
         }
 
         /// <summary>
@@ -37,17 +37,16 @@
         /// <returns>The <see cref="CompletionResult"/></returns>
         protected unsafe override CompletionResult EnsureItemAt(int index)
         {
-            CXCodeCompleteResults* pCXCodeCompleteResults = (CXCodeCompleteResults*)this.m_value;
-            uint fixitCount = clang.clang_getCompletionNumFixIts(pCXCodeCompleteResults, (uint)index);
+            uint fixitCount = clang.clang_getCompletionNumFixIts(this.m_value, (uint)index);
             FixIt[] fixIts = new FixIt[fixitCount];
             for (uint J = 0; J < fixitCount; J++)
             {
                 CXSourceRange xSourceRange;
-                string text = clang.clang_getCompletionFixIt(pCXCodeCompleteResults, (uint)index, J, out xSourceRange).ToStringAndDispose();
+                string text = clang.clang_getCompletionFixIt(this.m_value, (uint)index, J, out xSourceRange).ToStringAndDispose();
                 SourceRange sourceRange = new SourceRange(xSourceRange);
                 fixIts[J] = new FixIt(text, sourceRange);
             }
-            return new CompletionResult(pCXCodeCompleteResults->Results[index], fixIts);
+            return new CompletionResult(this.m_value->Results[index], fixIts);
         }
 
         /// <summary>

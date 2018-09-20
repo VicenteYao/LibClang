@@ -24,7 +24,7 @@
         /// <summary>
         /// Gets the Value
         /// </summary>
-        protected internal override ValueType Value => throw new NotImplementedException();
+        protected internal override ValueType Value  {get{ return this.m_value; } }
 
         /// <summary>
         /// The Contains

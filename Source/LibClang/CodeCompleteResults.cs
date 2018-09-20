@@ -82,7 +82,7 @@
         /// <summary>
         /// Defines the context
         /// </summary>
-        private CXCompletionContext? context;
+        private CXCompletionContext context;
 
         /// <summary>
         /// Gets the Context
@@ -91,12 +91,8 @@
         {
             get
             {
-                if (!this.context.HasValue)
-                {
-
-                    this.context = (CXCompletionContext)clang.clang_codeCompleteGetContexts(this.m_value);
-                }
-                return this.context.Value;
+                this.context = (CXCompletionContext)clang.clang_codeCompleteGetContexts(this.m_value);
+                return this.context;
             }
         }
 
@@ -114,6 +110,11 @@
         public void Sort()
         {
             clang.clang_sortCodeCompletionResults(this.m_value->Results, this.m_value->NumResults);
+            if (this.completionResults!=null)
+            {
+                this.completionResults.Clear();
+            }
+
         }
     }
 }

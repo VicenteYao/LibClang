@@ -30,6 +30,10 @@
         /// <returns>The <see cref="CodeCompleteResults"/></returns>
         public unsafe CodeCompleteResults CodeCompleteAt(string completeFileName, uint completeline, uint completeColumn, UnsavedFile[] unsavedFiles, CXCodeComplete_Flags flags)
         {
+            if (completeFileName == null)
+            {
+                throw new ArgumentNullException("completeFileName");
+            }
             if (unsavedFiles == null)
             {
                 unsavedFiles = new UnsavedFile[0];
@@ -49,17 +53,17 @@
         /// <summary>
         /// Defines the _defaultSaveFlags
         /// </summary>
-        private CXSaveTranslationUnit_Flags _defaultSaveFlags;
+        private CXSaveTranslationUnit_Flags _defaultSaveOptions;
 
         /// <summary>
         /// Gets the DefaultSaveFlags
         /// </summary>
-        public CXSaveTranslationUnit_Flags DefaultSaveFlags
+        public CXSaveTranslationUnit_Flags DefaultSaveOptions
         {
             get
             {
-                this._defaultSaveFlags = (CXSaveTranslationUnit_Flags)clang.clang_defaultSaveOptions(this.m_value);
-                return this._defaultSaveFlags;
+                this._defaultSaveOptions = (CXSaveTranslationUnit_Flags)clang.clang_defaultSaveOptions(this.m_value);
+                return this._defaultSaveOptions;
             }
         }
 
@@ -110,18 +114,18 @@
         /// <summary>
         /// Defines the _defaultReparseFlags
         /// </summary>
-        private CXReparse_Flags _defaultReparseFlags;
+        private CXReparse_Flags _defaultReparseOptions;
 
         /// <summary>
         /// Gets the DefaultReparseFlags
         /// </summary>
-        public CXReparse_Flags DefaultReparseFlags
+        public CXReparse_Flags DefaultReparseOptions
         {
             get
             {
 
-                this._defaultReparseFlags = (CXReparse_Flags)clang.clang_defaultReparseOptions(this.m_value);
-                return this._defaultReparseFlags;
+                this._defaultReparseOptions = (CXReparse_Flags)clang.clang_defaultReparseOptions(this.m_value);
+                return this._defaultReparseOptions;
             }
         }
 

@@ -17,6 +17,14 @@
         {
         }
 
+        internal void Clear()
+        {
+            if (this._items != null && this._items.Count > 0)
+            {
+                this._items.Clear();
+            }
+        }
+
         /// <summary>
         /// Defines the _items
         /// </summary>
